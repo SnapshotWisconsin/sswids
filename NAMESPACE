@@ -3,6 +3,7 @@
 export(connect_to_sswidb)
 export(detect_overlap)
 export(establish_sswidb_credentials)
+export(write_encounter_histories)
 importFrom(keyring,key_get)
 importFrom(keyring,key_set)
 importFrom(sswidb,sswidb_connect_manually)
