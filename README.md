@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-R package for the Snapshot Wisconsin Decision Support Team
+R package for the [Snapshot Wisconsin](https://dnr.wisconsin.gov/topic/research/projects/snapshot) Decision Support Team
 
 ## Installation
 
