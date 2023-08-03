@@ -2,7 +2,7 @@
 #' Title
 #'
 #' @param db_version
-#' @importFrom keyring key_set
+#' @importFrom keyring key_get
 #' @importFrom sswidb sswidb_connect_manually
 #'
 #' @return

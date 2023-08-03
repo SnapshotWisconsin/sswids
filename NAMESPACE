@@ -2,5 +2,6 @@
 
 export(connect_to_sswidb)
 export(establish_sswidb_credentials)
+importFrom(keyring,key_get)
 importFrom(keyring,key_set)
 importFrom(sswidb,sswidb_connect_manually)
