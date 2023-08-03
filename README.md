@@ -1,0 +1,16 @@
+
+# sswids
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+R package for the Snapshot Wisconsin Decision Support Team
+
+## Installation
+
+You can install the development version of sswids from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("jaymwin/sswids")
+```
