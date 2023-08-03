@@ -6,9 +6,6 @@
 \usage{
 establish_sswidb_credentials(db_version)
 }
-\arguments{
-\item{db_version}{}
-}
 \value{
 
 }

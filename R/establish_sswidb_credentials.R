@@ -2,7 +2,7 @@
 #' Title
 #'
 #' @param db_version
-#' @importFrom keyring "key_set"
+#' @importFrom keyring key_set
 #'
 #' @return
 #' @export

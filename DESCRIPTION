@@ -2,8 +2,7 @@ Package: sswids
 Title: An R Package to Clean, Format, and Analyze Snapshot Wisconsin Data
 Version: 0.0.0.9000
 Authors@R: 
-    person("Jay", "Winiarski", , "jason.winiarski@wisconsin.gov", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person(given = "Jay", family = "Winiarski", email = "jason.winiarski@wisconsin.gov", role = c("aut", "cre"))
 Description: sswids provides functions to clean and manipulate Snapshot Wisconsin data for occupancy and abundance analyses.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -11,9 +10,10 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 URL: https://github.com/jaymwin/sswids
 BugReports: https://github.com/jaymwin/sswids/issues
-Suggests: 
+Imports: 
     dplyr,
     ggplot2,
+    janitor,
     keyring,
     lubridate,
     readr,
