@@ -1,6 +1,6 @@
 
 #' Download and unzip Wiscland2 landcover data from DNR GIS website
-#'
+#' @importFrom utils download.file
 #' @return
 #' @export
 #'

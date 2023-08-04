@@ -4,7 +4,9 @@
 #' @return list of SSWI tables
 #' @export
 #'
-#' @examples sswidb_tables()
+#' @examples
+#' connect_to_sswidb(db_version = 'PROD')
+#' sswidb_tables()
 
 sswidb_tables <- function() {
 

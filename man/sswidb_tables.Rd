@@ -13,5 +13,6 @@ list of SSWI tables
 Print a list of SSWI database tables from larger DNR database
 }
 \examples{
+connect_to_sswidb(db_version = 'PROD')
 sswidb_tables()
 }

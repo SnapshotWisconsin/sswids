@@ -1,5 +1,4 @@
 
-# create a sequence of dates from a start and end date
 date_sequence <- function(df) {
 
   seq.Date(as.Date(df$start_date), as.Date(df$end_date), by = 'day')
@@ -7,7 +6,6 @@ date_sequence <- function(df) {
 }
 
 
-# determine number of digits after decimal place for lat/long
 n_digits <- function(x) {
 
   max(
@@ -23,8 +21,6 @@ n_digits <- function(x) {
 }
 
 
-# this is the same as the Overlap function from DescTools
-# just given a more informative name here
 date_overlap <- function(x, y) {
 
   x <- cbind(apply(rbind(x), 1L, min), apply(rbind(x), 1L,
@@ -47,7 +43,6 @@ date_overlap <- function(x, y) {
 }
 
 
-# create individual dates for a date range when a camera was active
 activity_by_date <- function(df) {
 
   # create sequence(s) of date(s); sometimes there are overlapping
@@ -60,7 +55,6 @@ activity_by_date <- function(df) {
 }
 
 
-# add a year if filtering photo table for a query where season dates overlap two different years
 add_year <- function(...) {
 
   if(as.numeric(stringr::str_sub(min_date, 2, 3)) > as.numeric(stringr::str_sub(max_date, 2, 3))) {
@@ -74,4 +68,3 @@ add_year <- function(...) {
   }
 
 }
-
