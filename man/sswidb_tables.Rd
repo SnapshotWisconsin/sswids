@@ -2,13 +2,16 @@
 % Please edit documentation in R/list_sswidb_tables.R
 \name{sswidb_tables}
 \alias{sswidb_tables}
-\title{Title}
+\title{Print a list of SSWI database tables from larger DNR database}
 \usage{
 sswidb_tables()
 }
 \value{
-
+list of SSWI tables
 }
 \description{
-Title
+Print a list of SSWI database tables from larger DNR database
+}
+\examples{
+sswidb_tables()
 }

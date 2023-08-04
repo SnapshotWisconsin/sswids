@@ -1,10 +1,10 @@
 
-#' Title
+#' Print a list of SSWI database tables from larger DNR database
 #'
-#' @return
+#' @return list of SSWI tables
 #' @export
 #'
-#' @examples
+#' @examples sswidb_tables()
 
 sswidb_tables <- function() {
 
