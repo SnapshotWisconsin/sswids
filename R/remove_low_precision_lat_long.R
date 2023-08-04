@@ -32,3 +32,19 @@ remove_low_precision_lat_long <- function(df, coordinate_precision) {
     select(-matches('digits'))
 
 }
+
+
+# determine number of digits after decimal place for lat/long
+n_digits <- function(x) {
+
+  max(
+    stringr::str_length(
+      stringr::str_replace(
+        x,
+        ".*\\.(\\d+)",
+        "\\1"
+      )
+    )
+  )
+
+}
