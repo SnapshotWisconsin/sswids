@@ -7,20 +7,20 @@ date_sequence <- function(df) {
 }
 
 
-# # determine number of digits after decimal place for lat/long
-# n_digits <- function(x) {
-#
-#   max(
-#     stringr::str_length(
-#       stringr::str_replace(
-#         x,
-#         ".*\\.(\\d+)",
-#         "\\1"
-#       )
-#     )
-#   )
-#
-# }
+# determine number of digits after decimal place for lat/long
+n_digits <- function(x) {
+
+  max(
+    stringr::str_length(
+      stringr::str_replace(
+        x,
+        ".*\\.(\\d+)",
+        "\\1"
+      )
+    )
+  )
+
+}
 
 
 # this is the same as the Overlap function from DescTools
