@@ -2,13 +2,16 @@
 % Please edit documentation in R/setup_project.R
 \name{setup_project}
 \alias{setup_project}
-\title{Create project directories to store SSWI data and outputs}
+\title{Create Project Directories}
 \usage{
 setup_project()
 }
 \value{
-
+empty data and output folders
 }
 \description{
-Create project directories to store SSWI data and outputs
+Create project directories to store SSWI data and outputs.
+}
+\examples{
+setup_project()
 }

@@ -2,17 +2,21 @@
 % Please edit documentation in R/list_sswidb_tables.R
 \name{sswidb_tables}
 \alias{sswidb_tables}
-\title{Print a list of SSWI database tables from larger DNR database}
+\title{Print Snapshot Wisconsin Database Tables}
 \usage{
 sswidb_tables()
 }
 \value{
-list of SSWI tables
+list of Snapshot Wisconsin tables
 }
 \description{
-Print a list of SSWI database tables from larger DNR database
+Print a list of Snapshot Wisconsin tables from the larger WI DNR Oracle database
 }
 \examples{
+\dontrun{
+# first connect to Snapshot Wisconsin database
 connect_to_sswidb(db_version = 'PROD')
+# print Snapshot Wisconsin tables
 sswidb_tables()
+}
 }

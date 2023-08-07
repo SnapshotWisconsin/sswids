@@ -22,5 +22,7 @@ future database connections.
 # this will create 3 pop-ups that require entry of 1) dsn, 2) uid, and 3) pwd
 establish_sswidb_credentials(db_version = 'PROD')
 }
-#' @seealso \code{\link{connect_to_sswidb}}
+}
+\seealso{
+\code{\link{connect_to_sswidb}}
 }

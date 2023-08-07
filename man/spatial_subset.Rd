@@ -2,16 +2,23 @@
 % Please edit documentation in R/spatial_subset.R
 \name{spatial_subset}
 \alias{spatial_subset}
-\title{Spatially subset camera site locations using an sf polygon object}
+\title{Spatially Subset Camera Site Locations}
 \usage{
 spatial_subset(df, polygon_layer)
 }
 \arguments{
-\item{polygon_layer}{}
+\item{df}{Data frame of camera locations}
+
+\item{polygon_layer}{sf polygon object}
 }
 \value{
-
+data frame
 }
 \description{
-Spatially subset camera site locations using an sf polygon object
+Spatially subset camera site locations using an sf polygon object.
+}
+\examples{
+\dontrun{
+spatial_subset(locs_df, _sf)
+}
 }

@@ -1,7 +1,8 @@
 
-#' Title
+#' Filter Out Low Precision Camera Locations
 #'
-#' @param df
+#' Remove camera_location_seq_no's that have a low precision latitude or longitude coordinate.
+#' @param df Data frame of camera locations
 #' @importFrom dplyr rowwise
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
@@ -9,10 +10,15 @@
 #' @importFrom dplyr ungroup
 #' @importFrom dplyr matches
 #'
-#' @return
+#' @return Locations data frame with high precision coordinates
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # set coordinate precision
+#' coordinate_precision <- 4
+#' locs_df %>% remove_low_precision_lat_long(coordinate_precision)
+#' }
 
 remove_low_precision_lat_long <- function(df, coordinate_precision) {
 

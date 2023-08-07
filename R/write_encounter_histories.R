@@ -1,12 +1,15 @@
 
-#' Title
+#' Write Encounter Histories for Abundance Analysis
 #'
 #' @param df
 #'
-#' @return
+#' @return csv files of encounter histories by class (e.g., age and sex)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' write_encounter_histories(df)
+#' }
 
 write_encounter_histories <- function(df) {
 

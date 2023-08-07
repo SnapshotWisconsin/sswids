@@ -1,10 +1,12 @@
 
-#' Create project directories to store SSWI data and outputs
+#' Create Project Directories
 #'
-#' @return
+#' Create project directories to store SSWI data and outputs.
+#' @return empty data and output folders
 #' @export
 #'
 #' @examples
+#' setup_project()
 
 setup_project <- function() {
 

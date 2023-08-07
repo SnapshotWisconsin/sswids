@@ -2,16 +2,21 @@
 % Please edit documentation in R/detect_overlap.R
 \name{detect_overlap}
 \alias{detect_overlap}
-\title{Title}
+\title{Detect Effort Overlap in Batches and Cameras}
 \usage{
 detect_overlap(df)
 }
 \arguments{
-\item{df}{}
+\item{df}{Effort data frame}
 }
 \value{
-
+Data frame showing instances of overlap.
 }
 \description{
-Title
+Find instances of overlapping effort by camera location and year.
+}
+\examples{
+\dontrun{
+effort_df \%>\% detect_overlap()
+}
 }

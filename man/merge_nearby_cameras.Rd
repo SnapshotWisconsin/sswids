@@ -2,16 +2,20 @@
 % Please edit documentation in R/merge_nearby_cameras.R
 \name{merge_nearby_cameras}
 \alias{merge_nearby_cameras}
-\title{Merge nearby camera_location_seq_no's and create new camera locations called cam_site_id's}
+\title{Merge Nearby Camera Locations}
 \usage{
 merge_nearby_cameras(locs_df, cam_distance, effort_df)
 }
 \arguments{
-\item{effort_df}{}
+\item{locs_df}{Data frame of camera_location_seq_no's and coordinates}
+
+\item{cam_distance}{Distance (meters) in which nearby camera locations should be combined}
+
+\item{effort_df}{Data frame of days of effort for each camera_location_seq_no}
 }
 \value{
 
 }
 \description{
-Merge nearby camera_location_seq_no's and create new camera locations called cam_site_id's
+Combine nearby camera_location_seq_no's and create new camera site IDs (cam_site_id).
 }

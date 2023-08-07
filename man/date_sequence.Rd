@@ -2,7 +2,7 @@
 % Please edit documentation in R/date_sequence.R
 \name{date_sequence}
 \alias{date_sequence}
-\title{Title}
+\title{Create Sequence of Dates}
 \usage{
 date_sequence(df)
 }
@@ -13,5 +13,5 @@ date_sequence(df)
 
 }
 \description{
-Title
+Create sequence of dates from effort start/end dates.
 }

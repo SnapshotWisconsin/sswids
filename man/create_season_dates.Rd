@@ -2,16 +2,44 @@
 % Please edit documentation in R/create_season_dates.R
 \name{create_season_dates}
 \alias{create_season_dates}
-\title{Title}
+\title{Create Seasonal Data Frames to Query Detections and Effort}
 \usage{
 create_season_dates(min_date, max_date, years)
 }
 \arguments{
-\item{years}{}
+\item{min_date}{Start date of query}
+
+\item{max_date}{End date of query}
+
+\item{years}{Years of data to query}
 }
 \value{
-
+Data frame containing years and associated start and end dates
 }
 \description{
-Title
+Query effort and detection data from a set of season dates in each year of interest.
+}
+\examples{
+\dontrun{
+# set min/max years for obtaining data
+min_year <- 2017
+max_year <- 2022
+
+# season start/end dates (in -MM-DD format)
+min_date <- '-04-01'
+max_date <- '-04-30'
+
+# what years of data to query?
+years <- seq(min_year, max_year, 1)
+
+# create date ranges for each year;
+# if spanning two years (i.e., winter) use start date year
+# otherwise just use the year of the particular season
+seasons_df <-
+create_season_dates(
+min_date,
+max_date,
+years
+)
+}
 }

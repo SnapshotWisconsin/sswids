@@ -1,9 +1,10 @@
 
-#' Merge nearby camera_location_seq_no's and create new camera locations called cam_site_id's
+#' Merge Nearby Camera Locations
 #'
-#' @param locs_df
-#' @param cam_distance
-#' @param effort_df
+#' Combine nearby camera_location_seq_no's and create new camera site IDs (cam_site_id).
+#' @param locs_df Data frame of camera_location_seq_no's and coordinates
+#' @param cam_distance Distance (meters) in which nearby camera locations should be combined
+#' @param effort_df Data frame of days of effort for each camera_location_seq_no
 #'
 #' @return
 #' @export

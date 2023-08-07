@@ -1,12 +1,16 @@
 
-#' Title
+#' Detect Effort Overlap in Batches and Cameras
 #'
-#' @param df
+#' Find instances of overlapping effort by camera location and year.
+#' @param df Effort data frame
 #'
-#' @return
+#' @return Data frame showing instances of overlap.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' effort_df %>% detect_overlap()
+#' }
 
 detect_overlap <- function(df) {
 

@@ -2,13 +2,23 @@
 % Please edit documentation in R/remove_low_precision_lat_long.R
 \name{remove_low_precision_lat_long}
 \alias{remove_low_precision_lat_long}
-\title{Title}
+\title{Filter Out Low Precision Camera Locations}
 \usage{
 remove_low_precision_lat_long(df, coordinate_precision)
 }
+\arguments{
+\item{df}{Data frame of camera locations}
+}
 \value{
-
+Locations data frame with high precision coordinates
 }
 \description{
-Title
+Remove camera_location_seq_no's that have a low precision latitude or longitude coordinate.
+}
+\examples{
+\dontrun{
+# set coordinate precision
+coordinate_precision <- 4
+locs_df \%>\% remove_low_precision_lat_long(coordinate_precision)
+}
 }

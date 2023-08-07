@@ -1,12 +1,17 @@
 
-#' Print a list of SSWI database tables from larger DNR database
+#' Print Snapshot Wisconsin Database Tables
 #'
-#' @return list of SSWI tables
+#' Print a list of Snapshot Wisconsin tables from the larger WI DNR Oracle database
+#' @return list of Snapshot Wisconsin tables
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # first connect to Snapshot Wisconsin database
 #' connect_to_sswidb(db_version = 'PROD')
+#' # print Snapshot Wisconsin tables
 #' sswidb_tables()
+#' }
 
 sswidb_tables <- function() {
 

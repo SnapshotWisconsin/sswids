@@ -2,7 +2,7 @@
 % Please edit documentation in R/write_encounter_histories.R
 \name{write_encounter_histories}
 \alias{write_encounter_histories}
-\title{Title}
+\title{Write Encounter Histories for Abundance Analysis}
 \usage{
 write_encounter_histories(df)
 }
@@ -10,8 +10,13 @@ write_encounter_histories(df)
 \item{df}{}
 }
 \value{
-
+csv files of encounter histories by class (e.g., age and sex)
 }
 \description{
-Title
+Write Encounter Histories for Abundance Analysis
+}
+\examples{
+\dontrun{
+write_encounter_histories(df)
+}
 }

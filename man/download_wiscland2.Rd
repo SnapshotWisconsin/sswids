@@ -2,13 +2,18 @@
 % Please edit documentation in R/download_wiscland2.R
 \name{download_wiscland2}
 \alias{download_wiscland2}
-\title{Download and unzip Wiscland2 landcover data from DNR GIS website}
+\title{Download Wiscland2 Landcover Data}
 \usage{
 download_wiscland2()
 }
 \value{
-
+Directory containing Wiscland2 rasters
 }
 \description{
-Download and unzip Wiscland2 landcover data from DNR GIS website
+Download and unzip Wiscland2 landcover data from DNR GIS website.
+}
+\examples{
+\dontrun{
+download_wiscland2()
+}
 }

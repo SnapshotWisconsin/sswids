@@ -1,6 +1,7 @@
 
-#' Title
+#' Create Sequence of Dates
 #'
+#' Create sequence of dates from effort start/end dates.
 #' @param df
 #'
 #' @return
