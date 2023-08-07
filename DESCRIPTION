@@ -26,16 +26,3 @@ Imports:
     tibble,
     tidyr,
     vroom
-Collate: 
-    'connect_to_sswidb.R'
-    'create_season_dates.R'
-    'detect_overlap.R'
-    'download_wiscland2.R'
-    'establish_sswidb_credentials.R'
-    'list_sswidb_tables.R'
-    'merge_nearby_cameras.R'
-    'utils.R'
-    'remove_low_precision_lat_long.R'
-    'setup_project.R'
-    'spatial_subset.R'
-    'write_encounter_histories.R'
