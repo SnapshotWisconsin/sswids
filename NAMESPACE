@@ -2,6 +2,7 @@
 
 export(connect_to_sswidb)
 export(create_season_dates)
+export(date_sequence)
 export(detect_overlap)
 export(download_wiscland2)
 export(establish_sswidb_credentials)
