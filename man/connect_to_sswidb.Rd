@@ -2,13 +2,28 @@
 % Please edit documentation in R/connect_to_sswidb.R
 \name{connect_to_sswidb}
 \alias{connect_to_sswidb}
-\title{Title}
+\title{Connect to Snapshot Wisconsin Database}
 \usage{
 connect_to_sswidb(db_version)
 }
+\arguments{
+\item{db_version}{Production ("PROD") or testing ("UAT") versions of the database.}
+}
 \value{
-
+a \code{\link{dbPool}} object.
 }
 \description{
-Title
+A wrapper around \code{sswidb::sswidb_connect_manually()} that allows Snapshot Wisconsin database connection
+without a locally-stored yaml file containing credentials.
+}
+\examples{
+\dontrun{
+# must set credentials first before connecting to database
+# that only has to be done once before using connect_to_sswidb()
+establish_sswidb_credentials(db_version = 'PROD')
+connect_to_sswidb(db_version = 'PROD')
+}
+}
+\seealso{
+\code{\link{establish_sswidb_credentials}}
 }

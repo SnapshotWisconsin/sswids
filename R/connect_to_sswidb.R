@@ -1,14 +1,23 @@
 
-#' Title
+#' Connect to Snapshot Wisconsin Database
 #'
-#' @param db_version
+#' A wrapper around \code{sswidb::sswidb_connect_manually()} that allows Snapshot Wisconsin database connection
+#' without a locally-stored yaml file containing credentials.
+#' @param db_version Production ("PROD") or testing ("UAT") versions of the database.
 #' @importFrom keyring key_get
 #' @importFrom sswidb sswidb_connect_manually
 #'
-#' @return
+#' @return a \code{\link{dbPool}} object.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # must set credentials first before connecting to database
+#' # that only has to be done once before using connect_to_sswidb()
+#' establish_sswidb_credentials(db_version = 'PROD')
+#' connect_to_sswidb(db_version = 'PROD')
+#' }
+#' @seealso \code{\link{establish_sswidb_credentials}}
 
 connect_to_sswidb <- function(db_version) {
 

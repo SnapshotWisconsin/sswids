@@ -1,6 +1,7 @@
 
 n_digits <- function(x) {
 
+  # determine number of digits after decimal place for lat/long
   max(
     stringr::str_length(
       stringr::str_replace(
@@ -16,6 +17,8 @@ n_digits <- function(x) {
 
 date_overlap <- function(x, y) {
 
+  # this is the same as the Overlap function from DescTools
+  # just given a more informative name here
   x <- cbind(apply(rbind(x), 1L, min), apply(rbind(x), 1L,
                                              max))
   y <- cbind(apply(rbind(y), 1L, min), apply(rbind(y), 1L,
@@ -38,6 +41,8 @@ date_overlap <- function(x, y) {
 
 activity_by_date <- function(df) {
 
+  # create individual dates for a date range when a camera was active
+
   # create sequence(s) of date(s); sometimes there are overlapping
   # start and end dates due to batches being uploaded
   seq.Date(as.Date(df$start_date), as.Date(df$end_date), by = 'day') %>%
@@ -50,6 +55,7 @@ activity_by_date <- function(df) {
 
 add_year <- function(...) {
 
+  # add a year if filtering photo table for a query where season dates overlap two different years
   if(as.numeric(stringr::str_sub(min_date, 2, 3)) > as.numeric(stringr::str_sub(max_date, 2, 3))) {
 
     1

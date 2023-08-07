@@ -1,13 +1,21 @@
 
-#' Title
+#' Set Snapshot Wisconsin database credentials just one time for future database connections
 #'
-#' @param db_version
+#' Use \code{\link{keyring}} package to store Snapshot Wisconsin database credentials for
+#' future database connections.
+#' @param db_version Production ("PROD") or testing ("UAT") versions of the database.
 #' @importFrom keyring key_set
 #'
-#' @return
+#' @return Confidential information saved in the credential store.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' # store credentials for production version of the Snapshot Wisconsin database
+#' # this will create 3 pop-ups that require entry of 1) dsn, 2) uid, and 3) pwd
+#' establish_sswidb_credentials(db_version = 'PROD')
+#' }
+#' #' @seealso \code{\link{connect_to_sswidb}}
 
 
 establish_sswidb_credentials <- function(db_version) {
