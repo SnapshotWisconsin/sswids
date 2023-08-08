@@ -19,6 +19,7 @@ Imports:
     janitor,
     keyring,
     lubridate,
+    magrittr,
     readr,
     sf,
     sswidb,

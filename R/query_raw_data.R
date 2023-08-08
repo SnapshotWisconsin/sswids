@@ -1,6 +1,5 @@
 
 #' Title
-#' @importFrom dplyr %>%
 #' @return
 #' @export
 #'
@@ -35,7 +34,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
   cat('querying detections...\n')
 
   # detections
-  detections_df <<-
+  detections_df <-
     # take each season
     seasons_df %>%
     # iterate sswidb_detections() over each season's date range
@@ -67,7 +66,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
 
   # effort
   # now query database for effort across different years but same season
-  effort_df <<-
+  effort_df <-
     seasons_df %>%
     purrr::map2_dfr(
       .x = .$start_date,
@@ -96,7 +95,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
 
   # locations
   # get camera location lat/long coordinates
-  locs_df <<-
+  locs_df <-
     sswidb::sswidb_location(
       # use unique camera locations from effort
       camera_location_seq_no = unique(effort_df$camera_location_seq_no),
