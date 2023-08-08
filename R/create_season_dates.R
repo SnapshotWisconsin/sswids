@@ -37,7 +37,7 @@ create_season_dates <- function(min_date, max_date, years) {
 
   if(as.numeric(stringr::str_sub(min_date, 2, 3)) > as.numeric(stringr::str_sub(max_date, 2, 3))) {
 
-    cat('creating winter season date ranges (across years)...\n')
+    cat('creating winter season date ranges (season spans years)...\n')
 
     tibble::tibble(
       year = years,
@@ -47,7 +47,7 @@ create_season_dates <- function(min_date, max_date, years) {
 
   } else {
 
-    cat('creating season date ranges (within years)...\n')
+    cat('creating season date ranges (season does not span years)...\n')
 
     tibble::tibble(
       year = years,

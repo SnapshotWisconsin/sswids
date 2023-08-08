@@ -31,7 +31,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
     dplyr::ungroup() %>%
     dplyr::select(-data)
 
-  cat('querying detections...\n')
+  cat('querying detections from database...\n')
 
   # detections
   detections_df <-
@@ -62,7 +62,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
       detection_datetime, class_method, class_key, species, count
     )
 
-  cat('querying effort...\n')
+  cat('querying effort from database...\n')
 
   # effort
   # now query database for effort across different years but same season
@@ -91,7 +91,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
     # organize
     dplyr::arrange(year, camera_location_seq_no, start_date)
 
-  cat('querying locations...\n')
+  cat('querying locations from database...\n')
 
   # locations
   # get camera location lat/long coordinates
