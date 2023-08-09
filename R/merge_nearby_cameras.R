@@ -56,7 +56,7 @@ merge_nearby_cameras <- function(locs_df, cam_distance, effort_df) {
   # join in buffer id to effort data
   effort_df <-
     effort_df %>%
-    dplyr::left_join(., cam_in_buffer) %>%
+    dplyr::left_join(., cam_in_buffer, by = "camera_location_seq_no") %>%
     # buffer id turns into final cam_site_id: cam_xxxx
     dplyr::mutate(cam_site_id = stringr::str_c('cam_', sprintf("%04d", buffer_id))) %>%
     # clean up
