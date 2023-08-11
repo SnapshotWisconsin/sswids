@@ -77,7 +77,7 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
     dplyr::distinct(TRIGGER_SEQ_NO, UPLOAD_BATCH_SEQ_NO, CAMERA_LOCATION_SEQ_NO, FINAL_DATE_TIME, PHOTO_TYPE_CODE, DELETE_TRIGGER) %>%
     # only interested in motion triggers that shouldn't be deleted
     # and between min/max year
-    dplyr::filter(PHOTO_TYPE_CODE == 'MOTION_TRIGGERED' & DELETE_TRIGGER == 'NO' & lubridate::year(FINAL_DATE_TIME) >= min_year & lubridate::year(FINAL_DATE_TIME) <= max_year) %>%
+    dplyr::filter(PHOTO_TYPE_CODE == 'MOTION_TRIGGERED' & DELETE_TRIGGER == 'NO' & year(FINAL_DATE_TIME) >= min_year & year(FINAL_DATE_TIME) <= max_year) %>%
     # filter photos within our season date ranges
     dplyr::filter(
       # this filters season dates for each year
@@ -91,7 +91,7 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
     dplyr::select(CAMERA_LOCATION_SEQ_NO, FINAL_DATE_TIME, TRIGGER_SEQ_NO, classified) %>%
     # convert datetime to date (this actually is still a datetime, but any given image on a day gets
     # a date with YYYY-MM-DD 00:00:00). this allows tallying photos by 'date'
-    dplyr::mutate(date = to_date(paste(lubridate::year(FINAL_DATE_TIME), lubridate::month(FINAL_DATE_TIME), lubridate::day(FINAL_DATE_TIME), sep = "-"), "YYYY-MM-DD")) %>%
+    dplyr::mutate(date = to_date(paste(year(FINAL_DATE_TIME), month(FINAL_DATE_TIME), day(FINAL_DATE_TIME), sep = "-"), "YYYY-MM-DD")) %>%
     # tally triggers classified or not (== NA) per camera_location_seq_no and date
     dplyr::group_by(CAMERA_LOCATION_SEQ_NO, date, classified) %>%
     # this creates n, which is equal to number of triggers
