@@ -14,6 +14,8 @@
 
 calculate_prop_classified <- function(effort, min_date, max_date, min_year, max_year) {
 
+  cat('this may take several minutes...\n')
+
   # camera site by year combinations to retain for proportion classified
   # needed later when filtering the sswi photo table
   cam_loc_seq_no_x_year <-
