@@ -4,12 +4,12 @@
 \alias{spatial_subset}
 \title{Spatially Subset Camera Site Locations}
 \usage{
-spatial_subset(df, polygon_layer)
+spatial_subset(locations, sf_layer)
 }
 \arguments{
-\item{df}{Data frame of camera locations}
+\item{locations}{Data frame of camera locations}
 
-\item{polygon_layer}{sf polygon object}
+\item{sf_layer}{sf polygon object}
 }
 \value{
 data frame

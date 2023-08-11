@@ -2,8 +2,8 @@
 #' Spatially Subset Camera Site Locations
 #'
 #' Spatially subset camera site locations using an sf polygon object.
-#' @param df Data frame of camera locations
-#' @param polygon_layer sf polygon object
+#' @param locations Data frame of camera locations
+#' @param sf_layer sf polygon object
 #'
 #' @return data frame
 #' @export
@@ -13,10 +13,20 @@
 #' spatial_subset(locs_df, _sf)
 #' }
 
-spatial_subset <- function(df, polygon_layer) {
+spatial_subset <- function(locations, sf_layer) {
 
-  df %>%
-    # polygon layer must be in 3071 projection
-    sf::st_intersection(., polygon_layer %>% sf::st_transform(., 3071))
+  # find cam_site_ids within intersection
+  focal_cams <-
+    locations %>%
+    st_as_sf(coords = c('lon', 'lat'), crs = 3071) %>%
+    st_intersection(., sf_layer %>% st_transform(., 3071)) %>%
+    pull(cam_site_id)
+
+  # use these to discard locations we don't need
+  locations <-
+    locations %>%
+    filter(cam_site_id %in% focal_cams)
+
+  return(locations)
 
 }
