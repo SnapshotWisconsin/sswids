@@ -14,7 +14,7 @@
 
 calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_year, max_year) {
 
-  cat('this may take several minutes...\n')
+  cat('calculating the proportion of triggers classified may take several minutes...\n')
 
   # camera site by year combinations to retain for proportion classified
   # needed later when filtering the sswi photo table
