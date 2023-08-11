@@ -198,7 +198,7 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
     # add in mean date of sampling occasion
     dplyr::left_join(., data_to_fill) %>%
     # organize
-    dplyr::select(cam_site_id, year, occ, classified, total, ppn, days_active, man_date_occasion_df)
+    dplyr::select(cam_site_id, year, occ, classified, total, ppn_classified, days_active, mean_date)
 
   return(effort_ppn_df)
 

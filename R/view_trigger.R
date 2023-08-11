@@ -7,6 +7,10 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' view_trigger(21733907)
+#' }
+
 
 view_trigger <- function(trigger_id) {
 
