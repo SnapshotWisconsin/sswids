@@ -4,7 +4,14 @@
 \alias{calculate_prop_classified}
 \title{Title}
 \usage{
-calculate_prop_classified(effort, min_date, max_date, min_year, max_year)
+calculate_prop_classified(
+  seasons,
+  effort,
+  min_date,
+  max_date,
+  min_year,
+  max_year
+)
 }
 \arguments{
 \item{max_year}{}

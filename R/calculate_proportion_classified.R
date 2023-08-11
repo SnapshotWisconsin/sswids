@@ -12,7 +12,7 @@
 #'
 #' @examples
 
-calculate_prop_classified <- function(effort, min_date, max_date, min_year, max_year) {
+calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_year, max_year) {
 
   cat('this may take several minutes...\n')
 
@@ -21,6 +21,32 @@ calculate_prop_classified <- function(effort, min_date, max_date, min_year, max_
   cam_loc_seq_no_x_year <-
     effort %>%
     dplyr::distinct(camera_location_seq_no, cam_site_id, year)
+
+  day_occasion_df <-
+    seasons %>%
+    group_by(year) %>%
+    nest() %>%
+    # create date sequence for each year
+    mutate(date = map(data, date_sequence)) %>%
+    unnest(date) %>%
+    select(-data) %>%
+    # using row_number give day of season starting with day 1
+    mutate(day_of_season = row_number()) %>%
+    ungroup() %>%
+    # split season into equal intervals (1-day, 3-day, ...1 week)
+    # ntile() assigns each day into a sampling occasion
+    mutate(
+      occ = ntile(day_of_season, num_occasions)
+    )
+
+  man_date_occasion_df <-
+    day_occasion_df %>%
+    group_by(year, occ) %>%
+    summarise(
+      # not exactly an ordinal date, just average day from the season start date
+      mean_date = mean(day_of_season)
+    ) %>%
+    ungroup()
 
   # first, lazily query classifications (i.e., don't load into memory yet)
   class_lazy <-
@@ -168,7 +194,11 @@ calculate_prop_classified <- function(effort, min_date, max_date, min_year, max_
         total == 0 ~ 1,
         TRUE ~ classified / total
       )
-    )
+    ) %>%
+    # add in mean date of sampling occasion
+    dplyr::left_join(., data_to_fill) %>%
+    # organize
+    dplyr::select(cam_site_id, year, occ, classified, total, ppn, days_active, man_date_occasion_df)
 
   return(effort_ppn_df)
 
