@@ -144,6 +144,30 @@ calculate_prop_classified <- function(effort, min_date, max_date, min_year, max_
     complete(occ = 1:num_occasions, fill = list(classified = 0, total = 0)) %>%
     ungroup()
 
-  return(photos_by_cam_df)
+  effort_ppn_df <-
+    effort %>%
+    left_join(
+      .,
+      photos_by_cam_df,
+      by = c("cam_site_id", "year", "occ")
+      ) %>%
+    # filter(is.na(classified)) %>% print(n=Inf)
+    # there are some NAs now...seem to be when there is effort but no photos in the photo table
+    # or 0 effort (and thus no photos)
+    # so turn those into 0s now
+    mutate(
+      classified = replace_na(classified, 0),
+      total = replace_na(total, 0)
+    ) %>%
+    # calculate proportion classified
+    mutate(
+      ppn_classified = case_when(
+        # I think we want ppn to be 1 here as there are no photos to be classified?
+        total == 0 ~ 1,
+        TRUE ~ classified / total
+      )
+    )
+
+  return(effort_ppn_df)
 
 }
