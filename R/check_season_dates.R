@@ -6,13 +6,9 @@
 #'
 #' @examples
 
-check_season_dates <- function() {
+check_season_dates <- function(seasons_df) {
 
-  create_season_dates(
-    min_date,
-    max_date,
-    years
-  ) %>%
+  seasons_df %>%
     dplyr::group_by(year) %>%
     dplyr::mutate(
       season_length_days = purrr::map2_int(start_date, end_date, ~length(seq.Date(.x, .y, by = 'day')))

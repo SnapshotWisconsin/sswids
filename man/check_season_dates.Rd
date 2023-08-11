@@ -4,7 +4,7 @@
 \alias{check_season_dates}
 \title{Title}
 \usage{
-check_season_dates()
+check_season_dates(seasons_df)
 }
 \value{
 
