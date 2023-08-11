@@ -15,3 +15,8 @@ view_trigger(trigger_id)
 \description{
 Look at a set of triggers in .gif format
 }
+\examples{
+\dontrun{
+view_trigger(21733907)
+}
+}
