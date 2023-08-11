@@ -2,8 +2,10 @@
 
 export("%>%")
 export(average_camera_coordinates)
+export(calculate_prop_classified)
 export(check_season_dates)
 export(connect_to_sswidb)
+export(create_sampling_occasions)
 export(create_season_dates)
 export(date_sequence)
 export(detect_remove_overlap)
