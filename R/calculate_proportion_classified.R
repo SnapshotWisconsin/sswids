@@ -1,6 +1,7 @@
 
 #' Title
 #'
+#' @param seasons
 #' @param effort_by_day
 #' @param effort_by_occ
 #' @param min_date

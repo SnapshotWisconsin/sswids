@@ -2,7 +2,7 @@
 #' Title
 #'
 #' @param seasons
-#' @param effort
+#' @param effort_by_day
 #' @param num_occasions
 #'
 #' @return

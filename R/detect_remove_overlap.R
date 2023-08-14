@@ -10,6 +10,7 @@
 
 detect_remove_overlap <- function(effort_df) {
 
+  # warnings indicate instances of no overlap
   suppressWarnings(
     effort_df <-
       effort_df %>%

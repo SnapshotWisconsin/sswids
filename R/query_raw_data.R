@@ -1,5 +1,12 @@
 
 #' Title
+#'
+#' @param species
+#' @param grid
+#' @param min_year
+#' @param max_year
+#' @param min_date
+#' @param max_date
 #' @return
 #' @export
 #'

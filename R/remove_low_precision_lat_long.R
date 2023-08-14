@@ -2,7 +2,8 @@
 #' Filter Out Low Precision Camera Locations
 #'
 #' Remove camera_location_seq_no's that have a low precision latitude or longitude coordinate.
-#' @param df Data frame of camera locations
+#' @param locations Data frame of camera locations
+#' @param coordinate_precision Number of digits after decimal for determining whether a location is precise or not
 #' @importFrom dplyr rowwise
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter

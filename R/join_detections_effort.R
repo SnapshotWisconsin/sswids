@@ -1,8 +1,9 @@
 
 #' Title
 #'
-#' @param effort
+#' @param effort_by_occ
 #' @param detections
+#' @param discard_na_rows
 #'
 #' @return
 #' @export

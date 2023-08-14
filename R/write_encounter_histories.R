@@ -1,14 +1,14 @@
 
 #' Write Encounter Histories for Abundance Analysis
 #'
-#' @param df
+#' @param effort_by_occ
 #'
 #' @return csv files of encounter histories by class (e.g., age and sex)
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' write_encounter_histories(df)
+#' write_encounter_histories(effort_by_occ)
 #' }
 
 # automate writing of encounter histories

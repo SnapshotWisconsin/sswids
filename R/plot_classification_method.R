@@ -1,14 +1,14 @@
 
 #' Title
 #'
-#' @param detections_df
+#' @param detections
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-plot_classification_method <- function(detections_df) {
+plot_classification_method <- function(detections) {
 
   title <- unique(detections_df$species)
 
