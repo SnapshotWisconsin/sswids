@@ -4,14 +4,14 @@
 \alias{merge_nearby_cameras}
 \title{Merge Nearby Camera Locations}
 \usage{
-merge_nearby_cameras(locs_df, cam_distance, effort_df)
+merge_nearby_cameras(locations, cam_distance, effort_df)
 }
 \arguments{
-\item{locs_df}{Data frame of camera_location_seq_no's and coordinates}
-
 \item{cam_distance}{Distance (meters) in which nearby camera locations should be combined}
 
 \item{effort_df}{Data frame of days of effort for each camera_location_seq_no}
+
+\item{locs_df}{Data frame of camera_location_seq_no's and coordinates}
 }
 \value{
 

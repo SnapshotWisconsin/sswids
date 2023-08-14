@@ -11,10 +11,10 @@
 #'
 #' @examples
 
-merge_nearby_cameras <- function(locs_df, cam_distance, effort_df) {
+merge_nearby_cameras <- function(locations, cam_distance, effort_df) {
 
   locs_sf <-
-    locs_df %>%
+    locations %>%
     # don't need the grid ID
     dplyr::select(-dnr_grid_id) %>%
     sf::st_as_sf(coords = c('lon', 'lat'), crs = 4326) %>%
