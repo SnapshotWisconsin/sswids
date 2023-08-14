@@ -20,10 +20,10 @@
 #' locs_df %>% remove_low_precision_lat_long(coordinate_precision)
 #' }
 
-remove_low_precision_lat_long <- function(df, coordinate_precision) {
+remove_low_precision_lat_long <- function(locations, coordinate_precision) {
 
   # locations data frame
-  df %>%
+  locations %>%
     # function in next line needs to be done on a row-by-row basis
     rowwise() %>%
     # n_digits() is a custom function that counts digits after decimal

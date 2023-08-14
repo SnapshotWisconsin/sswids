@@ -9,7 +9,7 @@
 #'
 #' @examples
 
-join_detections_effort <- function(effort, detections, discard_na_rows = TRUE) {
+join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = TRUE) {
 
   # then we can join detections (species counts) to particular observation periods
   # in the effort data frame
@@ -77,7 +77,7 @@ join_detections_effort <- function(effort, detections, discard_na_rows = TRUE) {
     # discard from effort
     effort <-
       effort %>%
-      dplyr::anti_join(., na_effort_df)
+      dplyr::anti_join(., na_effort_df, by = c("cam_site_id", "year"))
 
   }
 

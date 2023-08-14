@@ -4,7 +4,7 @@
 \alias{remove_low_precision_lat_long}
 \title{Filter Out Low Precision Camera Locations}
 \usage{
-remove_low_precision_lat_long(df, coordinate_precision)
+remove_low_precision_lat_long(locations, coordinate_precision)
 }
 \arguments{
 \item{df}{Data frame of camera locations}

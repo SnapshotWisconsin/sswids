@@ -4,7 +4,7 @@
 \alias{join_detections_effort}
 \title{Title}
 \usage{
-join_detections_effort(effort, detections, discard_na_rows = TRUE)
+join_detections_effort(effort_by_occ, detections, discard_na_rows = TRUE)
 }
 \arguments{
 \item{detections}{}

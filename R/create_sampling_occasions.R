@@ -10,7 +10,7 @@
 #'
 #' @examples
 
-create_sampling_occasions <- function(seasons, effort, num_occasions) {
+create_sampling_occasions <- function(seasons, effort_by_day, num_occasions) {
 
   # create day of season data frame to join occasion number to effort/detection dates
   day_occasion_df <-
@@ -31,8 +31,8 @@ create_sampling_occasions <- function(seasons, effort, num_occasions) {
     )
 
   # now summarize effort over sampling occasion
-  effort <-
-    effort %>%
+  effort_by_day <-
+    effort_by_day %>%
     dplyr::left_join(
       .,
       # rename date as date_active to match effort data frame
@@ -52,12 +52,12 @@ create_sampling_occasions <- function(seasons, effort, num_occasions) {
 
   # zero-fill in effort for any missing occasions here
   # ONLY for cam_site_id x year combinations where a camera is already operational
-  effort <-
-    effort %>%
+  effort_by_day <-
+    effort_by_day %>%
     dplyr::group_by(cam_site_id, year) %>%
     tidyr::complete(occ = 1:num_occasions, fill = list(days_active = 0)) %>%
     dplyr::ungroup()
 
-  return(effort)
+  return(effort_by_day)
 
 }

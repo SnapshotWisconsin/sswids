@@ -4,7 +4,7 @@
 \alias{create_sampling_occasions}
 \title{Title}
 \usage{
-create_sampling_occasions(seasons, effort, num_occasions)
+create_sampling_occasions(seasons, effort_by_day, num_occasions)
 }
 \arguments{
 \item{num_occasions}{}
