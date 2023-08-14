@@ -6,7 +6,8 @@
 \usage{
 calculate_prop_classified(
   seasons,
-  effort,
+  effort_by_day,
+  effort_by_occ,
   min_date,
   max_date,
   min_year,

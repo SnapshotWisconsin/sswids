@@ -1,22 +1,22 @@
 
 #' Look at a set of triggers in .gif format
 #'
-#' @param trigger_id numeric trigger ID
+#' @param trigger_seq_no trigger sequence number
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' view_trigger(21733907)
+#' view_trigger(trigger_seq_no = 21733907)
 #' }
 
 
-view_trigger <- function(trigger_id) {
+view_trigger <- function(trigger_seq_no) {
 
   # locate url for each trigger (set of 3 photos per trigger)
   photo_links <-
-    sswidb::sswidb_trigger_photo_urls(conn, trigger_id) %>%
+    sswidb::sswidb_trigger_photo_urls(conn, trigger_seq_no) %>%
     tibble::as_tibble() %>%
     dplyr::select(-PHOTO_TYPE_CODE) %>%
     dplyr::mutate(trigger_name = basename(PHOTO_LINK_URL))

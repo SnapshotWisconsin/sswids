@@ -4,10 +4,10 @@
 \alias{view_trigger}
 \title{Look at a set of triggers in .gif format}
 \usage{
-view_trigger(trigger_id)
+view_trigger(trigger_seq_no)
 }
 \arguments{
-\item{trigger_id}{numeric trigger ID}
+\item{trigger_seq_no}{trigger sequence number}
 }
 \value{
 
@@ -17,6 +17,6 @@ Look at a set of triggers in .gif format
 }
 \examples{
 \dontrun{
-view_trigger(21733907)
+view_trigger(trigger_seq_no = 21733907)
 }
 }

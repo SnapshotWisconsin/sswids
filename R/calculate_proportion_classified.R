@@ -1,7 +1,8 @@
 
 #' Title
 #'
-#' @param effort
+#' @param effort_by_day
+#' @param effort_by_occ
 #' @param min_date
 #' @param max_date
 #' @param min_year
@@ -12,14 +13,14 @@
 #'
 #' @examples
 
-calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_year, max_year) {
+calculate_prop_classified <- function(seasons, effort_by_day, effort_by_occ, min_date, max_date, min_year, max_year) {
 
   cat('calculating the proportion of triggers classified may take several minutes...\n')
 
   # camera site by year combinations to retain for proportion classified
   # needed later when filtering the sswi photo table
   cam_loc_seq_no_x_year <-
-    effort %>%
+    effort_by_day %>%
     dplyr::distinct(camera_location_seq_no, cam_site_id, year)
 
   day_occasion_df <-
@@ -39,7 +40,7 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
       occ = ntile(day_of_season, num_occasions)
     )
 
-  man_date_occasion_df <-
+  mean_date_occasion_df <-
     day_occasion_df %>%
     group_by(year, occ) %>%
     summarise(
@@ -63,7 +64,7 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
     dplyr::mutate(classified = 'yes')
 
   # if seasons span years, add 1 below to end_date when filtering photo table; otherwise == 0
-  year_plus_one <- add_year()
+  year_plus_one <- sswids:::add_year()
 
   # now query photo table
   # 1) query photo table to get all photos within season date range
@@ -173,12 +174,12 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
     dplyr::ungroup()
 
   effort_ppn_df <-
-    effort %>%
+    effort_by_occ %>%
     dplyr::left_join(
       .,
       photos_by_cam_df,
       by = c("cam_site_id", "year", "occ")
-      ) %>%
+    ) %>%
     # filter(is.na(classified)) %>% print(n=Inf)
     # there are some NAs now...seem to be when there is effort but no photos in the photo table
     # or 0 effort (and thus no photos)
@@ -196,7 +197,7 @@ calculate_prop_classified <- function(seasons, effort, min_date, max_date, min_y
       )
     ) %>%
     # add in mean date of sampling occasion
-    dplyr::left_join(., data_to_fill) %>%
+    dplyr::left_join(., mean_date_occasion_df, by = c("year", "occ")) %>%
     # organize
     dplyr::select(cam_site_id, year, occ, classified, total, ppn_classified, days_active, mean_date)
 
