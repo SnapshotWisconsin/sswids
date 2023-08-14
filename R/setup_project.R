@@ -10,8 +10,11 @@
 
 setup_project <- function() {
 
-  # write data folder
-  fs::dir_create(here::here('data'))
+  # write data folders; raw
+  fs::dir_create(here::here('data_raw'))
+
+  # clean
+  fs::dir_create(here::here('data_clean'))
 
   # write output folder
   fs::dir_create(here::here('output'))
