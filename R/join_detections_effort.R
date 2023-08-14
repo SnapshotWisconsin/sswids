@@ -13,8 +13,8 @@ join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = 
 
   # then we can join detections (species counts) to particular observation periods
   # in the effort data frame
-  effort <-
-    effort %>%
+  effort_by_occ <-
+    effort_by_occ %>%
     dplyr::left_join(., detections, by = c("cam_site_id", "year", "occ")) %>%
     # and fix counts while we're at it
     # NAs here are actually 0s; otherwise use count as is
@@ -33,8 +33,8 @@ join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = 
   # but 0s should be converted back to NA if 1) the camera is not operational,
   # or 2) the proportion of photos classified dips below the desired threshold
   # during a sampling occasion
-  effort <-
-    effort %>%
+  effort_by_occ <-
+    effort_by_occ %>%
     dplyr::mutate_at(
       dplyr::vars(
         matches("[A-Z]", ignore.case = FALSE)
@@ -51,7 +51,7 @@ join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = 
 
     # find all site x year with all NA rows
     na_effort_df <-
-      effort %>%
+      effort_by_occ %>%
       # grab first 3 columns here plus any upper case (class keys)
       dplyr::select(year, cam_site_id, occ, matches("[A-Z]", ignore.case = FALSE)) %>%
       # only need 1 class key, so subset to first 4 columns (last is one class key)
@@ -75,12 +75,12 @@ join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = 
       dplyr::select(year, cam_site_id)
 
     # discard from effort
-    effort <-
-      effort %>%
+    effort_by_occ <-
+      effort_by_occ %>%
       dplyr::anti_join(., na_effort_df, by = c("cam_site_id", "year"))
 
   }
 
-  return(effort)
+  return(effort_by_occ)
 
 }
