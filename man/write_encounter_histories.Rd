@@ -7,7 +7,7 @@
 write_encounter_histories(effort_by_occ)
 }
 \arguments{
-\item{df}{}
+\item{effort_by_occ}{}
 }
 \value{
 csv files of encounter histories by class (e.g., age and sex)
@@ -17,6 +17,6 @@ Write Encounter Histories for Abundance Analysis
 }
 \examples{
 \dontrun{
-write_encounter_histories(df)
+write_encounter_histories(effort_by_occ)
 }
 }

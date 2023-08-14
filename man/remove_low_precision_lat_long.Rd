@@ -7,7 +7,9 @@
 remove_low_precision_lat_long(locations, coordinate_precision)
 }
 \arguments{
-\item{df}{Data frame of camera locations}
+\item{locations}{Data frame of camera locations}
+
+\item{coordinate_precision}{Number of digits after decimal for determining whether a location is precise or not}
 }
 \value{
 Locations data frame with high precision coordinates

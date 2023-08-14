@@ -11,6 +11,8 @@
 
 average_camera_coordinates <- function(locations, effort_by_day) {
 
+  # use this for weighting lat/long averages below
+  # active_days is summed across years if there are multiple years for a site
   effort_by_cam_site_df <-
     effort_by_day_df %>%
     dplyr::group_by(cam_site_id, camera_location_seq_no) %>%

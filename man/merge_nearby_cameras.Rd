@@ -7,11 +7,11 @@
 merge_nearby_cameras(locations, cam_distance, effort_df)
 }
 \arguments{
+\item{locations}{Data frame of camera_location_seq_no's and coordinates}
+
 \item{cam_distance}{Distance (meters) in which nearby camera locations should be combined}
 
 \item{effort_df}{Data frame of days of effort for each camera_location_seq_no}
-
-\item{locs_df}{Data frame of camera_location_seq_no's and coordinates}
 }
 \value{
 

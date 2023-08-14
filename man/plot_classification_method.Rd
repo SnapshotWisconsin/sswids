@@ -4,10 +4,10 @@
 \alias{plot_classification_method}
 \title{Title}
 \usage{
-plot_classification_method(detections_df)
+plot_classification_method(detections)
 }
 \arguments{
-\item{detections_df}{}
+\item{detections}{}
 }
 \value{
 
