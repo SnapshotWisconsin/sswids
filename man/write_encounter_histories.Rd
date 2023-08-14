@@ -4,7 +4,7 @@
 \alias{write_encounter_histories}
 \title{Write Encounter Histories for Abundance Analysis}
 \usage{
-write_encounter_histories(df)
+write_encounter_histories(effort_by_occ)
 }
 \arguments{
 \item{df}{}

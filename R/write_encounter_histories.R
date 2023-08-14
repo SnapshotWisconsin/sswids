@@ -11,13 +11,14 @@
 #' write_encounter_histories(df)
 #' }
 
-write_encounter_histories <- function(df) {
+# automate writing of encounter histories
+write_encounter_histories <- function(effort_by_occ) {
 
   # grab class keys from effort data
   class_keys <-
     colnames(
-      df %>%
-        dplyr::select(dplyr::matches("[A-Z]", ignore.case = FALSE))
+      effort_by_occ %>%
+        dplyr::select(matches("[A-Z]", ignore.case = FALSE))
     )
 
   # loop through each class key, filter effort, create encounter histories,
@@ -29,7 +30,7 @@ write_encounter_histories <- function(df) {
     cat("\n")
 
     # save each class key encounter history to csv
-    df %>%
+    effort_by_occ %>%
       dplyr::select(year, cam_site_id, occ, class_keys[i]) %>%
       tidyr::pivot_wider(
         names_from = c(occ),
@@ -37,7 +38,7 @@ write_encounter_histories <- function(df) {
         names_glue = "{'occ'}_{occ}",
         values_from = class_keys[i]
       ) %>%
-      vroom::vroom_write(here::here('data', stringr::str_c('eh_df_', class_keys[i], '.csv')), delim = ',', progress = FALSE)
+      vroom::vroom_write(here::here('data_clean', stringr::str_c('eh_df_', class_keys[i], '.csv')), delim = ',', progress = FALSE)
 
   }
 

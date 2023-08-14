@@ -2,19 +2,25 @@
 #' Title
 #'
 #' @param locations
-#' @param effort
+#' @param effort_by_day
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-average_camera_coordinates <- function(locations, effort) {
+average_camera_coordinates <- function(locations, effort_by_day) {
+
+  effort_by_cam_site_df <-
+    effort_by_day_df %>%
+    dplyr::group_by(cam_site_id, camera_location_seq_no) %>%
+    dplyr::tally(name = 'active_days') %>%
+    dplyr::ungroup()
 
   # take our locations
   locations %>%
     # join in the cam_site_id- and camera_location_seq_no-specific effort
-    dplyr::left_join(., effort, by = "camera_location_seq_no") %>%
+    dplyr::left_join(., effort_by_cam_site_df, by = "camera_location_seq_no") %>%
     # organize
     dplyr::arrange(cam_site_id) %>%
     # convert these locations to meter projection before computing weighted average

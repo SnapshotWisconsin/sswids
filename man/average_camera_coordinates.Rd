@@ -4,10 +4,10 @@
 \alias{average_camera_coordinates}
 \title{Title}
 \usage{
-average_camera_coordinates(locations, effort)
+average_camera_coordinates(locations, effort_by_day)
 }
 \arguments{
-\item{effort}{}
+\item{effort_by_day}{}
 }
 \value{
 
