@@ -64,7 +64,7 @@ calculate_prop_classified <- function(seasons, effort_by_day, effort_by_occ, min
     dplyr::mutate(classified = 'yes')
 
   # if seasons span years, add 1 below to end_date when filtering photo table; otherwise == 0
-  year_plus_one <- sswids:::add_year()
+  year_plus_one <- add_year()
 
   # now query photo table
   # 1) query photo table to get all photos within season date range
