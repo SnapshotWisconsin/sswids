@@ -7,12 +7,13 @@
 #' @param max_year
 #' @param min_date
 #' @param max_date
+#' @param prec
 #' @return
 #' @export
 #'
 #' @examples
 
-query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date) {
+query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date, prec) {
 
   # what years of data to query?
   years <- seq(min_year, max_year, 1)
@@ -56,6 +57,8 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
         species_name = species,
         # query one or multiple grid types
         grid = grid,
+        # set precision level
+        prec = prec,
         conn = conn
       )
     ) %>%

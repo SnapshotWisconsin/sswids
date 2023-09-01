@@ -4,7 +4,7 @@
 \alias{query_raw_data}
 \title{Title}
 \usage{
-query_raw_data(species, grid, min_year, max_year, min_date, max_date)
+query_raw_data(species, grid, min_year, max_year, min_date, max_date, prec)
 }
 \value{
 
