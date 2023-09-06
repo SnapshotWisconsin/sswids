@@ -17,7 +17,7 @@ list_spatial_layers <- function() {
     'furbearer_zones', 'north/south trapping zones',
     'wolf_zones', 'wolf hunting management zones',
     'ruffed_grouse_priority_areas', 'ruffed grouse priority areas',
-    'bear zones', 'bear hunting management zones'
+    'bear_zones', 'bear hunting management zones'
   ) %>%
     dplyr::arrange(layer_name) %>%
     print(n = Inf)
