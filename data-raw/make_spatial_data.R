@@ -37,7 +37,7 @@ ecological_landscapes <-
 
 turkey_mgt_zones <-
   get_spatial_layer('https://dnrmaps.wi.gov/arcgis/rest/services/DW_Map_Dynamic/EN_Hunting_Zones_WTM_Ext/MapServer/3') %>%
-  select(-OBJECTID, -SHAPE.AREA, -SHAPE.LEN, -SHAPE) %>%
+  select(-OBJECTID, -SHAPE.AREA, -SHAPE.LEN) %>%
   janitor::clean_names()
 
 
@@ -47,6 +47,14 @@ furbearer_zones <-
   st_read(here::here('data-raw/Zones.shp')) %>%
   st_transform(., 4326) %>%
   select(-OBJECTID, -Shape_Leng, -Shape_Area) %>%
+  janitor::clean_names()
+
+
+# wolf zones --------------------------------------------------------------
+
+wolf_zones <-
+  get_spatial_layer('https://dnrmaps.wi.gov/arcgis/rest/services/DW_Map_Dynamic/EN_Hunting_Zones_WTM_Ext/MapServer/0') %>%
+  select(-OBJECTID, -SHAPE.AREA, -SHAPE.LEN) %>%
   janitor::clean_names()
 
 
@@ -61,7 +69,8 @@ sswids_spatial_layers <-
     counties = counties,
     ecological_landscapes = ecological_landscapes,
     turkey_mgt_zones = turkey_mgt_zones,
-    furbearer_zones = furbearer_zones
+    furbearer_zones = furbearer_zones,
+    wolf_zones = wolf_zones
   )
 
 # this updates the /data folder

@@ -14,7 +14,8 @@ list_spatial_layers <- function() {
     'counties', 'county boundaries',
     'ecological_landscapes', 'ecological landscapes',
     'turkey_mgt_zones', 'turkey hunting management zones',
-    'furbearer_zones', 'north/south trapping zones'
+    'furbearer_zones', 'north/south trapping zones',
+    'wolf_zones', 'wolf hunting management zones'
   ) %>%
     arrange(layer_name)
 
