@@ -107,7 +107,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
   # get camera location lat/long coordinates
   locs_df <-
     sswidb::sswidb_location(
-      # use unique camera locations from effort
+      # use unique camera locations from effort data frame
       camera_location_seq_no = unique(effort_df$camera_location_seq_no),
       conn = conn
     ) %>%
