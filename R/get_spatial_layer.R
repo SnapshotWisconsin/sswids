@@ -36,7 +36,7 @@ get_spatial_layer <- function(layer_name) {
 
   } else if (layer_name == 'ruffed_grouse_priority_areas') {
 
-    layer <- sswids_spatial_layers$wolf_zones
+    layer <- sswids_spatial_layers$ruffed_grouse_priority_areas
 
   }
 
