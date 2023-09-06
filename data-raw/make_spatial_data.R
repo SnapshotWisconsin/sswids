@@ -64,6 +64,14 @@ ruffed_grouse_priority_areas <-
   st_read(here::here('data-raw/rugr_priority_regions.shp'))
 
 
+# bear --------------------------------------------------------------------
+
+bear_zones <-
+  get_spatial_layer('https://dnrmaps.wi.gov/arcgis/rest/services/DW_Map_Dynamic/EN_Hunting_Zones_WTM_Ext/MapServer/1') %>%
+  select(-OBJECTID, -SHAPE.AREA, -SHAPE.LEN, -GLOBALID) %>%
+  janitor::clean_names()
+
+
 # save raw spatial data ---------------------------------------------------
 
 sswids_spatial_layers <-
@@ -74,7 +82,8 @@ sswids_spatial_layers <-
     turkey_mgt_zones = turkey_mgt_zones,
     furbearer_zones = furbearer_zones,
     wolf_zones = wolf_zones,
-    ruffed_grouse_priority_areas = ruffed_grouse_priority_areas
+    ruffed_grouse_priority_areas = ruffed_grouse_priority_areas,
+    bear_zones = bear_zones
   )
 
 # this updates the /data folder

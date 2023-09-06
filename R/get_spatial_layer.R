@@ -38,6 +38,10 @@ get_spatial_layer <- function(layer_name) {
 
     layer <- sswids_spatial_layers$ruffed_grouse_priority_areas
 
+  } else if (layer_name == 'bear_zones') {
+
+    layer <- sswids_spatial_layers$bear_zones
+
   }
 
   return(layer)
