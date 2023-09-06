@@ -42,3 +42,8 @@ devtools::install_github("SnapshotWisconsin/sswids")
 - Click `Push`
 
 Then update R package by first removing with `remove.packages()` or `devtools::install_github("SnapshotWisconsin/sswids", force = TRUE)`
+
+## Update spatial data
+
+- Open `data-raw/make_spatial_data.R`
+- Grab DNR GIS files using `arcpullr` package or drop shapefiles into `data-raw`
