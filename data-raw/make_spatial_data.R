@@ -74,7 +74,7 @@ sswids_spatial_layers <-
     turkey_mgt_zones = turkey_mgt_zones,
     furbearer_zones = furbearer_zones,
     wolf_zones = wolf_zones,
-    ruffed_grouse_priority_areas = counties
+    ruffed_grouse_priority_areas = ruffed_grouse_priority_areas
   )
 
 # this updates the /data folder
