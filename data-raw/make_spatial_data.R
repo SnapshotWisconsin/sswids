@@ -61,10 +61,7 @@ wolf_zones <-
 # ruffed grouse -----------------------------------------------------------
 
 ruffed_grouse_priority_areas <-
-  st_read(here::here('data-raw/Ruffed_Grouse_Priority_Regions.shp')) %>%
-  st_transform(., 4326) %>%
-  select(-AREA, -PERIMETER, -CTY_, -DNR_CTY_NO, -CTY_FIPS) %>%
-  janitor::clean_names()
+  st_read(here::here('data-raw/rugr_priority_regions.shp'))
 
 
 # save raw spatial data ---------------------------------------------------
@@ -77,7 +74,7 @@ sswids_spatial_layers <-
     turkey_mgt_zones = turkey_mgt_zones,
     furbearer_zones = furbearer_zones,
     wolf_zones = wolf_zones,
-    ruffed_grouse_priority_areas = ruffed_grouse_priority_areas
+    ruffed_grouse_priority_areas = counties
   )
 
 # this updates the /data folder
