@@ -24,6 +24,15 @@ counties <-
   select(-OBJECTID, -SHAPE.AREA, -SHAPE.LEN, -DNR_CNTY_CODE, -COUNTY_FIPS_CODE) %>%
   janitor::clean_names()
 
+
+# ecological landscapes ---------------------------------------------------
+
+ecological_landscapes <-
+  get_spatial_layer('https://dnrmaps.wi.gov/arcgis/rest/services/DW_Map_Dynamic/EN_Forest_Land_Cover_WTM_Ext/MapServer/3') %>%
+  select(-OBJECTID, -SHAPE.AREA, -SHAPE.LEN, -DNR_CNTY_CODE, -COUNTY_FIPS_CODE) %>%
+  janitor::clean_names()
+
+
 # ruffed grouse -----------------------------------------------------------
 
 
@@ -31,11 +40,9 @@ counties <-
 
 sswids_spatial_layers <-
   list(
-    dmus,
-    counties
+    dmus = dmus,
+    counties = counties
   )
 
+# this updates the /data folder
 use_data(sswids_spatial_layers, overwrite = TRUE)
-
-
-load_all()
