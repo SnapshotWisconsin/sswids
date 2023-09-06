@@ -18,6 +18,6 @@ list_spatial_layers <- function() {
     'wolf_zones', 'wolf hunting management zones',
     'ruffed_grouse_priority_areas', 'ruffed grouse priority areas'
   ) %>%
-    arrange(layer_name)
+    dplyr::arrange(layer_name)
 
 }
