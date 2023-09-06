@@ -12,5 +12,5 @@ You can install the development version of sswids from [GitHub](https://github.c
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("jaymwin/sswids")
+devtools::install_github("SnapshotWisconsin/sswids")
 ```
