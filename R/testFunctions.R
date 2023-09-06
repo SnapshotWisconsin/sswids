@@ -11,7 +11,6 @@
 #' @export
 #'
 #' @examples
-#' @examples
 #' \dontrun{
 #' a <- seq(as.Date("2020-10-01"),as.Date("2020-12-31"),1)
 #' tile(a,7)
