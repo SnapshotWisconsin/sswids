@@ -17,7 +17,6 @@
 #' tile(a,7)
 #' }
 
-
 tile <- function(x, len){
   mod <- as.integer(max(x) - min(x) +1) %% len
   cutpoints <- seq(min(x), max(x)+1, len)
