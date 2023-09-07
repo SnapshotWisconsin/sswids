@@ -9,9 +9,6 @@ detect_remove_overlap(effort_df)
 \arguments{
 \item{effort_df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

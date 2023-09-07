@@ -9,9 +9,6 @@ effort_by_day(effort_df)
 \arguments{
 \item{effort_df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

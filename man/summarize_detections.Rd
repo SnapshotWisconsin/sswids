@@ -9,9 +9,6 @@ summarize_detections(detections, seasons)
 \arguments{
 \item{seasons}{}
 }
-\value{
-
-}
 \description{
 Title
 }

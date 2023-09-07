@@ -8,7 +8,7 @@
 #'
 #' @examples
 
-get_spatial_layer <- function(layer_name) {
+get_spatial_data <- function(layer_name) {
 
   if (layer_name == 'counties') {
 

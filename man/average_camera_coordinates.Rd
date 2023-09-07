@@ -9,9 +9,6 @@ average_camera_coordinates(locations, effort_by_day)
 \arguments{
 \item{effort_by_day}{}
 }
-\value{
-
-}
 \description{
 Title
 }

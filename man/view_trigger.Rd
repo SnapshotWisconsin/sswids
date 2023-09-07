@@ -9,9 +9,6 @@ view_trigger(trigger_seq_no)
 \arguments{
 \item{trigger_seq_no}{trigger sequence number}
 }
-\value{
-
-}
 \description{
 Look at a set of triggers in .gif format
 }

@@ -9,9 +9,6 @@ write_raw_data(data)
 \arguments{
 \item{data}{}
 }
-\value{
-
-}
 \description{
 Title
 }

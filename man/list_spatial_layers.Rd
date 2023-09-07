@@ -6,9 +6,6 @@
 \usage{
 list_spatial_layers()
 }
-\value{
-
-}
 \description{
 Title
 }

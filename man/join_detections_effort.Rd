@@ -9,9 +9,6 @@ join_detections_effort(effort_by_occ, detections, discard_na_rows = TRUE)
 \arguments{
 \item{discard_na_rows}{}
 }
-\value{
-
-}
 \description{
 Title
 }

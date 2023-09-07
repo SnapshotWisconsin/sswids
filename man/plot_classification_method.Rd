@@ -9,9 +9,6 @@ plot_classification_method(detections)
 \arguments{
 \item{detections}{}
 }
-\value{
-
-}
 \description{
 Title
 }

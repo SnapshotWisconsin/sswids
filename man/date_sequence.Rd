@@ -9,9 +9,6 @@ date_sequence(df)
 \arguments{
 \item{df}{}
 }
-\value{
-
-}
 \description{
 Create sequence of dates from effort start/end dates.
 }

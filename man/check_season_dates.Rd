@@ -6,9 +6,6 @@
 \usage{
 check_season_dates(seasons_df)
 }
-\value{
-
-}
 \description{
 Title
 }

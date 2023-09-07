@@ -17,9 +17,6 @@ calculate_prop_classified(
 \arguments{
 \item{max_year}{}
 }
-\value{
-
-}
 \description{
 Title
 }
