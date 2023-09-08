@@ -73,9 +73,10 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <-
       raster::raster(
-        stringr::str_c(
-          'C:/sswids_gis/nlcd_landcover/', 'NLCD_', year, '_Land_Cover_L48_20210604_8rAl09UOYGVZAyUDlv0r.tiff'
-        )
+        fs::dir_ls('C:/sswids_gis/nlcd_landcover', glob = '*.tiff') %>%
+          tibble::as_tibble() %>%
+          dplyr::filter(stringr::str_detect(value, stringr::str_c('NLCD_', year))) %>%
+          dplyr::pull()
       )
 
   }

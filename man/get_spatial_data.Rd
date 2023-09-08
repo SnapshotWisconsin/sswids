@@ -4,7 +4,7 @@
 \alias{get_spatial_data}
 \title{Title}
 \usage{
-get_spatial_data(layer_name)
+get_spatial_data(layer_name = NULL, level = NULL, year = NULL)
 }
 \arguments{
 \item{layer_name}{}
