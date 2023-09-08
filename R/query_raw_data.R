@@ -70,6 +70,13 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
     dplyr::select(
       year, batch_seq_no, trigger_id, camera_location_seq_no,
       detection_datetime, class_method, class_key, species, count
+    ) %>%
+    # deal with NA counts (these are young or collar present)
+    dplyr::mutate(
+      count = dplyr::case_when(
+        is.na(count) ~ 1,
+        TRUE ~ count
+      )
     )
 
   cat('querying effort from database...\n')
