@@ -9,17 +9,23 @@
 list_spatial_layers <- function() {
 
   tibble::tribble(
-    ~layer_name, ~description,
-    'dmus', 'deer management units and zones',
-    'counties', 'county boundaries',
-    'ecological_landscapes', 'ecological landscapes',
-    'turkey_mgt_zones', 'turkey hunting management zones',
-    'furbearer_zones', 'north/south trapping zones',
-    'wolf_zones', 'wolf hunting management zones',
-    'ruffed_grouse_priority_areas', 'ruffed grouse priority areas',
-    'bear_zones', 'bear hunting management zones'
+    ~layer_name, ~description, ~type,
+    'dmus', 'deer management units and zones', 'shapefile',
+    'counties', 'county boundaries', 'shapefile',
+    'ecological_landscapes', 'ecological landscapes', 'shapefile',
+    'turkey_mgt_zones', 'turkey hunting management zones', 'shapefile',
+    'furbearer_zones', 'north/south trapping zones', 'shapefile',
+    'wolf_zones', 'wolf hunting management zones', 'shapefile',
+    'ruffed_grouse_priority_areas', 'ruffed grouse priority areas', 'shapefile',
+    'bear_zones', 'bear hunting management zones', 'shapefile',
+    'major_roads', 'major roads', 'shapefile',
+    'county_local_roads', 'county and local roads', 'shapefile',
+    'streams', 'streams and rivers', 'shapefile',
+    'open_water', 'open water bodies', 'shapefile',
+    'wiscland2', 'wiscland land cover', 'raster',
+    'nlcd', 'national land cover database', 'raster'
   ) %>%
-    dplyr::arrange(layer_name) %>%
+    dplyr::arrange(type, layer_name) %>%
     print(n = Inf)
 
 }
