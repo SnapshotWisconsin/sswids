@@ -47,3 +47,4 @@ Then update R package by first removing with `remove.packages()` or `devtools::i
 
 - Open `data-raw/make_spatial_data.R`
 - Grab DNR GIS files using `arcpullr` package or drop shapefiles into `data-raw`
+- Copy `OAS/Winiarski/snapshot/sswids_gis` into `C:/sswids_gis` to access large shapefiles/rasters
