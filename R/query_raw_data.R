@@ -1,7 +1,7 @@
 
 #' Title
 #'
-#' @param species
+#' @param species list of species
 #' @param grid
 #' @param min_year
 #' @param max_year

@@ -6,6 +6,9 @@
 \usage{
 query_raw_data(species, grid, min_year, max_year, min_date, max_date, prec)
 }
+\arguments{
+\item{species}{list of species}
+}
 \description{
 Title
 }
