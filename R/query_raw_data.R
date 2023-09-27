@@ -50,6 +50,7 @@ query_raw_data <- function(species, grid, season, prec) {
     tibble::as_tibble(.name_repair = janitor::make_clean_names) %>%
     # add year to detections from detection datetime
     # dplyr::mutate(year = lubridate::year(detection_datetime)) %>%
+    # add in year from season data frame so it is correct for winter queries
     dplyr::mutate(start_date = as.Date(detection_datetime)) %>%
     dplyr::left_join(., season_year_df, by = "start_date") %>%
     # keep only some of the detection columns
