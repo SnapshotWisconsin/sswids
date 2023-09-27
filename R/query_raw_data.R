@@ -3,35 +3,19 @@
 #'
 #' @param species list of species
 #' @param grid
-#' @param min_year
-#' @param max_year
-#' @param min_date
-#' @param max_date
+#' @param season
 #' @param prec
 #' @return
 #' @export
 #'
 #' @examples
 
-query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date, prec) {
-
-  # what years of data to query?
-  years <- seq(min_year, max_year, 1)
-
-  # create date ranges for each year;
-  # if spanning two years (i.e., winter) use start date year
-  # otherwise just use the year of the particular season
-  seasons_df <-
-    create_season_dates(
-      min_date,
-      max_date,
-      years
-    )
+query_raw_data <- function(species, grid, season, prec) {
 
   # create data frame to assign appropriate 'season year' to effort start dates below
   # if Dec 2017-Feb 2018, year is set as 2017; otherwise use regular year
   season_year_df <-
-    seasons_df %>%
+    season %>%
     dplyr::group_by(year) %>%
     tidyr::nest() %>%
     dplyr::mutate(start_date = purrr::map(data, date_sequence)) %>%
@@ -44,7 +28,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
   # detections
   detections_df <-
     # take each season
-    seasons_df %>%
+    season %>%
     # iterate sswidb_detections() over each season's date range
     # _dfr produces a data frame as output
     purrr::map2_dfr(
@@ -65,11 +49,20 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
     # clean up names (snakecase), convert to tibble
     tibble::as_tibble(.name_repair = janitor::make_clean_names) %>%
     # add year to detections from detection datetime
-    dplyr::mutate(year = lubridate::year(detection_datetime)) %>%
+    # dplyr::mutate(year = lubridate::year(detection_datetime)) %>%
+    dplyr::mutate(start_date = as.Date(detection_datetime)) %>%
+    dplyr::left_join(., season_year_df, by = "start_date") %>%
     # keep only some of the detection columns
     dplyr::select(
-      year, batch_seq_no, trigger_id, camera_location_seq_no,
-      detection_datetime, class_method, class_key, species, count
+      year,
+      batch_seq_no,
+      trigger_id,
+      camera_location_seq_no,
+      detection_datetime,
+      class_method,
+      class_key,
+      species,
+      count
     ) %>%
     # deal with NA counts (these are young or collar present)
     dplyr::mutate(
@@ -84,7 +77,7 @@ query_raw_data <- function(species, grid, min_year, max_year, min_date, max_date
   # effort
   # now query database for effort across different years but same season
   effort_df <-
-    seasons_df %>%
+    season %>%
     purrr::map2_dfr(
       .x = .$start_date,
       .y = .$end_date,
