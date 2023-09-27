@@ -4,7 +4,13 @@
 \alias{query_raw_data}
 \title{Title}
 \usage{
-query_raw_data(species, grid, seasons, prec)
+query_raw_data(
+  species,
+  grid,
+  seasons,
+  prec,
+  outputs = c("detections", "effort", "locations")
+)
 }
 \arguments{
 \item{species}{list of species}

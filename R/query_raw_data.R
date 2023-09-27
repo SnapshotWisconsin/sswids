@@ -10,7 +10,7 @@
 #'
 #' @examples
 
-query_raw_data <- function(species, grid, seasons, prec) {
+query_raw_data <- function(species, grid, seasons, prec, outputs = c('detections', 'effort', 'locations')) {
 
   # create data frame to assign appropriate 'season year' to effort start dates below
   # if Dec 2017-Feb 2018, year is set as 2017; otherwise use regular year
@@ -22,6 +22,8 @@ query_raw_data <- function(species, grid, seasons, prec) {
     tidyr::unnest(start_date) %>%
     dplyr::ungroup() %>%
     dplyr::select(-data)
+
+  if ('detections' %in% outputs) {
 
   cat('querying detections from database...\n')
 
@@ -73,6 +75,10 @@ query_raw_data <- function(species, grid, seasons, prec) {
       )
     )
 
+  }
+
+  if ('effort' %in% outputs) {
+
   cat('querying effort from database...\n')
 
   # effort
@@ -102,6 +108,10 @@ query_raw_data <- function(species, grid, seasons, prec) {
     # organize
     dplyr::arrange(year, camera_location_seq_no, start_date)
 
+  }
+
+  if ('locations' %in% outputs) {
+
   cat('querying locations from database...\n')
 
   # locations
@@ -116,6 +126,8 @@ query_raw_data <- function(species, grid, seasons, prec) {
     tibble::as_tibble(.name_repair = janitor::make_clean_names) %>%
     # cam_loc_seq_no and id are the same thing
     dplyr::select(camera_location_seq_no = id, dnr_grid_id, lat, lon)
+
+  }
 
   return(
     list(
