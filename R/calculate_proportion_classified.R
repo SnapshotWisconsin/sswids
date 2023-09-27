@@ -14,14 +14,20 @@
 #'
 #' @examples
 
-calculate_prop_classified <- function(seasons, effort_by_day, effort_by_occ, min_date, max_date, min_year, max_year) {
+calculate_prop_classified <- function(seasons, effort_day, effort_occ) {
 
   cat('calculating the proportion of triggers classified may take several minutes...\n')
+
+  # set dates/years for querying photo table
+  min_date <- stringr::str_sub(seasons$start_date[1], start = 5, end = 10)
+  max_date <- stringr::str_sub(seasons$end_date[1], start = 5, end = 10)
+  min_year <- min(seasons$year)
+  max_year <- max(seasons$year)
 
   # camera site by year combinations to retain for proportion classified
   # needed later when filtering the sswi photo table
   cam_loc_seq_no_x_year <-
-    effort_by_day %>%
+    effort_day %>%
     dplyr::distinct(camera_location_seq_no, cam_site_id, year)
 
   day_occasion_df <-
@@ -175,7 +181,7 @@ calculate_prop_classified <- function(seasons, effort_by_day, effort_by_occ, min
     dplyr::ungroup()
 
   effort_ppn_df <-
-    effort_by_occ %>%
+    effort_occ %>%
     dplyr::left_join(
       .,
       photos_by_cam_df,

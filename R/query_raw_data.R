@@ -10,12 +10,12 @@
 #'
 #' @examples
 
-query_raw_data <- function(species, grid, season, prec) {
+query_raw_data <- function(species, grid, seasons, prec) {
 
   # create data frame to assign appropriate 'season year' to effort start dates below
   # if Dec 2017-Feb 2018, year is set as 2017; otherwise use regular year
   season_year_df <-
-    season %>%
+    seasons %>%
     dplyr::group_by(year) %>%
     tidyr::nest() %>%
     dplyr::mutate(start_date = purrr::map(data, date_sequence)) %>%
@@ -28,7 +28,7 @@ query_raw_data <- function(species, grid, season, prec) {
   # detections
   detections_df <-
     # take each season
-    season %>%
+    seasons %>%
     # iterate sswidb_detections() over each season's date range
     # _dfr produces a data frame as output
     purrr::map2_dfr(
@@ -78,7 +78,7 @@ query_raw_data <- function(species, grid, season, prec) {
   # effort
   # now query database for effort across different years but same season
   effort_df <-
-    season %>%
+    seasons %>%
     purrr::map2_dfr(
       .x = .$start_date,
       .y = .$end_date,
