@@ -12,14 +12,14 @@
 #' @param effort_df raw effort dataframe from Snapshot database query
 #' @param detections_df raw detections dataframe from Snapshot database query
 #' @param spatial_data character string returned by list_spatial_layers()
-#' @param zone character string, specify column of spatial_data that contains zone or management unit id by which to identify locations outside the study area
+#' @param zone column name (unquoted!), specify column of spatial_data that contains zone or management unit id by which to identify locations outside the study area
 #' @return a list containing filtered locations dataframe with UP and no location/effort data , filtered effort dataframe with UP and no location/effort data, filtered detection dataframe with UP and no location/effort data
 #' @export
 #'
 #' @examples
 #'
 
-rmNoLocData <- function (locs_df = locs_df_raw, effort_df = effort_df_raw, detections_df = detections_df_raw, spatial_data, zone) {
+rm_noloc_data <- function (locs_df = locs_df_raw, effort_df = effort_df_raw, detections_df = detections_df_raw, spatial_data, zone) {
 # find the location in the UP of MI and remove it from detection, effort, and locations. IRON024, but only concerns 1 camera_location_seq_no
 
 locs_sf = locs_df %>%
@@ -32,7 +32,7 @@ locs_sf_zones <-
     locs_sf,
     # only keep furbearer_zones column
     get_spatial_data(spatial_data) %>%
-      sf::st_transform(., st_crs(locs_sf)),
+      sf::st_transform(., sf::st_crs(locs_sf)),
 
     join = sf::st_within
   )
