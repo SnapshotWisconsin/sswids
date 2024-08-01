@@ -7,7 +7,10 @@
 rm_bad_batches(data = list_nolocs)
 }
 \arguments{
-\item{listobj}{}
+\item{data}{list object containing location, effort, and detection dataframes. Right now this is specifically set up to handle output of rm_noloc_data function}
+}
+\value{
+a list object containing location, effort, and detection dataframes with bad batches filtered out
 }
 \description{
 At least some of these are errors because of the location start date not

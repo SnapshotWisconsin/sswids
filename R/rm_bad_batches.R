@@ -8,21 +8,22 @@
 #' function.Find all batches that have detections outside of batch start and end
 #' active dates and remove those batches and all associated detections and locations.
 #'
-#' @param listobj
+#' @param data list object containing location, effort, and detection dataframes. Right now this is specifically set up to handle output of rm_noloc_data function
 #'
-#' @return
+#'
+#' @return a list object containing location, effort, and detection dataframes with bad batches filtered out
 #' @export
 #'
 #' @examples
 
 rm_bad_batches <- function(data=list_nolocs){
   batches_baddates = data[["locs DF"]] %>%
-  left_join(data[["locs DF"]]) %>%
-  mutate(date = as.Date(detection_datetime),
+  dplyr::left_join(data[["effort DF"]]) %>%
+    dplyr::mutate(date = as.Date(detection_datetime),
          outside = ifelse(date < start_date | date > end_date,1,0)) %>%
-  filter(outside==1) %>%
-  select(batch_seq_no) %>%
-  distinct()
+    dplyr::filter(outside==1) %>%
+    dplyr::select(batch_seq_no) %>%
+    dplyr::distinct()
 
 # test = detections_df_nolocs %>%
 #   left_join(effort_df_nolocs) %>%
@@ -30,12 +31,16 @@ rm_bad_batches <- function(data=list_nolocs){
 #          outside = ifelse(date < start_date | date > end_date,1,0)) %>%
 #   filter(outside==1)
 
-detections_df_outsideactivedates = detections_df_nolocs %>%
-  filter(!batch_seq_no %in% batches_baddates$batch_seq_no)
+detections_df_outsideactivedates = data[["detections DF"]] %>%
+  dplyr::filter(!batch_seq_no %in% batches_baddates$batch_seq_no)
 
-effort_df_outsideactivedates = effort_df_nolocs %>%
-  filter(!batch_seq_no %in% batches_baddates$batch_seq_no)
+effort_df_outsideactivedates = data[["effort DF"]] %>%
+  dplyr::filter(!batch_seq_no %in% batches_baddates$batch_seq_no)
 
-locs_df_outsideactivedates = locs_df_nolocs %>%
-  filter(camera_location_seq_no %in% effort_df_outsideactivedates$camera_location_seq_no)
+locs_df_outsideactivedates = data[["locs DF"]] %>%
+  dplyr::filter(camera_location_seq_no %in% effort_df_outsideactivedates$camera_location_seq_no)
+
+outsideactivedates_list <- list("locs DF"=locs_df_outsideactivedates, "effort DF"=effort_df_outsideactivedates,
+                                "detections DF"= detections_df_outsideactivedates)
+return(outsideactivedates_list)
 }
