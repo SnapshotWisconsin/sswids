@@ -17,7 +17,7 @@
 #' @examples
 
 rm_bad_batches <- function(data=list_nolocs){
-  batches_baddates = data[["locs DF"]] %>%
+  batches_baddates = data[["detections DF"]] %>%
   dplyr::left_join(data[["effort DF"]]) %>%
     dplyr::mutate(date = as.Date(detection_datetime),
          outside = ifelse(date < start_date | date > end_date,1,0)) %>%
@@ -40,7 +40,7 @@ effort_df_outsideactivedates = data[["effort DF"]] %>%
 locs_df_outsideactivedates = data[["locs DF"]] %>%
   dplyr::filter(camera_location_seq_no %in% effort_df_outsideactivedates$camera_location_seq_no)
 
-outsideactivedates_list <- list("locs DF"=locs_df_outsideactivedates, "effort DF"=effort_df_outsideactivedates,
+list_outsideactivedates <- list("locs DF"=locs_df_outsideactivedates, "effort DF"=effort_df_outsideactivedates,
                                 "detections DF"= detections_df_outsideactivedates)
-return(outsideactivedates_list)
+return(list_outsideactivedates)
 }

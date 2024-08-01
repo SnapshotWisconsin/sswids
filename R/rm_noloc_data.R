@@ -37,7 +37,7 @@ locs_sf_zones <-
     join = sf::st_within
   )
 upmi_loc = locs_sf_zones %>%
-  dplyr::filter(is.na(zone))
+  dplyr::filter(is.na({{zone}}))
 
 locs_df_nolocs = locs_df %>%
   dplyr::filter(camera_location_seq_no != upmi_loc$camera_location_seq_no)
@@ -59,6 +59,6 @@ detections_df_nolocs = detections_df %>%
 detections_df_nolocs = detections_df_nolocs %>%
   dplyr::filter(camera_location_seq_no %in% locs_df_nolocs$camera_location_seq_no)
 
-nolocs_list <- list("locs DF"=locs_df_nolocs, "effort DF"=effort_df_nolocs, "detections DF"= dtections_df_nolocs)
+nolocs_list <- list("locs DF"=locs_df_nolocs, "effort DF"=effort_df_nolocs, "detections DF"= detections_df_nolocs)
 return(nolocs_list)
 }
