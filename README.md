@@ -12,8 +12,9 @@ You can install the development version of sswids from [GitHub](https://github.c
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("SnapshotWisconsin/sswids")
+devtools::install_github("SnapshotWisconsin/sswids", build_vignettes = TRUE)
 ```
+Including `build_vignettes = TRUE` is the only way the vignette is included and accessible via the `utils::browseVignettes()` or `vignettes()` functions.
 
 ## Clone repository
 

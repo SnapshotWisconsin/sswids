@@ -244,8 +244,6 @@ coord_prec <- 4
 # set desired proportion of photos classified (per sampling occasion) threshold
 ppn_class_threshold <- 0
 
-# set desired number of sampling occasions
-num_occasions <- 10
 ```
 \
 
@@ -341,7 +339,7 @@ Until summer 2023, there was no requirement for the number of decimal places whe
 This step may not be necessary for species and analyses that do not require landcover, distance to water, or similar spatial covariates. 
 
 ```{r remove_low_prec_locs, eval=FALSE}
-list_removelowpreclocs <- remove_low_precision_lat_long(list_outsideactivedates, coordinate_precision=coordinate_precision)
+list_removelowpreclocs <- remove_low_precision_lat_long(list_outsideactivedates, coordinate_precision=coord_prec)
 ```
 
 ## Spatially subset camera locations (optional)
@@ -430,10 +428,10 @@ effort_df_camsiteid_demo %>%
 
 To be safe, we need to discard `cam_site_ids` that have overlapping effort in a particular year (but keep other years of effort for these `cam_site_ids` if they show no overlap). In this example, we need to discard 2021 but keep 2022 and 2023. We can do that for this and other sites with `detect_remove_overlap()`. After running the function, we use the remaining `cam_site_id` x year  combinations in the effort data (which is now free of overlaps) to filter our location and detection data.
 ```{r detect_remove_overlap, eval=FALSE}
-list_camsiteid <- detect_remove_overlap(list_camsiteid)
+list_removeoverlap <- detect_remove_overlap(list_camsiteid)
 ```
 
-#End of list based workflow for now
+# End of list based workflow for now
 
 After this point you will have to specify dataframes contained in list to continue until package is updated again.
 
@@ -742,7 +740,7 @@ We calculate proportion classified as the number of triggers classified divided 
 # use all data by setting proportion classified to 0
  ppn_class_threshold = 0
 effort_by_occ_df <-
-    calculate_prop_classified_updated(
+    calculate_prop_classified(
       seasons = seasons_df,
       effort_day = effort_by_day_df,
       effort_occ = effort_by_occ_df
@@ -765,14 +763,12 @@ effort_by_occ_demo[1:1000,] %>%
 
 ## Create detection histories
 
-Now the effort data is summarized by cam_site_id-year-occasions. We summarize the detection data in this same way, by `cam_site_id-year-occasions`. 
+Now the effort data is summarized by `cam_site_id-year-occasions`. We summarize the detection data in this same way, by `cam_site_id-year-occasions`. 
 
-There are various ways we can do this. The default is using the max count of every `CLASS_KEY` per `cam_site_id-year-occasion`. For example, for `DEER_ADULT_ANTLERLESS_AMT`, the max count for cam_0001 in 2019 occasion 1 is 1. The max count is 0 if there are any days of effort but 0 detections. The max count is NA if there are 0 days active. 
+There are various ways we can do this.  For example, for `DEER_ADULT_ANTLERLESS_AMT`, the total triggers for cam_0001 in 2019 occasion 1 is 7. In this row of data there were 7 triggers that were classified as `DEER_ADULT_ANTLERLESS_AMT`. This structuring of the data makes the total counts of `CLASS_KEYS` more comparable to raw data. But is also possible to obtain the maximum count of every `CLASS_KEY` per `cam_site_id-year-occasion`.  For example, for `DEER_ADULT_ANTLERLESS_AMT`, the max count for cam_0001 in 2019 occasion 1 is 1. The max count is 0 if there are any days of effort but 0 detections. The max count is NA if there are 0 days active. 
 
-A different function will calculate the total number of triggers in each `CLASS_KEY` by `cam_site_id-year-occasion` combo. For example, for `DEER_ADULT_ANTLERLESS_AMT`, the total triggers for cam_0001 in 2019 occasion 1 is 7. In this row of data there were 7 triggers that were classified as `DEER_ADULT_ANTLERLESS_AMT`. This structuring of the data makes the total counts of `CLASS_KEYS` more comparable to raw data.
+Getting either a total number of triggers or max count per `cam_site_id-year-occasions` is done by specifying the `summary_value` argument of the `sswids::summarize_detections` function to either `"count triggers"` or `"max count"`. The default is total numer of triggers or `count triggers` of every `CLASS_KEY` per `cam_site_id-year-occasion`.
 
-**TO DO:**
-*Make a function in `sswids` to calculate total number of triggers of `CLASS_KEY` by occasion.*
 
 ```{r detection_histories, eval=FALSE}
 
@@ -780,67 +776,18 @@ A different function will calculate the total number of triggers in each `CLASS_
 detections_wide_df_maxcount <-
   sswids::summarize_detections(
     detections = detections_df_precision,
-    seasons = seasons_df
+    seasons = seasons_df,
+    summary_value = "max count"
   )
 
-summarize_detections_counttriggers <- function(detections, seasons) {
-
-  # convert detections to wide format
-  # so there's a column of counts for different age/sex classes, etc.
-  detections <-
-    detections %>%
-    # SUM TRIGGERS INSTEAD OF MAX COUNT
-    mutate(count = ifelse(count>0,1,count)) %>%
-    tidyr::pivot_wider(
-      names_from = c(class_key),
-      values_from = count,
-      # fill in 0 adult/young; male/female, etc. counts if absent
-      values_fill = 0
-    ) %>%
-    # tidy up
-    dplyr::arrange(year, cam_site_id, detection_datetime)
-
-  day_occasion_df <-
-    seasons %>%
-    dplyr::group_by(year) %>%
-    tidyr::nest() %>%
-    dplyr::mutate(date = purrr::map(data, date_sequence)) %>%
-    tidyr::unnest(date) %>%
-    dplyr::select(-data) %>%
-    dplyr::mutate(day_of_season =  dplyr::row_number()) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(occ = dplyr::ntile(day_of_season, num_occasions))
-
-  # now create date in the detection data frame
-  # use that to join in the occasion #
-  # and summarize detection counts by occasion
-  detections <-
-    detections %>%
-    # date not in detections yet so create it
-    dplyr::mutate(date = as.Date(detection_datetime)) %>%
-    # assign day to equal interval bin
-    dplyr::left_join(., day_occasion_df, by = c("year", "date")) %>%
-    # matches() here picks out the sswi keys (which are always capitalized)
-    dplyr::select(cam_site_id:species, date, day_of_season, occ, matches("[A-Z]", ignore.case = FALSE)) %>%
-    dplyr::group_by(year, cam_site_id, occ) %>%
-    # calculate max count over each occasion
-    # this works as key column headings are capitalized
-    #dplyr::summarise(dplyr::across(matches("[A-Z]", ignore.case = FALSE), max, na.rm = TRUE)) %>%
-    # COUNT instead of MAX, changed all counts >0 to 1, so sum should work here. 
-    dplyr::summarise(dplyr::across(matches("[A-Z]", ignore.case = FALSE), sum, na.rm = TRUE)) %>%
-    dplyr::arrange(cam_site_id, year, occ) %>%
-    dplyr::ungroup()
-
-  return(detections)
-
-}
 
 # the sum of triggers with spp present across detections within a sampling occasion
 # this is using the function above
 detections_wide_df_counttriggers <-
   summarize_detections_counttriggers(
     detections = detections_df_precision,
-    seasons = seasons_df
+    seasons = seasons_df,
+    summary_value = "count triggers"
   )
 
 ```

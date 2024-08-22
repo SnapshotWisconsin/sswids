@@ -12,6 +12,8 @@ Changes:
 
 * Edit to write_raw_data function including optional argument to allow for the modification of file names to prevent overwriting data if necessary.
 
+* added argument to summarize_detections function "summary_value" that allows you to specify whether you want sum of triggers or maximum count per cam site id-occasion-years.
+
 * Creation of NEWS.md file.
 
 * Updated .Rmd/vignette to illustrate data pull workflow of new version.

@@ -28,7 +28,7 @@
 #' locs_df %>% remove_low_precision_lat_long(coordinate_precision)
 #' }
 
-remove_low_precision_lat_long <- function(datalist, coordinate_precision) {
+remove_low_precision_lat_long <- function(datalist, coordinate_precision = coord_prec) {
 
 
   locs_df_removelowpreclocs <- datalist[["locs DF"]] %>% # locations data frame
