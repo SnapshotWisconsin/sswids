@@ -1,6 +1,6 @@
 Package: sswids
 Title: An R Package to Clean, Format, and Analyze Snapshot Wisconsin Data
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Jay", family = "Winiarski", email = "jason.winiarski@wisconsin.gov", role = c("aut", "cre"))
 Description: sswids provides functions to clean and manipulate Snapshot Wisconsin data for occupancy and abundance analyses.
@@ -18,11 +18,13 @@ Imports:
     here,
     janitor,
     keyring,
+    leafsync,
     lubridate,
     magick,
     magrittr,
     plotly,
     purrr,
+    raster,
     readr,
     sf,
     sswidb,
@@ -33,3 +35,9 @@ Imports:
 Depends: 
     R (>= 2.10)
 LazyData: true
+Suggests: 
+    kableExtra,
+    knitr,
+    mapview,
+    rmarkdown
+VignetteBuilder: knitr

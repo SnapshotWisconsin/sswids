@@ -62,9 +62,11 @@ calculate_prop_classified <- function(seasons, effort_day, effort_occ) {
     # classification table
     dplyr::tbl("SSWI_CLASSIFICATION") %>%
     # get rid of photos with comment status (121; e.g., 'cool' photo comment)
-    dplyr::filter(METADATA_GROUP_SEQ_NO != 121) %>%
+    dplyr::filter(METADATA_GROUP_SEQ_NO != 121) %>%    #121 = photo_tag_comment
     # get rid of zooniverse no consensus (48 AND Z)
-    dplyr::filter(METADATA_GROUP_SEQ_NO != 48 | USER_GROUP_CODE != 'Z') %>%
+    dplyr::filter(METADATA_GROUP_SEQ_NO != 48 | USER_GROUP_CODE != 'Z') %>% # 48 = photo_tag_unknown or zooniverse user group
+    # UPDATE - FILTER OUT AUTOCLASS UNKNOWNS
+    dplyr::filter(METADATA_GROUP_SEQ_NO != 48 | USER_GROUP_CODE != "A") %>% # 48 = photo_tag_unknown or automated classification use group
     # only need one classification per trigger
     dplyr::distinct(TRIGGER_SEQ_NO) %>%
     # used to tally 'classified' or not later
@@ -72,6 +74,7 @@ calculate_prop_classified <- function(seasons, effort_day, effort_occ) {
 
   # if seasons span years, add 1 below to end_date when filtering photo table; otherwise == 0
   year_plus_one <- add_year()
+  #if{}
 
   # now query photo table
   # 1) query photo table to get all photos within season date range

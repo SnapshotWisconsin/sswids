@@ -2,13 +2,21 @@
 % Please edit documentation in R/write_raw_data.R
 \name{write_raw_data}
 \alias{write_raw_data}
-\title{Title}
+\title{Save query to raw data frames for further prep/analysis}
 \usage{
-write_raw_data(data)
+write_raw_data(data, filename = NULL)
 }
 \arguments{
-\item{data}{}
+\item{data}{result of data query}
+
+\item{filename}{character string, optional argument to specify part of file name for data frames. Used just in case previous queries are saved in the data_raw folder already to avoid overwriting them.}
 }
 \description{
-Title
+Saves the query to three separate data frames in the data_raw folder of the
+working directory, created in \code{\link[=setup_project]{setup_project()}}. This also allows us to run
+the query above just once.Locations dataframe is saved as .rds file to preserve
+the number of coordinate digits.
+}
+\details{
+Filename argument is pasted into string with e.g. "data_raw/detections_df_".
 }

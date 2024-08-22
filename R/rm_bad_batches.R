@@ -8,7 +8,7 @@
 #' function.Find all batches that have detections outside of batch start and end
 #' active dates and remove those batches and all associated detections and locations.
 #'
-#' @param data list object containing location, effort, and detection dataframes. Right now this is specifically set up to handle output of rm_noloc_data function
+#' @param datalist list object containing location, effort, and detection dataframes. Right now this is specifically set up to handle output of rm_noloc_data function
 #'
 #'
 #' @return a list object containing location, effort, and detection dataframes with bad batches filtered out
@@ -16,9 +16,9 @@
 #'
 #' @examples
 
-rm_bad_batches <- function(data=list_nolocs){
-  batches_baddates = data[["detections DF"]] %>%
-  dplyr::left_join(data[["effort DF"]]) %>%
+rm_bad_batches <- function(datalist){
+  batches_baddates = datalist[["detections DF"]] %>%
+  dplyr::left_join(datalist[["effort DF"]]) %>%
     dplyr::mutate(date = as.Date(detection_datetime),
          outside = ifelse(date < start_date | date > end_date,1,0)) %>%
     dplyr::filter(outside==1) %>%
@@ -31,13 +31,13 @@ rm_bad_batches <- function(data=list_nolocs){
 #          outside = ifelse(date < start_date | date > end_date,1,0)) %>%
 #   filter(outside==1)
 
-detections_df_outsideactivedates = data[["detections DF"]] %>%
+detections_df_outsideactivedates = datalist[["detections DF"]] %>%
   dplyr::filter(!batch_seq_no %in% batches_baddates$batch_seq_no)
 
-effort_df_outsideactivedates = data[["effort DF"]] %>%
+effort_df_outsideactivedates = datalist[["effort DF"]] %>%
   dplyr::filter(!batch_seq_no %in% batches_baddates$batch_seq_no)
 
-locs_df_outsideactivedates = data[["locs DF"]] %>%
+locs_df_outsideactivedates = datalist[["locs DF"]] %>%
   dplyr::filter(camera_location_seq_no %in% effort_df_outsideactivedates$camera_location_seq_no)
 
 list_outsideactivedates <- list("locs DF"=locs_df_outsideactivedates, "effort DF"=effort_df_outsideactivedates,

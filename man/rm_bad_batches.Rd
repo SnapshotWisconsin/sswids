@@ -4,10 +4,10 @@
 \alias{rm_bad_batches}
 \title{Removes impossible dates outside the start and end active dates of a batch}
 \usage{
-rm_bad_batches(data = list_nolocs)
+rm_bad_batches(datalist)
 }
 \arguments{
-\item{data}{list object containing location, effort, and detection dataframes. Right now this is specifically set up to handle output of rm_noloc_data function}
+\item{datalist}{list object containing location, effort, and detection dataframes. Right now this is specifically set up to handle output of rm_noloc_data function}
 }
 \value{
 a list object containing location, effort, and detection dataframes with bad batches filtered out

@@ -1,16 +1,19 @@
 
-#' Title
+#' Summarize detection data by cam site id-year-occasions
 #'
-#' @param detections
-#' @param seasons
+#'
+#'
+#' @param detections detections dataframe
+#' @param seasons seasons dataframe
+#' @param summary_value character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-summarize_detections <- function(detections, seasons) {
-
+summarize_detections <- function(detections, seasons, summary_value = "count triggers") {
+  #                  %in% c("count triggers", "max count")
   # convert detections to wide format
   # so there's a column of counts for different age/sex classes, etc.
   detections <-
@@ -47,9 +50,13 @@ summarize_detections <- function(detections, seasons) {
     # matches() here picks out the sswi keys (which are always capitalized)
     dplyr::select(cam_site_id:species, date, day_of_season, occ, matches("[A-Z]", ignore.case = FALSE)) %>%
     dplyr::group_by(year, cam_site_id, occ) %>%
+    if (summary_value == "max count") {
     # calculate max count over each occasion
     # this works as key column headings are capitalized
-    dplyr::summarise(dplyr::across(matches("[A-Z]", ignore.case = FALSE), max, na.rm = TRUE)) %>%
+    dplyr::summarise(dplyr::across(matches("[A-Z]", ignore.case = FALSE), max, na.rm = TRUE))
+        }else{
+  # COUNT instead of MAX
+  dplyr::summarise(dplyr::across(matches("[A-Z]", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)))} %>%
     dplyr::arrange(cam_site_id, year, occ) %>%
     dplyr::ungroup()
 

@@ -2,13 +2,36 @@
 % Please edit documentation in R/detect_remove_overlap.R
 \name{detect_remove_overlap}
 \alias{detect_remove_overlap}
-\title{Title}
+\title{Remove overlapping effort}
 \usage{
-detect_remove_overlap(effort_df)
+detect_remove_overlap(datalist)
 }
 \arguments{
-\item{effort_df}{}
+\item{datalist}{list object containing location, effort, and detection dataframes.}
+}
+\value{
+list object containing location, effort, and detection dataframes with overlapping effort of site-years removed.
 }
 \description{
-Title
+Group effort dataframe into site-years and detects overlap in effort with
+detect_overlap from (R/utils.R). THen filters out those site-years with overlapping
+effort from detections and locations data frame using camera_Location_seq_no
+as a key.
+}
+\details{
+The cam_site_id and season structure of the data provides the framework for
+assessing overlapping effort and removing site-years with overlapping effort.
+Overlapping effort can happen when a batch is associated with the wrong camera
+location. In these cases there may be batches that have the same cam_site_id
+and start and end active dates that overlap. Another common reason for
+overlapping effort is if the camera has been programmed with the wrong date.
+Even just 1 day different can result in batches with the same cam_site_id and
+overlapping start and end active dates. Batches at the same cam_site_id and year
+(site-year) are assessed for overlap in their start and end active dates. If
+overlap is detected, ALL THE DATA FOR THAT SITE-YEAR IS REMOVED, the function
+is greedy like that.There is potentially more manual work that could be done
+to ‘save’ some effort. But, these fixes are manual and complicated with no
+clear blanket solution. For now, the best decision is to detect and remove
+site-years with overlapping effort. If there is no overlap detection at that
+cam_site_id over the other years, then those data are retained.
 }

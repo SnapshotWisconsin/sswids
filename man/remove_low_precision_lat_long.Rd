@@ -4,18 +4,26 @@
 \alias{remove_low_precision_lat_long}
 \title{Filter Out Low Precision Camera Locations}
 \usage{
-remove_low_precision_lat_long(locations, coordinate_precision)
+remove_low_precision_lat_long(datalist, coordinate_precision)
 }
 \arguments{
-\item{locations}{Data frame of camera locations}
+\item{datalist}{list object containing location, effort, and detection dataframes.}
 
 \item{coordinate_precision}{Number of digits after decimal for determining whether a location is precise or not}
+
+\item{locations}{Data frame of camera locations}
 }
 \value{
 Locations data frame with high precision coordinates
 }
 \description{
 Remove camera_location_seq_no's that have a low precision latitude or longitude coordinate.
+Does this first in locations dataframe before filtering the effort and detections
+dataframes by camera_location_seq_no.
+}
+\details{
+Until summer 2023, there was no requirement for the number of decimal places
+when recording latitude or longitude coordinates, or the ability to record trailing zeros in the database.
 }
 \examples{
 \dontrun{

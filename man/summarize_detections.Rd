@@ -2,13 +2,17 @@
 % Please edit documentation in R/summarize_detections.R
 \name{summarize_detections}
 \alias{summarize_detections}
-\title{Title}
+\title{Summarize detection data by cam site id-year-occasions}
 \usage{
-summarize_detections(detections, seasons)
+summarize_detections(detections, seasons, summary_value = "count triggers")
 }
 \arguments{
-\item{seasons}{}
+\item{detections}{detections dataframe}
+
+\item{seasons}{seasons dataframe}
+
+\item{summary_value}{character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"}
 }
 \description{
-Title
+Summarize detection data by cam site id-year-occasions
 }
