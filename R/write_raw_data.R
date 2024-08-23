@@ -21,15 +21,15 @@ if(!is.null(filename)){
   # write detections
   data$detections %>%
     # vroom_write() is like write_csv(), but faster
-    vroom::vroom_write(here::here(paste0('data_raw/detections_df_', filename, '.csv')), delim = ',')
+    vroom::vroom_write(here::here(paste0('data_raw/detections_df_raw', filename, '.csv')), delim = ',')
 
   # write effort
   data$effort %>%
-    vroom::vroom_write(here::here(paste0('data_raw/effort_df_', filename, '.csv')), delim = ',')
+    vroom::vroom_write(here::here(paste0('data_raw/effort_df_raw', filename, '.csv')), delim = ',')
 
   # write locations...need to write as .rds because saving as csv might impact # of coordinate digits
   data$locations %>%
-    readr::write_rds(here::here(paste0('data_raw/locations_df_', filename, '.rds')))
+    readr::write_rds(here::here(paste0('data_raw/locations_df_raw', filename, '.rds')))
 } else{
   # write detections
   data$detections %>%
