@@ -17,7 +17,7 @@
 #' @examples
 
 write_raw_data <- function(data, filename = NULL) {
-if(!is.null(filesnames)){
+if(!is.null(filename)){
   # write detections
   data$detections %>%
     # vroom_write() is like write_csv(), but faster
