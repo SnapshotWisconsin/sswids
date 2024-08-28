@@ -22,7 +22,6 @@
 #' site-years with overlapping effort. If there is no overlap detection at that
 #' cam_site_id over the other years, then those data are retained.
 #'
-#' @param effort_df
 #' @param datalist list object containing location, effort, and detection dataframes.
 #'
 #' @return list object containing location, effort, and detection dataframes with overlapping effort of site-years removed.
