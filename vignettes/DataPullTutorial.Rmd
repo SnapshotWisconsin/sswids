@@ -342,12 +342,6 @@ This step may not be necessary for species and analyses that do not require land
 list_removelowpreclocs <- remove_low_precision_lat_long(list_outsideactivedates, coordinate_precision=coord_prec)
 ```
 
-## Spatially subset camera locations (optional)
-
-There may be times where it doesn't make sense to include data from the entire Snapshot Wisconsin camera network, and we should spatially subset camera locations. For example, we may want to only consider the Northern Forest Zone instead of the entire state of Wisconsin. We can filter locations, detections, and effort based on a spatial layer, like deer management unit. We provide example code in the 'Additional resources' section of this document. 
-
-\
-\
 
 ## Merge close locations
 
@@ -405,6 +399,19 @@ This step does not result in any data loss. It does set up the data structure to
 ```{r merge_nearby_cameras, eval=FALSE}
 list_camsiteid <- merge_nearby_cameras(list_removelowpreclocs, cam_distance=100)
 ```
+
+## Spatially subset camera locations (optional)
+
+There may be times where it doesn't make sense to include data from the entire Snapshot Wisconsin camera network, and we should spatially subset camera locations. For example, we may want to only consider the Northern Forest Zone instead of the entire state of Wisconsin. This can be done using our list-based format to filter all 3 dataframes in one function by specifying the list, spatial layer, and statement by which to filter as a quoted string.  
+
+```{r spatial_subset, eval=FALSE}
+#Spatially subset camera locations
+list_spatialfilter <- spatial_subset(datalist = list_camsiteid, sf_layer = "dmus",filter_statement = "deer_management_zone == 'Northern Forest Zone'")
+```
+
+\
+\
+
 
 ## Remove overlapping effort
 
