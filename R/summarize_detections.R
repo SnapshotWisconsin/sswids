@@ -54,7 +54,7 @@ summarize_detections <- function(detections, seasons, summary_value = "count tri
     dplyr::group_by(year, cam_site_id, occ) %>%
     # calculate max count over each occasion
     # this works as key column headings are capitalized
-    dplyr::summarise(dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), max(. , na.rm = TRUE))) %>%
+    dplyr::summarise(dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~max(. , na.rm = TRUE))) %>%
     dplyr::arrange(cam_site_id, year, occ) %>%
     dplyr::ungroup()
   } else{
