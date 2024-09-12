@@ -852,12 +852,12 @@ effort_by_occ_df_counttriggers <-
 effort_by_occ_df_maxcount_join = effort_by_occ_df_maxcount %>%
  full_join(mean_locs_sf_layers %>%
              select(-c(camera_location_seq_no,dnr_grid_id)) %>%
-             distinct)
+             distinct, .)
 
 effort_by_occ_df_counttriggers_join = effort_by_occ_df_counttriggers %>%
  full_join(mean_locs_sf_layers %>%
              select(-c(camera_location_seq_no,dnr_grid_id)) %>%
-             distinct)
+             distinct, .)
 
 # save effort join files
 write_rds(effort_by_occ_df_maxcount_join,"data_clean/effort_by_occ_df_maxcount_join.Rds")
