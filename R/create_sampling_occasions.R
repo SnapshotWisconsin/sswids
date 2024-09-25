@@ -23,12 +23,12 @@ create_sampling_occasions <- function(seasons, effort_by_day, num_occasions) {
     dplyr::select(-data) %>%
     # using row_number give day of season starting with day 1
     dplyr::mutate(day_of_season = dplyr::row_number()) %>%
-    dplyr::ungroup() %>%
     # split season into equal intervals (1-day, 3-day, ...1 week)
     # ntile() assigns each day into a sampling occasion
     dplyr::mutate(
-      occ = dplyr::ntile(day_of_season, num_occasions)
-    )
+      occ = dplyr::ntile(day_of_season, num_occasions)) %>%
+      dplyr::ungroup()
+
 
   # now summarize effort over sampling occasion
   effort_by_day <-
