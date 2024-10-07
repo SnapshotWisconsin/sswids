@@ -19,7 +19,8 @@
 #' @examples
 #'
 
-rm_noloc_data <- function (locs_df = locs_df_raw, effort_df = effort_df_raw, detections_df = detections_df_raw, spatial_data, zone) {
+rm_noloc_data <- function (locs_df = locs_df_raw, effort_df = effort_df_raw, detections_df = detections_df_raw,
+                           spatial_data = "counties", zone = county_name) {
 # find the location in the UP of MI and remove it from detection, effort, and locations. IRON024, but only concerns 1 camera_location_seq_no
 
 locs_sf = locs_df %>%

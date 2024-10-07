@@ -16,7 +16,7 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
   } else if (layer_name == 'dmus') {
 
-    layer <- sswids_spatial_layers$dmus
+    layer <- sswids_spatial_layers$dmus %>% st_make_valid()
 
   } else if (layer_name == 'ecological_landscapes') {
 
@@ -32,7 +32,7 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
   } else if (layer_name == 'wolf_zones') {
 
-    layer <- sswids_spatial_layers$wolf_zones
+    layer <- sswids_spatial_layers$wolf_zones %>% st_make_valid()
 
   } else if (layer_name == 'ruffed_grouse_priority_areas') {
 

@@ -317,8 +317,15 @@ There are detections that have no effort or location data. This is likely becaus
 Also, there is 1 location that falls in the UP of Michigan. Remove this location as well. This is an old location from 2020 and earlier, so it cannot be corrected. The spatial data, and zone arguments will depend on the data you're working on, for this example...
 
 ```{r rm_noloc_data, eval=FALSE}
-list_nolocs <- rm_noloc_data(locs_df = locs_df_raw, effort_df = effort_df_raw, detections_df = detections_df_raw, "ruffed_grouse_priority_areas", rugr_pr)
+list_nolocs <- rm_noloc_data(locs_df = locs_df_raw, 
+                             effort_df = effort_df_raw, 
+                             detections_df = detections_df_raw, 
+                             spatial_data = "ruffed_grouse_priority_areas", 
+                             zone = rugr_pr)
 ```
+
+
+The "spatial data" argument is filled by the name of a layer returned from `list_spatial_layers()`, notice it is provided as a character string. The "zone" argument specifies the column in the spatial data relating to zone, management unit or similar spatial unit, specified without quotes! The default arguments are to load the "counties" layer with county_name as the zone argument. See `?rm_noloc_data` for more help if needed.
 
 ## Remove impossible dates
 
@@ -339,7 +346,8 @@ Until summer 2023, there was no requirement for the number of decimal places whe
 This step may not be necessary for species and analyses that do not require landcover, distance to water, or similar spatial covariates. 
 
 ```{r remove_low_prec_locs, eval=FALSE}
-list_removelowpreclocs <- remove_low_precision_lat_long(list_outsideactivedates, coordinate_precision=coord_prec)
+list_removelowpreclocs <- remove_low_precision_lat_long(list_outsideactivedates, 
+                                                        coordinate_precision=coord_prec)
 ```
 
 
@@ -397,7 +405,8 @@ The lat lon for `cam_site_id` are created later once effort is finalized and tra
 
 This step does not result in any data loss. It does set up the data structure to look for instances of overlapping effort, next.
 ```{r merge_nearby_cameras, eval=FALSE}
-list_camsiteid <- merge_nearby_cameras(list_removelowpreclocs, cam_distance=100)
+list_camsiteid <- merge_nearby_cameras(list_removelowpreclocs, 
+                                       cam_distance=cam_distance)
 ```
 
 ## Spatially subset camera locations (optional)
@@ -406,7 +415,9 @@ There may be times where it doesn't make sense to include data from the entire S
 
 ```{r spatial_subset, eval=FALSE}
 #Spatially subset camera locations
-list_spatialfilter <- spatial_subset(datalist = list_camsiteid, sf_layer = "dmus",filter_statement = "deer_management_zone == 'Northern Forest Zone'")
+list_spatialfilter <- spatial_subset(datalist = list_camsiteid, 
+                                     sf_layer = "dmus",
+                                     filter_statement = "deer_management_zone == 'Northern Forest Zone'")
 ```
 
 \
@@ -459,7 +470,7 @@ This is a rather crude approach to integrating classification precision. Initial
 ```{r class_prec, eval=FALSE}
 class.prec = read_csv("class_prec.csv")
 
-detections_df_precision = detections_df_removeoverlap %>%
+detections_df_precision = list_removeoverlap[["detections DF"]] %>%
   group_by(trigger_id) %>%
   mutate(rand_num = runif(1,0,1)) %>%
   ungroup() %>%
@@ -500,7 +511,7 @@ This level of overlap (e.g., the end date of the first batch is the same as the 
 # now we can expand effort data using date ranges for each cam_site_id x year
 # where date ranges are converted to multiple rows (one row for each active date)
 effort_by_day_df <-
-  sswids::effort_by_day(effort = effort_df_removeoverlap)
+  sswids::effort_by_day(effort = list_removeoverlap[["effort DF"]])
 ```
 
 ```{r daily_effort_table, echo = FALSE, message = FALSE, warning = FALSE}
@@ -520,7 +531,7 @@ There can be multiple rows per `cam_site_id` because of different `camera_locati
 ```{r merge_coords, eval=FALSE}
 mean_locs_df <-
   sswids::average_camera_coordinates(
-    locations = locs_df_removeoverlap,
+    locations = list_removeoverlap[["locs DF"]],
     effort = effort_by_day_df
   )
 ```
@@ -774,7 +785,7 @@ Now the effort data is summarized by `cam_site_id-year-occasions`. We summarize 
 
 There are various ways we can do this.  For example, for `DEER_ADULT_ANTLERLESS_AMT`, the total triggers for cam_0001 in 2019 occasion 1 is 7. In this row of data there were 7 triggers that were classified as `DEER_ADULT_ANTLERLESS_AMT`. This structuring of the data makes the total counts of `CLASS_KEYS` more comparable to raw data. But is also possible to obtain the maximum count of every `CLASS_KEY` per `cam_site_id-year-occasion`.  For example, for `DEER_ADULT_ANTLERLESS_AMT`, the max count for cam_0001 in 2019 occasion 1 is 1. The max count is 0 if there are any days of effort but 0 detections. The max count is NA if there are 0 days active. 
 
-Getting either a total number of triggers or max count per `cam_site_id-year-occasions` is done by specifying the `summary_value` argument of the `sswids::summarize_detections` function to either `"count triggers"` or `"max count"`. The default is total numer of triggers or `count triggers` of every `CLASS_KEY` per `cam_site_id-year-occasion`.
+Getting either a total number of triggers or max count per `cam_site_id-year-occasions` is done by specifying the `summary_value` argument of the `sswids::summarize_detections` function to either `"count triggers"` or `"max count"`. The default is total number of triggers or `count triggers` of every `CLASS_KEY` per `cam_site_id-year-occasion`.
 
 
 ```{r detection_histories, eval=FALSE}
@@ -791,7 +802,7 @@ detections_wide_df_maxcount <-
 # the sum of triggers with spp present across detections within a sampling occasion
 # this is using the function above
 detections_wide_df_counttriggers <-
-  summarize_detections_counttriggers(
+  summarize_detections(
     detections = detections_df_precision,
     seasons = seasons_df,
     summary_value = "count triggers"
@@ -908,23 +919,23 @@ dets_orig = detections_df_raw %>%
   group_by(class_key) %>%
   count() %>%
   rename("total" = "n")
-dets_noloc = detections_df_nolocs %>%
+dets_noloc = list_nolocs[["detections DF"]] %>%
   group_by(class_key) %>%
   count() %>%
   rename("n-no_loc" = "n")
-dets_baddate = detections_df_outsideactivedates %>%
+dets_baddate = list_outsideactivedates[["detections DF"]] %>%
   group_by(class_key) %>%
   count() %>%
   rename("n-bad_date" = "n")
-dets_lowlocprec = detections_df_removelowpreclocs %>%
+dets_lowlocprec = list_removelowpreclocs[["detections DF"]] %>%
   group_by(class_key) %>%
   count() %>%
   rename("n-low_loc_prec" = "n")
-dets_effortoverlap = detections_df_removeoverlap %>%
+dets_effortoverlap = list_removeoverlap[["detections DF"]] %>%
   group_by(class_key) %>%
   count() %>%
   rename("n-effort_overlap" = "n")
-dets_precision = detections_df_precision %>%
+dets_precision = list_precision[["detections DF"]] %>%
   group_by(class_key) %>%
   count() %>%
   rename("n-class-precision" = "n")
