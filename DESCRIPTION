@@ -1,6 +1,6 @@
 Package: sswids
 Title: An R Package to Clean, Format, and Analyze Snapshot Wisconsin Data
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     person(given = "Jay", family = "Winiarski", email = "jason.winiarski@wisconsin.gov", role = c("aut", "cre"))
 Description: sswids provides functions to clean and manipulate Snapshot Wisconsin data for occupancy and abundance analyses.
