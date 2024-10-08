@@ -1,5 +1,14 @@
 # sswids (development version)
 
+# sswids v0.0.0.9002
+
+* Updated sswids_spatial_layers.rda with new wolf zones, DMUs, and county layer to resolve NAs and errors when joining
+  these layers
+  
+* Updated vignette with Jen's feedback to make workflow more clear.
+
+* Fixed weird arraning of occasions due to ntile use in create_sampling_occasions.
+
 # sswids v0.0.0.9001
 
 Changes:
