@@ -1153,7 +1153,7 @@ Here are the deer management units/zones and camera locations, prior to subsetti
 ```{r pr_areas_map, echo = FALSE, message = FALSE, warning = FALSE}
 layer_map <- 
   sswids::get_spatial_data(layer_name = 'dmus') %>%
-  mapview(zcol = 'deer_management_zone', layer.name = 'Deer Management Zones')
+  mapview(zcol = 'DEER_MANAG', layer.name = 'Deer Management Zones')
 
 cam_map <- 
   locs_df_removelowpreclocs_demo %>%
