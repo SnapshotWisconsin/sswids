@@ -40,6 +40,7 @@ locs_sf_zones <-
 upmi_loc = locs_sf_zones %>%
   dplyr::filter(is.na({{zone}}))
 
+if(nrow(upmi_loc) == 0){
 locs_df_nolocs = locs_df %>%
   dplyr::filter(camera_location_seq_no != upmi_loc$camera_location_seq_no)
 
@@ -55,7 +56,7 @@ effort_df_nolocs = effort_df %>%
 detections_df_nolocs = detections_df %>%
   dplyr::filter(camera_location_seq_no != upmi_loc$camera_location_seq_no)
 #filter(camera_location_seq_no %in% locs_df_nolocs$camera_location_seq_no)
-
+} else{print("No UP location in dataset")}
 # then to remove detections without effort or location data
 detections_df_nolocs = detections_df_nolocs %>%
   dplyr::filter(camera_location_seq_no %in% locs_df_nolocs$camera_location_seq_no)
