@@ -40,7 +40,7 @@ locs_sf_zones <-
 upmi_loc = locs_sf_zones %>%
   dplyr::filter(is.na({{zone}}))
 
-if(nrow(upmi_loc) == 0){
+if(nrow(upmi_loc) != 0){
 locs_df_nolocs = locs_df %>%
   dplyr::filter(camera_location_seq_no != upmi_loc$camera_location_seq_no)
 
