@@ -7,7 +7,7 @@
   
 * Updated vignette with Jen's feedback to make workflow more clear.
 
-* Fixed weird arraning of occasions due to ntile use in create_sampling_occasions.
+* Fixed weird arranging of occasions due to ntile use in create_sampling_occasions.
 
 # sswids v0.0.0.9001
 

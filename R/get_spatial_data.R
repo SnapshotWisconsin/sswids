@@ -1,12 +1,22 @@
 
-#' Title
+#' Load various spatial layers for analysis
 #'
-#' @param layer_name
+#' Read in various spatial layers. Vector layers are imported as sf object,
+#' raster layers are imported as SpatRaster (terra).Use `list_spatial_layers()`
+#' to see available layers to load in.
 #'
-#' @return
+#' Raster layers are loaded in from file location on C: drive that
+#' must be set up before hand. Vector layers are internal to package.
+#'
+#'
+#' @param layer_name name of layer from `list_spatial_layers()`, as character string
+#' @param level When loading in Wiscland land cover, what level of the layer is required
+#'
+#' @return layer as sf or terra object
 #' @export
 #'
 #' @examples
+#' @seealso [list_spatial_layers()]
 
 get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
@@ -60,19 +70,20 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
   } else if (layer_name == 'wiscland2') {
 
+    if(is.null(level)){print("Please specify what level of Wiscland you would like")} else{
     layer <-
-      raster::raster(
+      terra::rast(
         stringr::str_c(
           'C:/sswids_gis/wiscland2_landcover/wiscland2/wiscland2_dataset/', 'level', level, '/level', level, '/wiscland2_level', level, '.tif'
         )
       )
-
+    }
   }
 
   else if (layer_name == 'nlcd') {
 
     layer <-
-      raster::raster(
+      terra::rast(
         fs::dir_ls('C:/sswids_gis/nlcd_landcover', glob = '*.tiff') %>%
           tibble::as_tibble() %>%
           dplyr::filter(stringr::str_detect(value, stringr::str_c('NLCD_', year))) %>%
