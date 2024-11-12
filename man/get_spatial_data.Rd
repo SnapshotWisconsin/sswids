@@ -2,13 +2,27 @@
 % Please edit documentation in R/get_spatial_data.R
 \name{get_spatial_data}
 \alias{get_spatial_data}
-\title{Title}
+\title{Load various spatial layers for analysis}
 \usage{
 get_spatial_data(layer_name = NULL, level = NULL, year = NULL)
 }
 \arguments{
-\item{layer_name}{}
+\item{layer_name}{name of layer from \code{list_spatial_layers()}, as character string}
+
+\item{level}{When loading in Wiscland land cover, what level of the layer is required}
+}
+\value{
+layer as sf or terra object
 }
 \description{
-Title
+Read in various spatial layers. Vector layers are imported as sf object,
+raster layers are imported as SpatRaster (terra).Use \code{list_spatial_layers()}
+to see available layers to load in.
+}
+\details{
+Raster layers are loaded in from file location on C: drive that
+must be set up before hand. Vector layers are internal to package.
+}
+\seealso{
+\code{\link[=list_spatial_layers]{list_spatial_layers()}}
 }

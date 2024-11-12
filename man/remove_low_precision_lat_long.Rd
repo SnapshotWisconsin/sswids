@@ -4,7 +4,7 @@
 \alias{remove_low_precision_lat_long}
 \title{Filter Out Low Precision Camera Locations}
 \usage{
-remove_low_precision_lat_long(datalist, coordinate_precision)
+remove_low_precision_lat_long(datalist, coordinate_precision = coord_prec)
 }
 \arguments{
 \item{datalist}{list object containing location, effort, and detection dataframes.}

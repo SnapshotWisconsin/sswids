@@ -4,18 +4,25 @@
 \alias{spatial_subset}
 \title{Spatially Subset Camera Site Locations}
 \usage{
-spatial_subset(locations, sf_layer)
+spatial_subset(datalist, sf_layer, filter_statement)
 }
 \arguments{
-\item{locations}{Data frame of camera locations}
+\item{datalist}{list object containing location, effort, and detection dataframes.}
 
 \item{sf_layer}{sf polygon object}
+
+\item{filter_statement}{character string, to be passed along to \code{filter()} to subset spatial layer}
 }
 \value{
 data frame
 }
 \description{
-Spatially subset camera site locations using an sf polygon object.
+Spatially subset camera site locations using an sf polygon object. There may
+be times where it doesn’t make sense to include data from the entire Snapshot
+Wisconsin camera network, and we should spatially subset camera locations. For
+example, we may want to only consider the Northern Forest Zone instead of the
+entire state of Wisconsin. We can filter locations, detections, and effort
+based on a spatial layer, like deer management unit.
 }
 \examples{
 \dontrun{

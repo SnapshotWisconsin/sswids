@@ -24,13 +24,15 @@ Imports:
     magrittr,
     plotly,
     purrr,
-    raster,
     readr,
+    rlang,
     sf,
     sswidb,
     stringr,
+    terra,
     tibble,
     tidyr,
+    tidyselect,
     vroom
 Depends: 
     R (>= 2.10)

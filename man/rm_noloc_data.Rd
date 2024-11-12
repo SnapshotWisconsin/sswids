@@ -8,8 +8,8 @@ rm_noloc_data(
   locs_df = locs_df_raw,
   effort_df = effort_df_raw,
   detections_df = detections_df_raw,
-  spatial_data,
-  zone
+  spatial_data = "counties",
+  zone = county_name
 )
 }
 \arguments{
