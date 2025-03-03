@@ -2,10 +2,13 @@
 % Please edit documentation in R/list_spatial_layers.R
 \name{list_spatial_layers}
 \alias{list_spatial_layers}
-\title{Title}
+\title{List available spatial layers in sswids}
 \usage{
 list_spatial_layers()
 }
+\value{
+a table with the layer name, description, and data type of available spatial layers
+}
 \description{
-Title
+List available spatial layers in sswids
 }
