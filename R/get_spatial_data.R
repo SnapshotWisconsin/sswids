@@ -52,6 +52,10 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <- sswids_spatial_layers$bear_zones
 
+  } else if (layer_name == "elk_zones") {
+
+    layer <- sswids_spatial_layers$elk_zones
+
   } else if (layer_name == 'major_roads') {
 
     layer <- sf::st_read('C:/sswids_gis/shapefiles/major_roads.shp')

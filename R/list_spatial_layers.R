@@ -1,7 +1,7 @@
 
-#' Title
+#' List available spatial layers in sswids
 #'
-#' @return
+#' @return a table with the layer name, description, and data type of available spatial layers
 #' @export
 #'
 #' @examples
@@ -23,7 +23,8 @@ list_spatial_layers <- function() {
     'streams', 'streams and rivers', 'shapefile',
     'open_water', 'open water bodies', 'shapefile',
     'wiscland2', 'wiscland land cover', 'raster',
-    'nlcd', 'national land cover database', 'raster'
+    'nlcd', 'national land cover database', 'raster',
+    'elk_zones', 'north/central elk management zones', 'shapefile'
   ) %>%
     dplyr::arrange(type, layer_name) %>%
     print(n = Inf)
