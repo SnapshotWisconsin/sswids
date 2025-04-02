@@ -26,7 +26,7 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
   } else if (layer_name == 'dmus') {
 
-    layer <- sswids_spatial_layers$dmus
+    layer <- sswids_spatial_layers$dmus%>%sf::st_make_valid()
 
   } else if (layer_name == 'ecological_landscapes') {
 

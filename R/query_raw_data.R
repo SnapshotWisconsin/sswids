@@ -1,7 +1,7 @@
 
 #' Title
 #'
-#' @param species list of species
+#' @param species
 #' @param grid
 #' @param season
 #' @param prec

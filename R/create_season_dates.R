@@ -4,7 +4,7 @@
 #' Query effort and detection data from a set of season dates in each year of interest.
 #' @param min_date Start date of query
 #' @param max_date End date of query
-#' @param years Years of data to query
+#' @param years Vector of the start and end years desired
 #'
 #' @return Data frame containing years and associated start and end dates
 #' @export
@@ -34,6 +34,14 @@
 #' }
 
 create_season_dates <- function(min_date, max_date, years) {
+
+  if(years[1] <= years[2]){
+  years <- seq(years[1], years[2], 1)
+  }
+
+  if(years[2] < years[1]){
+    years <- seq(years[2], years[1], 1)
+  }
 
   if(as.numeric(stringr::str_sub(min_date, 2, 3)) > as.numeric(stringr::str_sub(max_date, 2, 3))) {
 

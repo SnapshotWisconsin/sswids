@@ -8,9 +8,10 @@
 #' entire state of Wisconsin. We can filter locations, detections, and effort
 #' based on a spatial layer, like deer management unit.
 #'
-#' @param datalist list object containing location, effort, and detection dataframes.
-#' @param sf_layer sf polygon object
-#' @param filter_statement character string, to be passed along to `filter()` to subset spatial layer
+#' @param locationeffort dataframe containing location and effort information from `effort_query()`
+#' @param sf_layer as character string, sf polygon object by which to subset locationeffort data frame
+#' @param zone_id as character string, ID column in sf_layer e.g.(bear_mgmt_unit_id)
+#' @param filter_statement character string of right hand side of filter statment, to be passed along to subset spatial layer (e.g. "== 'A'")
 #'
 #' @return data frame
 #' @export
@@ -19,36 +20,51 @@
 #' \dontrun{
 #' spatial_subset(locs_df, _sf)
 #' }
+#' @seealso `list_spatial_layers()`
 
-spatial_subset <- function(datalist, sf_layer, filter_statement) {
+spatial_subset <- function(locationeffort, sf_layer, zone_id, filter_statement=NULL) {
 
-  subset_layer <-
-    sswids::get_spatial_data(layer_name = sf_layer) %>%
+  if(!is.null(filter_statement)){
+
+    # symbol <- str_extract(pattern = "^[[:symbol:]]{1,2}", string = filter_statement)
+    # RHS <- str_extract(pattern = "[[:alnum:]]+", string = filter_statement)
+    #
+
+    subset_layer <-sswids::get_spatial_data(layer_name = sf_layer) %>%
     # these regions are based off of county boundaries, so we need to
     # remove ones that aren't surveyed before subsetting
-    dplyr::filter(eval(rlang::parse_expr(filter_statement)))
+    dplyr::filter({{zone_id}}, {{filter_statement}})#sprintf()
+  }else{
+    subset_layer <-
+      sswids::get_spatial_data(layer_name = sf_layer) %>%
+      # these regions are based off of county boundaries, so we need to
+      # remove ones that aren't surveyed before subsetting
+      dplyr::filter(!is.na({{zone_id}}))
+  }
 
-  # find cam_site_ids within intersection
-  focal_cams <-
-    datalist[["locs DF"]] %>%
-    sf::st_as_sf(coords = c('lon', 'lat'), crs = 4326) %>% sf::st_transform(., 3071) %>%
-    sf::st_intersection(., sf::st_transform(subset_layer, 3071)) %>%
-    dplyr::pull(cam_site_id)
+  #make data frame of unique camera locations
+  colidx <- which(colnames(locationeffort) %in% c("CAMERA_LOCATION_SEQ_NO", "Longitude", "Latitude"))
+  camlocs <- locationeffort%>%dplyr::select(all_of(colidx))%>%dplyr::distinct(CAMERA_LOCATION_SEQ_NO, .keep_all = TRUE)
 
-  # use these to discard locations we don't need
-  locs_df_spatialfilter <-
-    datalist[["locs DF"]] %>%
-    dplyr::filter(cam_site_id %in% focal_cams)
+  #turn camera locations dataframe into sf object
+  locs_sf = camlocs %>%
+    sf::st_as_sf(coords = c('Longitude', 'Latitude'), crs = 4326)
 
-  # retain these sites in the detections and effort
-  detections_df_spatialfilter <-
-    datalist[["detections DF"]] %>%
-    dplyr::filter(cam_site_id %in% unique(locs_df_spatialfilter$cam_site_id))
+  # spatial join with spatial subset layer
+  locs_sf_zones <-
+    sf::st_join(
+      locs_sf,
+      # only keep furbearer_zones column
+      get_spatial_data("counties") %>%
+        sf::st_transform(., sf::st_crs(locs_sf)),
 
-  effort_df_spatialfilter <-
-    datalist[["effort DF"]] %>%
-    dplyr::filter(cam_site_id %in% unique(locs_df_spatialfilter$cam_site_id))
+      join = sf::st_within
+    )
 
-  return(list("locs DF"=locs_df_spatialfilter, "effort DF"=effort_df_spatialfilter, "detections DF"=detections_df_spatialfilter))
+  locs_sf_zones <- locs_sf_zones%>%filter(!is.na({{zone_id}}))
+
+  locationeffort <- locationeffort%>%filter(CAMERA_LOCATION_SEQ_NO %in% locs_sf_zones$CAMERA_LOCATION_SEQ_NO)
+
+  return(locationeffort)
 
 }

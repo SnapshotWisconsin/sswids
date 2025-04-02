@@ -44,6 +44,10 @@ if(nrow(upmi_loc) != 0){
 locs_df_nolocs = locs_df %>%
   dplyr::filter(camera_location_seq_no != upmi_loc$camera_location_seq_no)
 
+# Camera location in a lake, 1000 feet from shore
+#
+# Camera_location_seq_no 44282, WASB048, volunteer quit in 2023
+
 # update effort
 effort_df_nolocs = effort_df %>%
   dplyr::filter(camera_location_seq_no %in% locs_df_nolocs$camera_location_seq_no)

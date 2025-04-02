@@ -25,13 +25,26 @@ summarize_detections <- function(detections, seasons, summary_value = "count tri
       values_from = count,
       # fill in 0 adult/young; male/female, etc. counts if absent
       values_fill = 0
-    ) %>%
+    ) %>% mutate(detection_date=as.Date(detection_datetime),
+                 #cam_loc_seq_no must be same data type to later left_join
+                 camera_location_seq_no=as.character(camera_location_seq_no))%>%
     # tidy up
-    dplyr::arrange(year, cam_site_id, detection_datetime)
+    dplyr::arrange(season, camera_location_seq_no, detection_datetime)
 
+  longerdelim <- tidyr::separate_longer_delim(Q4, camera_location_seq_no, delim = ",")
+  joined1 <-  dplyr::right_join(detections, longerdelim,
+                               by=dplyr::join_by("camera_location_seq_no", "season", between(detection_date, start_date, end_date)))
+
+
+
+
+
+  if(!("season" %in% colnames(seasons))){
+    seasons$season <- dplyr::row_number(seasons)
+  }
   day_occasion_df <-
     seasons %>%
-    dplyr::group_by(year) %>%
+    dplyr::group_by(season) %>%
     tidyr::nest() %>%
     dplyr::mutate(date = purrr::map(data, date_sequence)) %>%
     tidyr::unnest(date) %>%
@@ -48,14 +61,14 @@ summarize_detections <- function(detections, seasons, summary_value = "count tri
     # date not in detections yet so create it
     dplyr::mutate(date = as.Date(detection_datetime)) %>%
     # assign day to equal interval bin
-    dplyr::left_join(., day_occasion_df, by = c("year", "date")) %>%
+    dplyr::left_join(., day_occasion_df, by = c("season", "date")) %>%
     # matches() here picks out the sswi keys (which are always capitalized)
-    dplyr::select(cam_site_id:species, date, day_of_season, occ, tidyselect::matches("[A-Z]", ignore.case = FALSE)) %>%
-    dplyr::group_by(year, cam_site_id, occ) %>%
+    dplyr::select(-c(batch_seq_no, trigger_id, detection_datetime, class_method)) %>%
+    dplyr::group_by(camera_location_seq_no, season, occ) %>%
     # calculate max count over each occasion
     # this works as key column headings are capitalized
     dplyr::summarise(dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~max(. , na.rm = TRUE))) %>%
-    dplyr::arrange(cam_site_id, year, occ) %>%
+    dplyr::arrange(camera_location_seq_no, season, occ) %>%
     dplyr::ungroup()
   } else{
     detections <-
@@ -63,13 +76,13 @@ summarize_detections <- function(detections, seasons, summary_value = "count tri
       # date not in detections yet so create it
       dplyr::mutate(date = as.Date(detection_datetime)) %>%
       # assign day to equal interval bin
-      dplyr::left_join(., day_occasion_df, by = c("year", "date")) %>%
+      dplyr::left_join(., day_occasion_df, by = c("season", "date")) %>%
       # matches() here picks out the sswi keys (which are always capitalized)
-      dplyr::select(cam_site_id:species, date, day_of_season, occ, tidyselect::matches("[A-Z]", ignore.case = FALSE)) %>%
-      dplyr::group_by(year, cam_site_id, occ) %>%
+      dplyr::select(-c(batch_seq_no, trigger_id, detection_datetime, class_method)) %>%
+      dplyr::group_by(camera_location_seq_no, season, occ) %>%
       # COUNT instead of MAX
       dplyr::summarise(dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE))) %>%
-      dplyr::arrange(cam_site_id, year, occ) %>%
+      dplyr::arrange(camera_location_seq_no, season, occ) %>%
       dplyr::ungroup()
   }
 

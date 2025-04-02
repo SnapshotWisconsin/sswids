@@ -12,11 +12,13 @@
 
 join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = TRUE) {
 
+  effortlongerdelim <- tidyr::separate_longer_delim(Q4, camera_location_seq_no, delim = ",")
+
   # then we can join detections (species counts) to particular observation periods
   # in the effort data frame
   effort_by_occ <-
-    effort_by_occ %>%
-    dplyr::left_join(., detections, by = c("cam_site_id", "year", "occ")) %>%
+    effortlongerdelim %>%
+    dplyr::left_join(., detections, by = c("camera_location_seq_no", "year", "occ")) %>%
     # and fix counts while we're at it
     # NAs here are actually 0s; otherwise use count as is
     dplyr::mutate_at(
@@ -30,7 +32,7 @@ join_detections_effort <- function(effort_by_occ, detections, discard_na_rows = 
         )
       )
     )
-
+  stats::aggregate(camera_location_seq_no ~ ., longerdelim, toString)%>%dplyr::arrange(cam_site_id, season, occ)
   # but 0s should be converted back to NA if 1) the camera is not operational,
   # or 2) the proportion of photos classified dips below the desired threshold
   # during a sampling occasion
