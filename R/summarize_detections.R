@@ -33,56 +33,60 @@ summarize_detections <- function(detections, seasons, summary_value = "count tri
 
   longerdelim <- tidyr::separate_longer_delim(Q4, camera_location_seq_no, delim = ",")
   joined1 <-  dplyr::right_join(detections, longerdelim,
-                               by=dplyr::join_by("camera_location_seq_no", "season", between(detection_date, start_date, end_date)))
+                               by=dplyr::join_by("camera_location_seq_no", "season", between(detection_date, start_date, end_date)))%>%
+    # and fix counts while we're at it
+    # NAs here are actually 0s; otherwise use count as is
+    dplyr::mutate(
+      dplyr::across(
+        matches("[A-Z]", ignore.case = FALSE),
+        ~dplyr::case_when(
+          is.na(.) ~ 0,
+          TRUE ~ .
+        )
+      )
+    )
+  #reordering columns, getting rid of unnecessary columns
+  joined2 <- joined1[,c(11,1,12,4,8,9,13:21)]%>%dplyr::arrange(cam_site_id, season, occ)
 
 
 
 
-
-  if(!("season" %in% colnames(seasons))){
-    seasons$season <- dplyr::row_number(seasons)
-  }
-  day_occasion_df <-
-    seasons %>%
-    dplyr::group_by(season) %>%
-    tidyr::nest() %>%
-    dplyr::mutate(date = purrr::map(data, date_sequence)) %>%
-    tidyr::unnest(date) %>%
-    dplyr::select(-data) %>%
-    dplyr::mutate(day_of_season =  dplyr::row_number()) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(occ = dplyr::ntile(day_of_season, num_occasions))
+  # if(!("season" %in% colnames(seasons))){
+  #   seasons$season <- dplyr::row_number(seasons)
+  # }
+  # day_occasion_df <-
+  #   seasons %>%
+  #   dplyr::group_by(season) %>%
+  #   tidyr::nest() %>%
+  #   dplyr::mutate(date = purrr::map(data, date_sequence)) %>%
+  #   tidyr::unnest(date) %>%
+  #   dplyr::select(-data) %>%
+  #   dplyr::mutate(day_of_season =  dplyr::row_number()) %>%
+  #   dplyr::ungroup() %>%
+  #   dplyr::mutate(occ = dplyr::ntile(day_of_season, num_occasions))
 
   # now create date in the detection data frame
   # use that to join in the occasion #
   # and summarize detection counts by occasion
-  if(summary_value == "max count"){detections <-
-    detections %>%
-    # date not in detections yet so create it
-    dplyr::mutate(date = as.Date(detection_datetime)) %>%
-    # assign day to equal interval bin
-    dplyr::left_join(., day_occasion_df, by = c("season", "date")) %>%
-    # matches() here picks out the sswi keys (which are always capitalized)
-    dplyr::select(-c(batch_seq_no, trigger_id, detection_datetime, class_method)) %>%
-    dplyr::group_by(camera_location_seq_no, season, occ) %>%
+  if(summary_value == "max count"){detections3 <-
+    joined2  %>%
+    dplyr::group_by(cam_site_id, season, occ) %>%
     # calculate max count over each occasion
     # this works as key column headings are capitalized
-    dplyr::summarise(dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~max(. , na.rm = TRUE))) %>%
-    dplyr::arrange(camera_location_seq_no, season, occ) %>%
+    dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
+                     dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~max(. , na.rm = TRUE)),
+                     across(lat:days_active, .fns = ~unique(.x))) %>%
+    dplyr::arrange(cam_site_id, season, occ) %>%
     dplyr::ungroup()
   } else{
     detections <-
-      detections %>%
-      # date not in detections yet so create it
-      dplyr::mutate(date = as.Date(detection_datetime)) %>%
-      # assign day to equal interval bin
-      dplyr::left_join(., day_occasion_df, by = c("season", "date")) %>%
-      # matches() here picks out the sswi keys (which are always capitalized)
-      dplyr::select(-c(batch_seq_no, trigger_id, detection_datetime, class_method)) %>%
-      dplyr::group_by(camera_location_seq_no, season, occ) %>%
+      joined2  %>%
+      dplyr::group_by(cam_site_id, season, occ) %>%
       # COUNT instead of MAX
-      dplyr::summarise(dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE))) %>%
-      dplyr::arrange(camera_location_seq_no, season, occ) %>%
+      dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
+                       dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)),
+                       across(lat:days_active, .fns = ~unique(.x))) %>%
+      dplyr::arrange(cam_site_id, season, occ) %>%
       dplyr::ungroup()
   }
 
