@@ -68,7 +68,8 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
   # now create date in the detection data frame
   # use that to join in the occasion #
   # and summarize detection counts by occasion
-  if(summary_value == "max count"){detections3 <-
+  if(summary_value == "max count"){
+    detections <-
     joined2  %>%
     dplyr::group_by(cam_site_id, season, occ) %>%
     # calculate max count over each occasion
