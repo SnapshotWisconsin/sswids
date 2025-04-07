@@ -1,5 +1,10 @@
 # sswids (development version)
 
+# sswids v0.0.0.9003
+4/4/2025
+
+*Overhaul of data pull process with DS_Location_Effort table. Pull in the location and effort data as one. Modify it first -- removing bad locations, merging close locations, remove overlapping effort and assigning cam_site_id. Aggregate by occasion and remove too little classification effort. Then bring in detections join and summarize by occasion.
+
 # sswids v0.0.0.9002
 
 * Updated sswids_spatial_layers.rda with new wolf zones, DMUs, and county layer to resolve NAs and errors when joining

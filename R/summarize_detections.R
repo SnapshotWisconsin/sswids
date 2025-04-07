@@ -4,7 +4,7 @@
 #'
 #'
 #' @param detections detections dataframe
-#' @param seasons seasons dataframe
+#' @param locationeffort data frame containing location and effort data
 #' @param summary_value character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"
 #'
 #' @return
@@ -12,7 +12,7 @@
 #'
 #' @examples
 
-summarize_detections <- function(detections, seasons, summary_value = "count triggers") {
+summarize_detections <- function(detections, locationeffort, summary_value = "count triggers") {
   if(!(summary_value %in% c("count triggers", "max count"))){
     stop("\nPlease supply either 'count triggers' or 'max count' as argument to summary_value")
   }

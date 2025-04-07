@@ -11,7 +11,7 @@ create_season_dates(min_date, max_date, years)
 
 \item{max_date}{End date of query}
 
-\item{years}{Years of data to query}
+\item{years}{Vector of the start and end years desired}
 }
 \value{
 Data frame containing years and associated start and end dates

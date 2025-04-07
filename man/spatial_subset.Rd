@@ -4,14 +4,16 @@
 \alias{spatial_subset}
 \title{Spatially Subset Camera Site Locations}
 \usage{
-spatial_subset(datalist, sf_layer, filter_statement)
+spatial_subset(locationeffort, sf_layer, zone_id, filter_statement = NULL)
 }
 \arguments{
-\item{datalist}{list object containing location, effort, and detection dataframes.}
+\item{locationeffort}{dataframe containing location and effort information from \code{effort_query()}}
 
-\item{sf_layer}{sf polygon object}
+\item{sf_layer}{as character string, sf polygon object by which to subset locationeffort data frame}
 
-\item{filter_statement}{character string, to be passed along to \code{filter()} to subset spatial layer}
+\item{zone_id}{as character string, ID column in sf_layer e.g.(bear_mgmt_unit_id)}
+
+\item{filter_statement}{character string of right hand side of filter statment, to be passed along to subset spatial layer (e.g. "== 'A'")}
 }
 \value{
 data frame
@@ -28,4 +30,7 @@ based on a spatial layer, like deer management unit.
 \dontrun{
 spatial_subset(locs_df, _sf)
 }
+}
+\seealso{
+\code{list_spatial_layers()}
 }

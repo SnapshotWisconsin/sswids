@@ -4,12 +4,16 @@
 \alias{summarize_detections}
 \title{Summarize detection data by cam site id-year-occasions}
 \usage{
-summarize_detections(detections, seasons, summary_value = "count triggers")
+summarize_detections(
+  detections,
+  locationeffort,
+  summary_value = "count triggers"
+)
 }
 \arguments{
 \item{detections}{detections dataframe}
 
-\item{seasons}{seasons dataframe}
+\item{locationeffort}{data frame containing location and effort data}
 
 \item{summary_value}{character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"}
 }

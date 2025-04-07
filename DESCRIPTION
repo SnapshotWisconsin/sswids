@@ -31,10 +31,12 @@ Imports:
     terra,
     tibble,
     tidyr,
+    tidyselect,
     vroom
 Depends: 
     R (>= 2.10)
 LazyData: true
+LazyDataCompression:xz
 Suggests: 
     kableExtra,
     knitr,

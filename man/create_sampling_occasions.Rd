@@ -2,13 +2,33 @@
 % Please edit documentation in R/create_sampling_occasions.R
 \name{create_sampling_occasions}
 \alias{create_sampling_occasions}
-\title{Title}
+\title{Assign effort data to sampling occasions}
 \usage{
-create_sampling_occasions(seasons, effort_by_day, num_occasions)
+create_sampling_occasions(
+  daterange,
+  locationeffort,
+  num_occasions,
+  prop_classified = 0.95
+)
 }
 \arguments{
-\item{num_occasions}{}
+\item{daterange}{data frame from \code{create_season_dates} or vector of dates specifying time
+frame of your data pull.}
+
+\item{locationeffort}{nested data frame with location and effort data created by
+\code{merge_nearby_cameras()}.}
+
+\item{num_occasions}{numeric. Number of occasions to split daily effort data in to.
+If the total time frame is not divisible by the number of occasions
+extra days will be distributed to earlier occasions, with an extra day
+added until there is no more remainder according to behavior of \code{ntile()}
+function.}
+
+\item{prop_classified}{numeric, the threshold for the proportion of photos classified by which
+to filter effort data. Defaults to 0.95.}
 }
 \description{
-Title
+From user specified number of occasion arguments assings days of effort to specific occasions
+Returns a data frame sorted by cam_site_id, season, and occasion with coordinates, start and
+end dates, classification effort summarized by occasion and camera location sequence number(s).
 }

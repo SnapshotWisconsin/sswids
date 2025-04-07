@@ -12,9 +12,6 @@ query_raw_data(
   outputs = c("detections", "effort", "locations")
 )
 }
-\arguments{
-\item{species}{list of species}
-}
 \description{
 Title
 }

@@ -4,19 +4,15 @@
 \alias{merge_nearby_cameras}
 \title{Merge Nearby Camera Locations}
 \usage{
-merge_nearby_cameras(datalist, cam_distance)
+merge_nearby_cameras(locationeffort, cam_distance = 50)
 }
 \arguments{
-\item{datalist}{list object containing location, effort, and detection dataframes.}
+\item{locationeffort}{nested data frame of locations and effort}
 
 \item{cam_distance}{numeric, distance (in meters) in which nearby camera locations should be combined}
-
-\item{locations}{Data frame of camera_location_seq_no's and coordinates}
-
-\item{effort_df}{Data frame of days of effort for each camera_location_seq_no}
 }
 \value{
-list object containing location, effort, and detection dataframes with associated cam_site_id.
+nested data frame of locations and effort wtih new cam_site_id
 }
 \description{
 Combine nearby camera_location_seq_no's and create new camera site IDs (cam_site_id).
@@ -24,7 +20,7 @@ Often, volunteers will maintain a camera then move it to another location very
 close by, and it may be advantageous later on to combine these locations into
 a single camera site. merge_nearby_cameras() does this for us and creates a new
 camera location variable called cam_site_id that can contain one or more nearby
-camera_location_seq_nos. Then, cam_site_id is added to effort and detections.
+camera_location_seq_nos.
 }
 \details{
 Up to this point, locations are kept track of using camera_location_seq_no.
@@ -33,14 +29,14 @@ there is a new camera deployed or a deployment event created, even at the exact
 same coordinates, a new camera_location_seq_no is created. Also, there are cases
 when a new camera is deployed, sometimes at the exact same spot, but there are
 new coordinates associated with that deployment. This step merges the
-camera_location_seq_nos within 100 m of each other together as the same cam_site_id.
-A camera_location_seq_no is buffered and given a new ID (cam_site_id) regardless
-of whether there is a camera nearby or not. In some cases, multiple
-camera_location_seq_nos may be in the same exact location (for example, a
-camera is deployed and later replaced with a different camera). The lat lon for
-cam_site_id are created later once effort is finalized and tranformed to daily
-effort for the purposes of creating a weighted average location
-(see \code{\link[=average_camera_coordinates]{average_camera_coordinates()}}). This step does not result in any data loss.
-It does set up the data structure to look for instances of overlapping effort,
-next.
+camera_location_seq_nos within a specified distance of each other together as
+the same cam_site_id. A camera_location_seq_no is buffered and given a new ID
+(cam_site_id) regardless of whether there is a camera nearby or not. In some
+cases, multiple camera_location_seq_nos may be in the same exact location
+(for example, a camera is deployed and later replaced with a different camera).
+The lat lon for cam_site_id are created after weighting the location for cam_site_id
+by effort at each camera location sequence number. This function also: removes
+cam_site_ids with overlapping effort of more than 1 day, and removes some columns
+to tidy up data frame (grid type, grid id, lat/long coordinates associated
+with camera location sequence number).
 }
