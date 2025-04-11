@@ -26,7 +26,9 @@
 #'  with camera location sequence number).
 #'
 #' @param locationeffort nested data frame of locations and effort
-#' @param cam_distance numeric, distance (in meters) in which nearby camera locations should be combined
+#' @param cam_distance numeric, distance (in meters) in which nearby camera locations should be combined,
+#'                     this represents the radius around a camera location for which a buffer is created.
+#'                     Default is 50m.
 #'
 #' @return nested data frame of locations and effort wtih new cam_site_id
 #' @export
@@ -44,12 +46,12 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=50) {
     # WI transverse mercator
     sf::st_transform(., 3071)
 
-  # buffer each camera_location_seq_no by distance set above / 2
+
   # (cameras <X m apart with overlapping buffers below = same site)
   buffers_sf <-
     locs_sf %>%
-    # buffer
-    sf::st_buffer(dist = cam_distance / 2)
+    # buffer, dist represents the radius of circle around the point
+    sf::st_buffer(dist = cam_distance)
 
   # dissolve any overlapping buffers (i.e., nearby camera_location_seq_no's or identical locations)
   buffers_sf <-
@@ -86,6 +88,9 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=50) {
     dplyr::select(-buffer_id) %>%
     dplyr::arrange(cam_site_id, season)
 
+  multiplecamlocseqno <- effort_df_camsiteid%>%dplyr::group_by(cam_site_id, season)%>%filter(dplyr::n()>1) %>% dplyr::summarize(n=dplyr::n())
+  cat("cam_site_ids with multiple cam_loc_seq_no...\n")
+  print(multiplecamlocseqno, n=nrow(multiplecamlocseqno))
   #tidyr::unnest(Q3, cols = c(effort))%>%tidyr::nest("effort"= any_of(effortvars))%>%dplyr::arrange(cam_site_id)
 
 
@@ -100,7 +105,11 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=50) {
   overlap <- Q5[lapply(Q5, function (x) nrow(x) > 2)==TRUE] # 2 because pulled out both duplicated rows in line 100
   #filter rows with overlapping effort more than one day
   Q6 <- Q4%>%filter(!cam_site_id %in% substr(names(overlap), 1, 8) | !season %in% substr(names(overlap), 10, 10))
-  print(paste("cam sites x seasons removed due to overlapping effort of more than 1 day:", names(overlap)))
+
+  printoverlap <- tibble::tibble("cam_site_id"=substring(names(overlap), 0,8), "season"=substring(names(overlap),10),
+                             "camera_location_seq_no"=unlist(lapply(overlap, function(x) paste0(unique(x$camera_location_seq_no), collapse = ",")), use.names = FALSE))
+  cat("\ncam sites x seasons removed due to overlapping effort of more than 1 day...\n")
+  print(printoverlap, n=nrow(printoverlap))
 
   #average camera coordinates
   Q7 <- Q6%>%dplyr::mutate("lat"= purrr::map_dbl(.x=.$effort, .f=~mean(as.numeric(.x$latitude))), "lon"= purrr::map_dbl(.x=.$effort, .f=~mean(as.numeric(.x$longitude))))

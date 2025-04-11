@@ -4,7 +4,7 @@
 \alias{query_detections}
 \title{Pull in detection from Snapshot database}
 \usage{
-query_detections(conn, species, grid, daterange, prec)
+query_detections(conn, species, grid, daterange = NULL, prec)
 }
 \arguments{
 \item{conn}{a connection to the sswi database}

@@ -20,10 +20,13 @@
 
 
 
-query_detections <- function(conn, species, grid, daterange, prec) {
+query_detections <- function(conn, species, grid, daterange=NULL, prec) {
 
   if(is.null(daterange)){
-    daterange <- data.frame("start_date"=as.Date('2019-01-01'), "end_date"=Sys.Date()-365)
+    previousyear <- lubridate::year(Sys.Date()-365)
+    start_date <- as.Date(stringr::str_c(previousyear, "-01-01"), tz="America/Chicago")
+    end_date <- as.Date(stringr::str_c(previousyear, "-12-31"), tz="America/Chicago")
+    daterange <- data.frame("start_date"=start_date, "end_date"=end_date)
   }
 
   if(!inherits(daterange, "data.frame")){
