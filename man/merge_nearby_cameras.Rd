@@ -9,7 +9,9 @@ merge_nearby_cameras(locationeffort, cam_distance = 50)
 \arguments{
 \item{locationeffort}{nested data frame of locations and effort}
 
-\item{cam_distance}{numeric, distance (in meters) in which nearby camera locations should be combined}
+\item{cam_distance}{numeric, distance (in meters) in which nearby camera locations should be combined,
+this represents the radius around a camera location for which a buffer is created.
+Default is 50m.}
 }
 \value{
 nested data frame of locations and effort wtih new cam_site_id

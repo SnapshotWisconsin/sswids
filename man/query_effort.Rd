@@ -10,27 +10,43 @@ query_effort(conn, prec, grid, daterange = NULL, remove0Timelapse = TRUE)
 \item{conn}{connection to database returned by \code{sswids::connect_to_sswidb()}}
 
 \item{prec}{precision of classifications. Should be set to 0 or 0.95. 0.95
-indicates final data and returns FINAL data while 0 indicates data
-that is classified but includes classifications that don't meet
-accuracy standards.}
+indicates final data and returns class_final_trigger_count column
+in output data while 0 indicates data that is classified but includes
+classifications that don't meet accuracy standard, resulting in
+class_effort_trigger_count column being included in output.}
 
 \item{grid}{specified as character vector. What camera grids to pull effort
 info for (e.g. "SSWI").}
 
 \item{daterange}{preferably a data frame of start and end dates, with columns
-"start_date" and "end_date". Can accommodate same ranges
-across years. The date range to pull the effort for. If not
-provided defaults to 2019-01-01 to  the current date - 1 year.}
+"start_date" and "end_date" as created by \code{sswids::create_season_dates()}.
+Can accommodate same ranges across years. The date range to
+pull the effort for. If not provided defaults to January 1st
+to December 31st of the previous year.}
 
 \item{remove0Timelapse}{Logical, should rows with 0 timelapse photos be removed
 from the table. These rows indicate camera site/days
 where no timelapse photo was taken despite programming.}
 }
 \value{
-a data frame with daily camera effort information as well as location and grid information.
+a nested data frame with daily camera effort information as well as
+location and grid information.See details for more info.
 }
 \description{
-Querys database for information about effort at camera sites,
+Queries database for information about effort at camera sites,
 including classification effort. Combines data from DS_LOCATION_EFFORT,
 SSWI_GRID_REF, and SSWI_CAMERA_LOCATION based on specified arguments.
+}
+\details{
+A column called season is created in the output indicating the time period
+repeated across years from which data is pulled, is often synonymous with year
+but possibly different if the time period of interest spans years (e.g. over
+winter). It is created based on the number of rows in your daterange input.
+
+Output is a nested table with camera-level information such as location sequence
+number, lat, lon, and grid ID displayed across columns and effort data nested
+within the effort list-column. See \code{tidyr::nest()} for more info.
+}
+\seealso{
+\code{create_season_dates()} \code{nest()}
 }

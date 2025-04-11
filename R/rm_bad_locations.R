@@ -21,7 +21,7 @@ rm_bad_locations <- function (locationeffort=locationeffort, coordinate_precisio
 
 
 colidx <- which(colnames(locationeffort) %in% c("camera_location_seq_no", "longitude", "latitude"))
-camlocs <- locationeffort%>%dplyr::select(all_of(colidx))
+camlocs <- locationeffort%>%dplyr::select(all_of(colidx))%>%dplyr::distinct(camera_location_seq_no, .keep_all = TRUE)
 
 
 locs_sf = camlocs %>%

@@ -4,14 +4,21 @@
 \alias{create_season_dates}
 \title{Create Seasonal Data Frames to Query Detections and Effort}
 \usage{
-create_season_dates(min_date, max_date, years)
+create_season_dates(min_date, max_date, years, discontinuous = FALSE)
 }
 \arguments{
 \item{min_date}{Start date of query}
 
 \item{max_date}{End date of query}
 
-\item{years}{Vector of the start and end years desired}
+\item{years}{Vector of the start and end years desired. \code{seq()} used within
+function to create a sequence of years from start to end years. Change to a
+vector of specific years desired if you want a discontinuous sequence of years.}
+
+\item{discontinuous}{logical indicating whether you want a discontinuous
+range of years from which to pull data. Defaults to FALSE. If TRUE, change years
+argument to specify the years you want (e.g. c(2019, 2021, 2023)) as opposed
+to the start and end years}
 }
 \value{
 Data frame containing years and associated start and end dates
