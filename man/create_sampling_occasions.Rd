@@ -8,7 +8,7 @@ create_sampling_occasions(
   daterange,
   locationeffort,
   num_occasions,
-  prop_classified = 0.95
+  class_threshold = 0.95
 )
 }
 \arguments{
@@ -24,11 +24,11 @@ extra days will be distributed to earlier occasions, with an extra day
 added until there is no more remainder according to behavior of \code{ntile()}
 function.}
 
-\item{prop_classified}{numeric, the threshold for the proportion of photos classified by which
+\item{class_threshold}{numeric, the threshold for the proportion of photos classified by which
 to filter effort data. Defaults to 0.95.}
 }
 \description{
-From user specified number of occasion arguments assings days of effort to specific occasions
+From user specified number of occasion arguments assigns days of effort to specific occasions.
 Returns a data frame sorted by cam_site_id, season, and occasion with coordinates, start and
 end dates, classification effort summarized by occasion and camera location sequence number(s).
 }

@@ -35,7 +35,7 @@
 #'
 #' @examples
 
-merge_nearby_cameras <- function(locationeffort, cam_distance=50) {
+merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
 
   colidx <- which(colnames(locationeffort) %in% c("camera_location_seq_no", "longitude", "latitude"))
   camlocs <- locationeffort%>%dplyr::select(all_of(colidx))%>%dplyr::distinct()
@@ -51,7 +51,7 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=50) {
   buffers_sf <-
     locs_sf %>%
     # buffer, dist represents the radius of circle around the point
-    sf::st_buffer(dist = cam_distance)
+    sf::st_buffer(dist = cam_distance/2)
 
   # dissolve any overlapping buffers (i.e., nearby camera_location_seq_no's or identical locations)
   buffers_sf <-

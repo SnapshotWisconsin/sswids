@@ -4,17 +4,19 @@
 \alias{merge_nearby_cameras}
 \title{Merge Nearby Camera Locations}
 \usage{
-merge_nearby_cameras(locationeffort, cam_distance = 50)
+merge_nearby_cameras(locationeffort, cam_distance = 100)
 }
 \arguments{
 \item{locationeffort}{nested data frame of locations and effort}
 
-\item{cam_distance}{numeric, distance (in meters) in which nearby camera locations should be combined,
-this represents the radius around a camera location for which a buffer is created.
-Default is 50m.}
+\item{cam_distance}{numeric, distance (in meters) within which nearby camera locations should be combined,
+this represents the between 2 camera locations. This number is divided in half within
+the function to create a buffer around each camera (e.g. for cam_distance=100 makes 50m
+buffer around each camera, those buffers that intersect are dissolved into 1).
+Default is 100m.}
 }
 \value{
-nested data frame of locations and effort wtih new cam_site_id
+nested data frame of locations and effort with new cam_site_id
 }
 \description{
 Combine nearby camera_location_seq_no's and create new camera site IDs (cam_site_id).
