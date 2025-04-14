@@ -26,11 +26,13 @@
 #'  with camera location sequence number).
 #'
 #' @param locationeffort nested data frame of locations and effort
-#' @param cam_distance numeric, distance (in meters) in which nearby camera locations should be combined,
-#'                     this represents the radius around a camera location for which a buffer is created.
-#'                     Default is 50m.
+#' @param cam_distance numeric, distance (in meters) within which nearby camera locations should be combined,
+#'                     this represents the between 2 camera locations. This number is divided in half within
+#'                     the function to create a buffer around each camera (e.g. for cam_distance=100 makes 50m
+#'                     buffer around each camera, those buffers that intersect are dissolved into 1).
+#'                     Default is 100m.
 #'
-#' @return nested data frame of locations and effort wtih new cam_site_id
+#' @return nested data frame of locations and effort with new cam_site_id
 #' @export
 #'
 #' @examples
