@@ -1,7 +1,7 @@
 
 #' Assign effort data to sampling occasions
 #'
-#' From user specified number of occasion arguments assings days of effort to specific occasions
+#' From user specified number of occasion arguments assigns days of effort to specific occasions.
 #' Returns a data frame sorted by cam_site_id, season, and occasion with coordinates, start and
 #' end dates, classification effort summarized by occasion and camera location sequence number(s).
 #'
@@ -14,7 +14,7 @@
 #'                      extra days will be distributed to earlier occasions, with an extra day
 #'                      added until there is no more remainder according to behavior of `ntile()`
 #'                      function.
-#' @param prop_classified numeric, the threshold for the proportion of photos classified by which
+#' @param class_threshold numeric, the threshold for the proportion of photos classified by which
 #'                        to filter effort data. Defaults to 0.95.
 #'
 #' @return
@@ -22,7 +22,18 @@
 #'
 #' @examples
 
-create_sampling_occasions <- function(daterange, locationeffort, num_occasions, prop_classified=0.95) {
+create_sampling_occasions <- function(daterange, locationeffort, num_occasions, class_threshold=0.95) {
+
+  if(is.null(num_occasions)){
+    print("Please specify the number of sampling occasions")
+  }
+
+  if(is.null(daterange)){
+    previousyear <- lubridate::year(Sys.Date()-365)
+    start_date <- as.Date(stringr::str_c(previousyear, "-01-01"), tz="America/Chicago")
+    end_date <- as.Date(stringr::str_c(previousyear, "-12-31"), tz="America/Chicago")
+    daterange <- data.frame("start_date"=start_date, "end_date"=end_date)
+  }
 
   if(!inherits(daterange, "data.frame")){
     daterange <- data.frame("start_date"=as.Date(min(daterange)), "end_date"=as.Date(max(daterange)))
@@ -78,7 +89,7 @@ create_sampling_occasions <- function(daterange, locationeffort, num_occasions, 
   effort_by_day <- effort_by_day[,c(1:10,13,12,11)]
 
   #filter by prop_classified which is at occasion level
-  effort_by_day2 <- effort_by_day%>%filter(prop_classified >= prop_classified)
+  effort_by_day2 <- effort_by_day%>%dplyr::filter(prop_classified >= class_threshold)
 
   #i dont think this chunk is necessary with how we pull data now
   # zero-fill in effort for any missing occasions here
