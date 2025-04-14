@@ -105,7 +105,8 @@ df <- df[,c(2:6,11,7:8,1,9:10)]
 # clean up names (snakecase), convert to tibble
 names(df) <- janitor::make_clean_names(names(df))
 effortvars <- c("final_date", "motion_trigger_count", "time_lapse_trigger_count", "class_final_trigger_count", "class_effort_trigger_count", "prop_classified")
-df <- df%>%tidyr::nest(effort=any_of(effortvars))%>%dplyr::arrange(camera_location_seq_no)
+
+df <- df%>%dplyr::arrange(camera_location_seq_no, final_date)%>%tidyr::nest(effort=any_of(effortvars))
 
 return(df)
 }

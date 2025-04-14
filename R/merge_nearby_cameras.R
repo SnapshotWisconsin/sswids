@@ -88,7 +88,8 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
     dplyr::mutate(cam_site_id = stringr::str_c('cam_', sprintf("%04d", buffer_id))) %>%
     # clean up
     dplyr::select(-buffer_id) %>%
-    dplyr::arrange(cam_site_id, season)
+    dplyr::arrange(camera_location_seq_no, season)
+
 
   multiplecamlocseqno <- effort_df_camsiteid%>%dplyr::group_by(cam_site_id, season)%>%filter(dplyr::n()>1) %>% dplyr::summarize(n=dplyr::n())
   cat("cam_site_ids with multiple cam_loc_seq_no...\n")
