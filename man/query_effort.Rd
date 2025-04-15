@@ -47,6 +47,22 @@ Output is a nested table with camera-level information such as location sequence
 number, lat, lon, and grid ID displayed across columns and effort data nested
 within the effort list-column. See \code{tidyr::nest()} for more info.
 }
+\examples{
+\dontrun{
+#set parameters for query_effort
+sswids::connect_to_sswidb(db_version = 'PROD')
+grid <- "SSWI"
+prec <- 0
+species <- c("Bear","Raccoon")
+daterange <- create_season_dates(min_date = "-06-05",
+                                 max_date = "-07-02",
+                                 years = c(2019,2022))
+#run query_effort
+Q.test.typical <- query_effort(conn = conn, prec = prec,
+                               grid = grid, daterange = daterange,
+                               remove0Timelapse = TRUE)
+}
+}
 \seealso{
 \code{create_season_dates()} \code{nest()}
 }

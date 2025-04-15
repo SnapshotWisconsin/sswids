@@ -10,9 +10,9 @@ merge_nearby_cameras(locationeffort, cam_distance = 100)
 \item{locationeffort}{nested data frame of locations and effort}
 
 \item{cam_distance}{numeric, distance (in meters) within which nearby camera locations should be combined,
-this represents the between 2 camera locations. This number is divided in half within
-the function to create a buffer around each camera (e.g. for cam_distance=100 makes 50m
-buffer around each camera, those buffers that intersect are dissolved into 1).
+this represents the distance between 2 camera locations. This number is divided in half
+within the function to create a buffer around each camera (e.g. for cam_distance=100
+makes 50m buffer around each camera, those buffers that intersect are dissolved into 1).
 Default is 100m.}
 }
 \value{
@@ -43,4 +43,10 @@ by effort at each camera location sequence number. This function also: removes
 cam_site_ids with overlapping effort of more than 1 day, and removes some columns
 to tidy up data frame (grid type, grid id, lat/long coordinates associated
 with camera location sequence number).
+}
+\examples{
+\dontrun{
+Q3.test.typical <- merge_nearby_cameras(locationeffort = Q2.test.typical,
+                                        cam_distance = 100)
+}
 }

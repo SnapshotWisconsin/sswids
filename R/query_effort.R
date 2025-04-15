@@ -35,6 +35,20 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' #set parameters for query_effort
+#' sswids::connect_to_sswidb(db_version = 'PROD')
+#' grid <- "SSWI"
+#' prec <- 0
+#' species <- c("Bear","Raccoon")
+#' daterange <- create_season_dates(min_date = "-06-05",
+#'                                  max_date = "-07-02",
+#'                                  years = c(2019,2022))
+#' #run query_effort
+#' Q.test.typical <- query_effort(conn = conn, prec = prec,
+#'                                grid = grid, daterange = daterange,
+#'                                remove0Timelapse = TRUE)
+#' }
 #' @seealso `create_season_dates()` `nest()`
 
 query_effort <- function(conn, prec, grid, daterange=NULL, remove0Timelapse=TRUE){

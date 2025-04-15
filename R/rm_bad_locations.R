@@ -2,20 +2,26 @@
 #'
 #' Removes bad locations, specifically one camera that is actually in the UP of
 #' Michigan and another with an erroneous location in the middle of a lake, as well as
-#' imprecise locations as specified by the user. Imprecise lcoations are determined by
+#' imprecise locations as specified by the user. Imprecise locations are determined by
 #' the number of digits after the decimal. The default is 4 which corresponds to an
-#' accuracy of ~11m. Number of digits after the decimals scales 10x withe each
+#' accuracy of ~11m. Number of digits after the decimals scales 10x with each
 #' added decimal place.Locations are considered precise if either the latitude OR
 #' longitude coordinate has 4 decimal places (accounting for truncation of 0 as
 #' last decimal place).
 #'
-#' @param locationeffort data frame of camera location and effort data from `effort_query()`
+#' @param locationeffort data frame of camera location and effort data from `query_effort()`
 #' @param coordinate_precision numeric, number of decimal places to filter locations by. Default is 4.
 #'
 #' @return a data frame with known bad locations removed.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' Q2.test.typical <- rm_bad_locations(locationeffort = Q.test.typical,
+#'                                     coordinate_precision = 4)
+#' }
+#'
+#'
 rm_bad_locations <- function (locationeffort=locationeffort, coordinate_precision=4){
 #spatial_data, zone
 
