@@ -5,7 +5,7 @@
 \title{Assign effort data to sampling occasions}
 \usage{
 create_sampling_occasions(
-  daterange,
+  daterange = NULL,
   locationeffort,
   num_occasions,
   class_threshold = 0.95

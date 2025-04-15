@@ -7,13 +7,14 @@
 create_season_dates(min_date, max_date, years, discontinuous = FALSE)
 }
 \arguments{
-\item{min_date}{Start date of query}
+\item{min_date}{character, start date of query, in the format "-mm-dd"}
 
-\item{max_date}{End date of query}
+\item{max_date}{character, end date of query, in the format "-mm-dd"}
 
 \item{years}{Vector of the start and end years desired. \code{seq()} used within
 function to create a sequence of years from start to end years. Change to a
-vector of specific years desired if you want a discontinuous sequence of years.}
+vector of specific years desired if you want a discontinuous sequence of years
+AND use argument discontinuous = TRUE.}
 
 \item{discontinuous}{logical indicating whether you want a discontinuous
 range of years from which to pull data. Defaults to FALSE. If TRUE, change years

@@ -46,7 +46,10 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       )
     )
   #reordering columns, getting rid of unnecessary columns
-  joined2 <- joined1[,c(11,1,12,4,8,9,13:21)]%>%dplyr::arrange(cam_site_id, season, occ)
+  colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date",
+                sort(grep(pattern = "[A-Z]", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
+                "time_lapse_trigger_count", "class_effort_trigger_count", "prop_classified", "days_active")
+  joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
 
 
 
@@ -75,6 +78,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     # calculate max count over each occasion
     # this works as key column headings are capitalized
     dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
+                     across(start_date:end_date, .fns = ~unique(.x)),
                      dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~max(. , na.rm = TRUE)),
                      across(lat:days_active, .fns = ~unique(.x))) %>%
     dplyr::arrange(cam_site_id, season, occ) %>%
@@ -85,6 +89,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       dplyr::group_by(cam_site_id, season, occ) %>%
       # COUNT instead of MAX
       dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
+                       across(start_date:end_date, .fns = ~unique(.x)),
                        dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)),
                        across(lat:days_active, .fns = ~unique(.x))) %>%
       dplyr::arrange(cam_site_id, season, occ) %>%

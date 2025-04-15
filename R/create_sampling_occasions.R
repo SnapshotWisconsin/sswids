@@ -22,7 +22,7 @@
 #'
 #' @examples
 
-create_sampling_occasions <- function(daterange, locationeffort, num_occasions, class_threshold=0.95) {
+create_sampling_occasions <- function(daterange=NULL, locationeffort, num_occasions, class_threshold=0.95) {
 
   if(is.null(num_occasions)){
     print("Please specify the number of sampling occasions")
