@@ -31,7 +31,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     # tidy up
     dplyr::arrange(season, camera_location_seq_no, detection_datetime)
 
-  longerdelim <- tidyr::separate_longer_delim(Q4, camera_location_seq_no, delim = ",")
+  longerdelim <- tidyr::separate_longer_delim(locationeffort, camera_location_seq_no, delim = ",")
   joined1 <-  dplyr::right_join(detections, longerdelim,
                                by=dplyr::join_by("camera_location_seq_no", "season", between(detection_date, start_date, end_date)))%>%
     # and fix counts while we're at it
