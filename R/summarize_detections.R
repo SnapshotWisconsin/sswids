@@ -48,7 +48,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
   #reordering columns, getting rid of unnecessary columns
   colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date",
                 sort(grep(pattern = "[A-Z]", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
-                "time_lapse_trigger_count", "class_effort_trigger_count", "prop_classified", "days_active")
+                "time_lapse_trigger_count", grep(pattern = "class_.*_trigger_count", x = colnames(joined1), value = TRUE), "prop_classified", "days_active")
   joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
 
 
