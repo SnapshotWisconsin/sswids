@@ -30,8 +30,8 @@ create_sampling_occasions <- function(daterange=NULL, locationeffort, num_occasi
 
   if(is.null(daterange)){
     previousyear <- lubridate::year(Sys.Date()-365)
-    start_date <- as.Date(stringr::str_c(previousyear, "-01-01"), tz="America/Chicago")
-    end_date <- as.Date(stringr::str_c(previousyear, "-12-31"), tz="America/Chicago")
+    start_date <- as.Date(stringr::str_c(previousyear, "-01-01"))
+    end_date <- as.Date(stringr::str_c(previousyear, "-12-31"))
     daterange <- data.frame("start_date"=start_date, "end_date"=end_date)
   }
 
@@ -41,7 +41,7 @@ create_sampling_occasions <- function(daterange=NULL, locationeffort, num_occasi
 
   # create day of season data frame to join occasion number to effort/detection dates
   day_occasion_df <-
-    daterange %>%
+    daterange2 %>%
     dplyr::mutate(season = dplyr::row_number()) %>%
     dplyr::group_by(season) %>%
     tidyr::nest() %>%

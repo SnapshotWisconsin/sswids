@@ -52,8 +52,8 @@ if (discontinuous ==FALSE){
 
     tibble::tibble(
       year = years,
-      start_date = as.Date(stringr::str_c(year, min_date), tz = "America/Chicago"),
-      end_date = as.Date(stringr::str_c(year + 1, max_date), tz = "America/Chicago")
+      start_date = as.Date(stringr::str_c(year, min_date)),
+      end_date = as.Date(stringr::str_c(year + 1, max_date))
     )
 
   } else {
@@ -62,8 +62,8 @@ if (discontinuous ==FALSE){
 
     tibble::tibble(
       year = years,
-      start_date = as.Date(stringr::str_c(year, min_date), tz = "America/Chicago"),
-      end_date = as.Date(stringr::str_c(year, max_date), tz = "America/Chicago")
+      start_date = as.Date(stringr::str_c(year, min_date)),
+      end_date = as.Date(stringr::str_c(year, max_date))
     )
 
   }
