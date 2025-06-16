@@ -51,9 +51,9 @@ if (discontinuous ==FALSE){
     cat('creating winter season date ranges (season spans years)...\n')
 
     tibble::tibble(
-      year = years,
-      start_date = as.Date(stringr::str_c(year, min_date)),
-      end_date = as.Date(stringr::str_c(year + 1, max_date))
+      season=seq.int(length(years)),
+      start_date = as.Date(stringr::str_c(years, min_date)),
+      end_date = as.Date(stringr::str_c(years + 1, max_date))
     )
 
   } else {
@@ -61,9 +61,9 @@ if (discontinuous ==FALSE){
     cat('creating season date ranges (season does not span years)...\n')
 
     tibble::tibble(
-      year = years,
-      start_date = as.Date(stringr::str_c(year, min_date)),
-      end_date = as.Date(stringr::str_c(year, max_date))
+      season=seq.int(length(years)),
+      start_date = as.Date(stringr::str_c(years, min_date)),
+      end_date = as.Date(stringr::str_c(years, max_date)),
     )
 
   }
