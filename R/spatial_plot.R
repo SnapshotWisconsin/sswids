@@ -27,6 +27,7 @@ spatial_plot <- function (x, specieslist=NULL, mgmtlayer=get_spatial_data("count
   FROM
   g83100.sswi_metadata_zoon_key_ref;")
 
+  #just do species-level not age or sex classes
 
   if(!is.null(specieslist)){
     specieslist <- toupper(specieslist)

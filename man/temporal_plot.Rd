@@ -2,13 +2,34 @@
 % Please edit documentation in R/temporal_plot.R
 \name{temporal_plot}
 \alias{temporal_plot}
-\title{Title}
+\title{Estimate temporal trends from Snapshot data}
 \usage{
-temporal_plot(specieslist, dataframe, year.lines, year.ticks)
+temporal_plot(
+  conn,
+  df,
+  mgmtlayer,
+  days_active_threshold,
+  ppn_class_threshold,
+  spatialgroup
+)
 }
 \arguments{
-\item{year.ticks}{}
+\item{conn}{connection to the Snapshot database from \code{connect_to_sswidb()}}
+
+\item{df}{a sf data frame output by the data pull workflow}
+
+\item{mgmtlayer}{spatial layer from \code{list_spatial_layers()}}
+
+\item{days_active_threshold}{Numeric, scalar. Minimum number of days a camera needs to have been functioning within an occasion for a cam site id x year x occasion to be included in temporal plot.}
+
+\item{ppn_class_threshold}{Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a temporal plot.}
+
+\item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group}
 }
 \description{
-Title
+Use year round data to decompose detections into seasonal and trend components for
+possible use in annual decision making products. Meant to be used with data pulled
+year round and with > 4 years of data or it will throw errors. Returns a list of
+ggplot objects based on the number of species. Can only be used with one spatial
+layer by which to summarise.
 }

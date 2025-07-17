@@ -89,3 +89,34 @@ detect_overlap <- function(df) {
 
 }
 
+
+combine_species_cols <- function(conn, df) {
+
+  MetaKey <- DBI::dbGetQuery(conn,
+                             "SELECT
+  g83100.sswi_metadata_ref.metadata_group_code,
+  g83100.sswi_metadata_ref.metadata_name
+  FROM
+  g83100.sswi_metadata_ref")%>%filter(stringr::str_detect(METADATA_GROUP_CODE, "^PHOTO_TAG"))%>%
+    filter(stringr::str_detect(METADATA_NAME, "_AMT$"))
+
+  MetaKey$METADATA_GROUP_CODE <- gsub(pattern = "PHOTO_TAG_", replacement = "", MetaKey$METADATA_GROUP_CODE)
+  MetaKey$METADATA_GROUP_CODE <-paste0(MetaKey$METADATA_GROUP_CODE, "_AMT")
+
+  amtcols <- grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)
+  newcolnames <- MetaKey$METADATA_GROUP_CODE[match(amtcols, MetaKey$METADATA_NAME)]
+  combinecollist <- split(newcolnames, newcolnames)
+  combinecollist <- combinecollist[lapply(combinecollist, function (x) length(x) > 1)==TRUE]
+  #colnames(df)[grep("[A-Z]*_AMT", colnames(df))] <- newcolnames
+
+  for (i in 1:length(combinecollist)) {
+    matchstring <- sub("([A-Z]+)(_AMT)","\\1.*\\2",x = unique(combinecollist[[i]]))
+    colstomerge <- grep(pattern = matchstring, x = colnames(df))
+    colname <- combinecollist[[i]][[1]]
+    speciessum <- rowSums(sf::st_drop_geometry(df[,colstomerge]))
+    df <- cbind(df, speciessum)
+    colnames(df)[length(df)-1] <- colname
+    df <- df[-(colstomerge)]
+    }
+    return(df)
+  }

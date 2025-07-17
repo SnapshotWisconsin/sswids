@@ -41,7 +41,7 @@ create_sampling_occasions <- function(daterange=NULL, locationeffort, num_occasi
 
   # create day of season data frame to join occasion number to effort/detection dates
   day_occasion_df <-
-    daterange2 %>%
+    daterange %>%
     dplyr::mutate(season = dplyr::row_number()) %>%
     dplyr::group_by(season) %>%
     tidyr::nest() %>%

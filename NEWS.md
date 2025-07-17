@@ -1,5 +1,14 @@
 # sswids (development version)
 
+# sswids v0.0.0.9004
+7/17/2025
+
+*add spatial_plot and temporal_plot functions to help in development of figures for advisory committees
+*add optional argument to summarize detections "event_threshold" function to allow for grouping triggers into events based on a time threshold 
+*added new vignette to reflect overhaul of data pull process
+*new deer management unit spatial layer
+
+
 # sswids v0.0.0.9003
 4/4/2025
 

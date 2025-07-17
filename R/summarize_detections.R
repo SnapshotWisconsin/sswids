@@ -6,13 +6,17 @@
 #' @param detections detections dataframe
 #' @param locationeffort data frame containing location and effort data
 #' @param summary_value character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"
+#' @param event_threshold numeric, specifying time in minutes between triggers for them to be considered independent events
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-summarize_detections <- function(detections, locationeffort, summary_value = "count triggers") {
+summarize_detections <- function(detections, locationeffort, summary_value = "count triggers", event_threshold= NULL) {
+
+
+
   if(!(summary_value %in% c("count triggers", "max count"))){
     stop("\nPlease supply either 'count triggers' or 'max count' as argument to summary_value")
   }
@@ -31,6 +35,12 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     # tidy up
     dplyr::arrange(season, camera_location_seq_no, detection_datetime)
 
+  if(!is.null()){
+    detections%>%group_by()
+  }
+
+
+
   longerdelim <- tidyr::separate_longer_delim(locationeffort, camera_location_seq_no, delim = ",")
   joined1 <-  dplyr::right_join(detections, longerdelim,
                                by=dplyr::join_by("camera_location_seq_no", "season", between(detection_date, start_date, end_date)))%>%
@@ -45,11 +55,28 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
         )
       )
     )
+
+  if(!is.null(event_threshold)){
+    if(summary_value == "max count"){
+      stop("event_threshold argument is meant to be used with count triggers only")
+    }
+    colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date", "detection_datetime", "species",
+                  sort(grep(pattern = "[A-Z]*_AMT", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
+                  "time_lapse_trigger_count", grep(pattern = "class_.*_trigger_count", x = colnames(joined1), value = TRUE), "prop_classified", "days_active")
+    joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
+    joined2 <- joined2%>%group_by(cam_site_id, species)%>%dplyr::arrange(cam_site_id, detection_datetime)%>%mutate(deltaTime=difftime(detection_datetime, dplyr::lag(detection_datetime), units = "mins"))%>%
+      ungroup()%>%mutate(event=cumsum(deltaTime >= event_threshold | is.na(deltaTime)))
+
+      joined2 <- joined2%>%group_by(event)%>%dplyr::slice_head()
+
+
+    }else{
   #reordering columns, getting rid of unnecessary columns
   colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date",
-                sort(grep(pattern = "[A-Z]", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
+                sort(grep(pattern = "[A-Z]*_AMT", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
                 "time_lapse_trigger_count", grep(pattern = "class_.*_trigger_count", x = colnames(joined1), value = TRUE), "prop_classified", "days_active")
   joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
+  }
 
 
 
