@@ -1,15 +1,16 @@
 #' Spatial Plots
 #'
 #' Produces a list of spatial plots summarizing animal detections by a chosen spatial layer.
+#' Can't currently handle multiple spatial layers within function, would have to run function
+#' for each different spatial layer.
 #'
-#' @param specieslist a vector of species names for which you want to plot spatial data, defaults to NULL pulling in all columns formatted as SPECIES_AMT.
-#' @param x a data frame output by the data pull workflow
+#' @param conn connection to the Snapshot database from `connect_to_sswidb()`
+#' @param df a sf data frame output by the data pull workflow
 #' @param mgmtlayer spatial layer from `list_spatial_layers()`, defaults to counties
 #' @param days_active_threshold Numeric, scalar. Minimum number of days a camera needs to have been functioning within an occasion for a cam site id x year x occasion to be included in spatial plot.
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a spatial plot.
 #' @param n_occasions_annual Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.
-#' @param young logical, defaults to FALSE, should spatial plots be made for YOUNG_AMT
 #'
 #' @return a named list of ggplot objects
 #'
@@ -17,41 +18,28 @@
 #' @export
 #'
 #' @examples
-spatial_plot <- function (x, specieslist=NULL, mgmtlayer=get_spatial_data("counties"), days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM", young=FALSE){
+spatial_plot <- function (conn, df, mgmtlayer=get_spatial_data("counties"), days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM"){
 
-  g <- DBI::dbGetQuery(conn,"SELECT
-  sswi_metadata_zoon_key_seq_no,
-  sswi_metadata_zoon_map_seq_no,
-  metadata_name,
-  zoon_key
-  FROM
-  g83100.sswi_metadata_zoon_key_ref;")
 
-  #just do species-level not age or sex classes
 
-  if(!is.null(specieslist)){
-    specieslist <- toupper(specieslist)
 
-  }
 
-  species <- stringr::str_extract(colnames(x), pattern =  ".*(?=_AMT)")
+  df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
+
+
+
+
+  species <- stringr::str_extract(colnames(df), pattern =  ".*_AMT")
   specieslist <- species[species != "" & !is.na(species)]
-
-
-
-  if(young==FALSE){
-    specieslist <- specieslist[!grepl(x = specieslist, pattern = "YOUNG")]
-    x <- x%>%select(-matches("YOUNG"))
-  }
 
   cat("Making plots for:", specieslist)
 
-  if(!(spatialgroup %in% colnames(effort_by_occ_df_counttriggers_sf))){
-    x = mgmtlayer %>% select({{spatialgroup}})%>%
-      sf::st_join(sf::st_transform(effort_by_occ_df_counttriggers_sf, st_crs(mgmtlayer)))
+  if(!(spatialgroup %in% colnames(df))){
+    df <- mgmtlayer %>% select({{spatialgroup}})%>%
+      sf::st_join(sf::st_transform(df, st_crs(mgmtlayer)))
   }
 
-  ppn.byyear = x %>%
+  ppn.byyear = df %>%
     dplyr::filter(days_active >= days_active_threshold) %>%
     dplyr::filter(prop_classified >= ppn_class_threshold) %>%
     dplyr::group_by(.data[[spatialgroup]],cam_site_id,season) %>%
@@ -81,15 +69,15 @@ spatial_plot <- function (x, specieslist=NULL, mgmtlayer=get_spatial_data("count
 
 
   titles <- janitor::make_clean_names(sub("(FOX|SKUNK|PIG|CRANE|CAT|DOG|GROUSE)(.*)", "\\2 \\1",
-                                 x = specieslist), case = "title")
+                                 x = unique(ppn.byyear$Spp)), case = "title")
   nspecies <- length(specieslist)
 
 
-  plotlist <- lapply(seq(1:nspecies), function(x)
-    ggplot(filter(dataframe, grepl(Spp, pattern = specieslist[x]))) +
-      geom_sf(color="grey", mapping=aes(fill=mean)) +
-      geom_sf(data=mgmtlayer, color="white", lwd=1,fill=NA) +
-      labs(title=stringr::str_wrap(sprintf("Adult %s -- Proportion of Snapshot Camera with a Detection", titles[x]),80)) +
+  plotlist <- lapply(seq(1:nspecies), function(j)
+    ggplot(filter(ppn.byyear, grepl(Spp, pattern = unique(ppn.byyear$Spp)[j]))) +
+      geom_sf(color="white", mapping=aes(fill=mean)) +
+      #geom_sf(data=mgmtlayer, color="white", lwd=1,fill=NA) +
+      labs(title=stringr::str_wrap(sprintf("%s -- Proportion of Snapshot Cameras with Detection", titles[j]),80)) +
       scale_fill_continuous() +
       theme(legend.title = element_blank(),
             legend.text=element_text(size=16),
