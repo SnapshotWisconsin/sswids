@@ -35,9 +35,6 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     # tidy up
     dplyr::arrange(season, camera_location_seq_no, detection_datetime)
 
-  if(!is.null()){
-    detections%>%group_by()
-  }
 
 
 
