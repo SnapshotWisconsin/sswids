@@ -28,8 +28,9 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
     stop("Year round data is needed for temporal plots")
   }
 
-
+  if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1){
   df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
+  }
 
   if(!(spatialgroup %in% colnames(df))){
     df <- mgmtlayer %>% select({{spatialgroup}})%>%

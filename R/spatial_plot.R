@@ -24,7 +24,9 @@ spatial_plot <- function (conn, df, mgmtlayer=get_spatial_data("counties"), days
 
 
 
-  df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
+  if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1){
+    df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
+  }
 
 
 
