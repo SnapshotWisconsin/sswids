@@ -33,8 +33,12 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
   }
 
   if(!(spatialgroup %in% colnames(df))){
-    df <- mgmtlayer %>% select({{spatialgroup}})%>%
-      sf::st_join(sf::st_transform(df, st_crs(mgmtlayer)))
+    df <- df %>%
+      sf::st_join(
+        .,
+        sf::st_transform(get_spatial_data(mgmtlayer), 4326),
+        join = sf::st_within
+      )
   }
 
 

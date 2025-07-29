@@ -2,7 +2,7 @@
 #'
 #' Produces a list of spatial plots summarizing animal detections by a chosen spatial layer.
 #' Can't currently handle multiple spatial layers within function, would have to run function
-#' for each different spatial layer.
+#' for each different spatial layer. It's possible to add to these objects for further modification.
 #'
 #' @param conn connection to the Snapshot database from `connect_to_sswidb()`
 #' @param df a sf data frame output by the data pull workflow
@@ -29,6 +29,15 @@ spatial_plot <- function (conn, df, mgmtlayer=get_spatial_data("counties"), days
   }
 
 
+  if(!(spatialgroup %in% colnames(df))){
+    df <- df %>%
+      sf::st_join(
+        .,
+        sf::st_transform(get_spatial_data(mgmtlayer), 4326),
+        join = sf::st_within
+      )
+  }
+
 
 
   species <- stringr::str_extract(colnames(df), pattern =  ".*_AMT")
@@ -36,10 +45,9 @@ spatial_plot <- function (conn, df, mgmtlayer=get_spatial_data("counties"), days
 
   cat("Making plots for:", specieslist)
 
-  if(!(spatialgroup %in% colnames(df))){
-    df <- mgmtlayer %>% select({{spatialgroup}})%>%
-      sf::st_join(sf::st_transform(df, st_crs(mgmtlayer)))
-  }
+
+
+
 
   ppn.byyear = df %>%
     dplyr::filter(days_active >= days_active_threshold) %>%
@@ -59,12 +67,14 @@ spatial_plot <- function (conn, df, mgmtlayer=get_spatial_data("counties"), days
                      .names = "{sub('_ppn','_mean',col)}"),
                      dplyr::across(tidyselect::matches("[A-Z]*_ppn", ignore.case = FALSE), ~sd(.),
                      .names = "{sub('_ppn','_sd',col)}"))%>%
-    tidyr::pivot_longer(-c(.data[[spatialgroup]], n.sites, geometry),
+    tidyr::pivot_longer(-c(tidyselect::all_of(spatialgroup), n.sites, geometry),
                         names_to = c("Spp", ".value"),
                         names_pattern="(.*)_(mean|sd)" ) #regex grouping to deal with different columns for different species/scenarios(e.g.BEAR_ADULT_AMT or FOXRED_AMT and FOXGRAY_AMT)
 
 
-
+  ppn.byyear = get_spatial_data(mgmtlayer) %>%
+    sf::st_transform(., crs = 3071) %>%
+    dplyr::left_join(sf::st_drop_geometry(ppn.byyear))
 
 
 

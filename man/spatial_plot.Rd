@@ -35,5 +35,5 @@ a named list of ggplot objects
 \description{
 Produces a list of spatial plots summarizing animal detections by a chosen spatial layer.
 Can't currently handle multiple spatial layers within function, would have to run function
-for each different spatial layer.
+for each different spatial layer. It's possible to add to these objects for further modification.
 }
