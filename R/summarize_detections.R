@@ -62,7 +62,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
                   "time_lapse_trigger_count", grep(pattern = "class_.*_trigger_count", x = colnames(joined1), value = TRUE), "prop_classified", "days_active")
     joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
     joined2 <- joined2%>%group_by(cam_site_id, species)%>%dplyr::arrange(cam_site_id, detection_datetime)%>%mutate(deltaTime=difftime(detection_datetime, dplyr::lag(detection_datetime), units = "mins"))%>%
-      ungroup()%>%mutate(event=cumsum(deltaTime >= event_threshold | is.na(deltaTime)))
+      ungroup()%>%dplyr::arrange(cam_site_id, season, occ)%>%mutate(event=cumsum(deltaTime >= event_threshold | is.na(deltaTime)))
 
       joined2 <- joined2%>%group_by(event)%>%dplyr::slice_head()
 
@@ -114,7 +114,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       # COUNT instead of MAX
       dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                        across(start_date:end_date, .fns = ~unique(.x)),
-                       dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)),
+                       dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)),
                        across(lat:days_active, .fns = ~unique(.x))) %>%
       dplyr::arrange(cam_site_id, season, occ) %>%
       dplyr::ungroup()

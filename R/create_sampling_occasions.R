@@ -89,7 +89,9 @@ create_sampling_occasions <- function(daterange=NULL, locationeffort, num_occasi
   effort_by_day <- effort_by_day[,c(1:10,13,12,11)]
 
   #filter by prop_classified which is at occasion level
-  effort_by_day2 <- effort_by_day%>%dplyr::filter(prop_classified >= class_threshold)
+  effort_by_day2 <- effort_by_day%>%
+    tidyr::replace_na(list(prop_classified = 1))%>%
+    dplyr::filter(prop_classified >= class_threshold)
 
   #i dont think this chunk is necessary with how we pull data now
   # zero-fill in effort for any missing occasions here
