@@ -8,7 +8,8 @@ summarize_detections(
   detections,
   locationeffort,
   summary_value = "count triggers",
-  event_threshold = NULL
+  event_threshold = NULL,
+  maxcountevents = NULL
 )
 }
 \arguments{
@@ -16,10 +17,12 @@ summarize_detections(
 
 \item{locationeffort}{data frame containing location and effort data}
 
-\item{summary_value}{character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"}
+\item{summary_value}{character string either "max count" or "count triggers" or "max events", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion or a sum of the max counts for each event in an occasion. Default value is "count triggers"}
 
-\item{event_threshold}{numeric, specifying time in minutes between triggers for them to be considered independent events}
+\item{event_threshold}{numeric, specifying time in minutes between triggers for them to be considered independent events. Meant to be used with either "count triggers" or "max events" summmary_value arguments.}
 }
 \description{
-Summarize detection data by cam site id-year-occasions
+This function aggregates detections into occasions established in the previous 'create_sampling_ocassions()' function. First, it joins
+detection data to effort/location data to remove detections at camera sites with errant location/effort information.Then it summarizes detections
+by occasion in one of 3 possible ways specified with the summary_value argument.
 }

@@ -1,23 +1,25 @@
 
 #' Summarize detection data by cam site id-year-occasions
 #'
-#'
+#' This function aggregates detections into occasions established in the previous 'create_sampling_ocassions()' function. First, it joins
+#' detection data to effort/location data to remove detections at camera sites with errant location/effort information.Then it summarizes detections
+#' by occasion in one of 3 possible ways specified with the summary_value argument.
 #'
 #' @param detections detections dataframe
 #' @param locationeffort data frame containing location and effort data
-#' @param summary_value character string either "max count" or "count triggers", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion. Default value is "count triggers"
-#' @param event_threshold numeric, specifying time in minutes between triggers for them to be considered independent events
+#' @param summary_value character string either "max count" or "count triggers" or "max events", indicating if you would like data summarized by the maximum count of detections in an occasion or the total number of triggers per occasion or a sum of the max counts for each event in an occasion. Default value is "count triggers"
+#' @param event_threshold numeric, specifying time in minutes between triggers for them to be considered independent events. Meant to be used with either "count triggers" or "max events" summmary_value arguments.
 #'
 #' @return
 #' @export
 #'
 #' @examples
 
-summarize_detections <- function(detections, locationeffort, summary_value = "count triggers", event_threshold= NULL) {
+summarize_detections <- function(detections, locationeffort, summary_value = "count triggers", event_threshold= NULL, maxcountevents=NULL) {
 
 
 
-  if(!(summary_value %in% c("count triggers", "max count"))){
+  if(!(summary_value %in% c("count triggers", "max count", "max events"))){
     stop("\nPlease supply either 'count triggers' or 'max count' as argument to summary_value")
   }
   # convert detections to wide format
@@ -64,10 +66,16 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     joined2 <- joined2%>%group_by(cam_site_id, species)%>%dplyr::arrange(cam_site_id, detection_datetime)%>%mutate(deltaTime=difftime(detection_datetime, dplyr::lag(detection_datetime), units = "mins"))%>%
       ungroup()%>%dplyr::arrange(cam_site_id, season, occ)%>%mutate(event=cumsum(deltaTime >= event_threshold | is.na(deltaTime)))
 
-      joined2 <- joined2%>%group_by(event)%>%dplyr::slice_head()
+      joined3 <- joined2%>%tidyr::nest(data=-c(event,detection_datetime, tidyselect::matches("[A-Z]*_AMT"), deltaTime))%>%group_by(event, data)%>%
+        dplyr::summarise(across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), max),
+                  detection_datetime=min(detection_datetime))%>%tidyr::unnest(cols = c(data))
+                                                        #dplyr::slice_head
 
 
     }else{
+      if(summary_value == "max events"){
+        warning("max events argument is meant to be used with an event_threshold, this will return the sum of counts of all detections within an occasion")
+      }
   #reordering columns, getting rid of unnecessary columns
   colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date",
                 sort(grep(pattern = "[A-Z]*_AMT", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
@@ -103,11 +111,11 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     # this works as key column headings are capitalized
     dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                      across(start_date:end_date, .fns = ~unique(.x)),
-                     dplyr::across(tidyselect::matches("[A-Z]", ignore.case = FALSE), ~max(. , na.rm = TRUE)),
+                     dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~max(. , na.rm = TRUE)),
                      across(lat:days_active, .fns = ~unique(.x))) %>%
     dplyr::arrange(cam_site_id, season, occ) %>%
     dplyr::ungroup()
-  } else{
+  } else if (summary_value == "count triggers"){
     detections <-
       joined2  %>%
       dplyr::group_by(cam_site_id, season, occ) %>%
@@ -115,6 +123,16 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                        across(start_date:end_date, .fns = ~unique(.x)),
                        dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)),
+                       across(lat:days_active, .fns = ~unique(.x))) %>%
+      dplyr::arrange(cam_site_id, season, occ) %>%
+      dplyr::ungroup()
+  } else if (summary_value == "max events"){
+    detections <-
+      joined3  %>%
+      dplyr::group_by(cam_site_id, season, occ) %>%
+      dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
+                       across(start_date:end_date, .fns = ~unique(.x)),
+                       dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~sum( ., na.rm=TRUE)),
                        across(lat:days_active, .fns = ~unique(.x))) %>%
       dplyr::arrange(cam_site_id, season, occ) %>%
       dplyr::ungroup()
