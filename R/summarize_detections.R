@@ -20,7 +20,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
 
 
   if(!(summary_value %in% c("count triggers", "max count", "max events"))){
-    stop("\nPlease supply either 'count triggers' or 'max count' as argument to summary_value")
+    stop("\nPlease supply either 'count triggers' or 'max count' or 'max events' as argument to summary_value")
   }
   # convert detections to wide format
   # so there's a column of counts for different age/sex classes, etc.
