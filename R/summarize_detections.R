@@ -57,7 +57,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
 
   if(!is.null(event_threshold)){
     if(summary_value == "max count"){
-      stop("event_threshold argument is meant to be used with count triggers only")
+      stop("event_threshold argument is meant to be used with count triggers or max events only")
     }
     colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date", "detection_datetime", "species",
                   sort(grep(pattern = "[A-Z]*_AMT", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
@@ -66,7 +66,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     joined2 <- joined2%>%group_by(cam_site_id, species)%>%dplyr::arrange(cam_site_id, detection_datetime)%>%mutate(deltaTime=difftime(detection_datetime, dplyr::lag(detection_datetime), units = "mins"))%>%
       ungroup()%>%dplyr::arrange(cam_site_id, season, occ)%>%mutate(event=cumsum(deltaTime >= event_threshold | is.na(deltaTime)))
 
-      joined3 <- joined2%>%tidyr::nest(data=-c(event,detection_datetime, tidyselect::matches("[A-Z]*_AMT"), deltaTime))%>%group_by(event, data)%>%
+      joined2 <- joined2%>%tidyr::nest(data=-c(event,detection_datetime, tidyselect::matches("[A-Z]*_AMT"), deltaTime))%>%group_by(event, data)%>%
         dplyr::summarise(across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), max),
                   detection_datetime=min(detection_datetime))%>%tidyr::unnest(cols = c(data))
                                                         #dplyr::slice_head
@@ -128,7 +128,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       dplyr::ungroup()
   } else if (summary_value == "max events"){
     detections <-
-      joined3  %>%
+      joined2  %>%
       dplyr::group_by(cam_site_id, season, occ) %>%
       dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                        across(start_date:end_date, .fns = ~unique(.x)),
