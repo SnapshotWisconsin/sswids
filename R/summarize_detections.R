@@ -74,7 +74,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
 
     }else{
       if(summary_value == "max events"){
-        warning("max events argument is meant to be used with an event_threshold, this will return the sum of counts of all detections within an occasion")
+        stop("max events argument is meant to be used with an event_threshold, \n if event_threshold = NULL the function would return the sum of counts of all detections within an occasion")
       }
   #reordering columns, getting rid of unnecessary columns
   colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "start_date", "end_date",

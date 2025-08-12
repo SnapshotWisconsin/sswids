@@ -109,14 +109,16 @@ combine_species_cols <- function(conn, df) {
   combinecollist <- combinecollist[lapply(combinecollist, function (x) length(x) > 1)==TRUE]
   #colnames(df)[grep("[A-Z]*_AMT", colnames(df))] <- newcolnames
 
+  if(length(combinecollist) > 0){
   for (i in 1:length(combinecollist)) {
-    matchstring <- sub("([A-Z]+)(_AMT)","\\1.*\\2",x = unique(combinecollist[[i]]))
-    colstomerge <- grep(pattern = matchstring, x = colnames(df))
-    colname <- combinecollist[[i]][[1]]
-    speciessum <- rowSums(sf::st_drop_geometry(df[,colstomerge]))
+    matchstring <- sub("([A-Z]+)(_AMT)","\\1.*\\2",x = unique(combinecollist[[i]])) #makes SPECIES.*_AMT string to match on
+    colstomerge <- grep(pattern = matchstring, x = colnames(df)) #finds columns matching SPECIES.*_AMT string
+    colname <- combinecollist[[i]][[1]] #gets new column name
+    speciessum <- rowSums(sf::st_drop_geometry(df[,colstomerge])) #sums across multiple age/class rows
     df <- cbind(df, speciessum)
     colnames(df)[length(df)-1] <- colname
-    df <- df[-(colstomerge)]
+    df <- df[-(colstomerge)] #gets rid of old columns
     }
+  }
     return(df)
   }
