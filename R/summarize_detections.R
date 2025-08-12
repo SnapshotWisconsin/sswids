@@ -15,7 +15,7 @@
 #'
 #' @examples
 
-summarize_detections <- function(detections, locationeffort, summary_value = "count triggers", event_threshold= NULL, maxcountevents=NULL) {
+summarize_detections <- function(detections, locationeffort, summary_value = "count triggers", event_threshold= NULL) {
 
 
 
