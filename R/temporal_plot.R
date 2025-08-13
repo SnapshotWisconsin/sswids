@@ -71,7 +71,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
   df.byocc.long$binomresponse <- with(df.byocc.long, cbind(value, num.sites - value))
 
   #table for number of sites, should I include this? also need to think about this for plot_spatial
-  table.temporal.camsites.byocc <-df.byocc.long%>%select(year,occ,.data[[spatialgroup]], num.sites)%>%sf::st_drop_geometry()
+  table.temporal.camsites.byocc <-df.byocc.long%>%select(year,occ,tidyselect::all_of(spatialgroup), num.sites)%>%sf::st_drop_geometry()
 
   species <- stringr::str_extract(colnames(df), pattern =  ".*_AMT")
   specieslist <- species[species != "" & !is.na(species)]
