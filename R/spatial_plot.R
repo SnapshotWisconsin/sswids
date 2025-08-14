@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-spatial_plot <- function (conn, df, mgmtlayer=get_spatial_data("counties"), days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM"){
+spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM"){
 
 
 
