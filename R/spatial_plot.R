@@ -90,7 +90,9 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
       geom_sf(color="white", mapping=aes(fill=mean)) +
       #geom_sf(data=mgmtlayer, color="white", lwd=1,fill=NA) +
       labs(title=stringr::str_wrap(sprintf("%s -- Proportion of Snapshot Cameras with Detection", titles[j]),80)) +
-      scale_fill_continuous())
+      scale_fill_continuous()) +
+    theme(legend.title = element_blank(),
+          plot.title = element_text(,hjust = 0.5))
 
   names(plotlist) <- specieslist
   return(plotlist)
