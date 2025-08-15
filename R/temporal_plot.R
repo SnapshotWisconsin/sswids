@@ -55,7 +55,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
     mutate(across(matches("[A-Z]*_occ", ignore.case = FALSE), ~./num.sites,.names = "{sub('_occ', '_propocc',col)}"),
            across(matches("[A-Z]*_sum", ignore.case = FALSE), ~./num.days,
                   .names = "{sub('_sum','_trigsperday',col)}"))%>%
-    mutate(yearocc = paste0(season+2017,stringr::str_pad(occ, width=2, side="left", pad="0"))) %>%
+    mutate(yearocc = paste0(season+201,stringr::str_pad(occ, width=2, side="left", pad="0"))) %>%
     dplyr::arrange(yearocc) %>%
     group_by(yearocc) %>%
     mutate(time = dplyr::cur_group_id())
@@ -87,10 +87,10 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
     speciesframe <- filter(df.byocc.long, grepl(Spp, pattern = unique(df.byocc.long$Spp)[i]))
     colnames(speciesframe)[which(colnames(speciesframe) == spatialgroup)] <- "zone" #can't handle multiple spatial groups
 
-
-    knots <- list(occ = c(0.5, 52.5))
-    nyears <- length(unique(speciesframe$season))
     nocc <- length(unique(speciesframe$occ))
+    knots <- list(occ = c(0.5, nocc+0.5))
+    nyears <- length(unique(speciesframe$season))
+
 
     #model with year x occ interaction as well as occ x zone interaction
     m2y <- mgcv::gam(binomresponse ~ zone + s(season, k=nyears, by=zone) + s(occ, bs = "cc", k=nocc, by=zone) +
@@ -102,16 +102,16 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
 
 
 
-    newdatay <- expand.grid(season=unique(speciesframe$season), zone=unique(speciesframe$zone), occ=26)
+    newdatay <- expand.grid(season=unique(speciesframe$season), zone=unique(speciesframe$zone), occ=nocc/2)
 
     occeffects <- paste("s(occ)", paste0("zone",unique(speciesframe$zone)), sep=":")
     #predict just year trend
-    yrtrendm2y <- gratia::fitted_values(m2y, data=newdatay, exclude=c(occeffects,"ti(season,occ)"))%>%mutate(time=rep(seq(26, length.out=nyears, by=52),length(unique(speciesframe$zone))))
+    yrtrendm2y <- gratia::fitted_values(m2y, data=newdatay, exclude=c(occeffects,"ti(season,occ)"))%>%mutate(time=rep(seq(nocc/2, length.out=nyears, by=nocc),length(unique(speciesframe$zone))))
 
 
     #predict whole model
 
-    occtrendm2y <- gratia::fitted_values(m2y)%>%mutate(time=rep(1:(52*nyears), each=length(unique(speciesframe$zone))))
+    occtrendm2y <- gratia::fitted_values(m2y)%>%mutate(time=rep(1:(nocc*nyears), each=length(unique(speciesframe$zone))))
 
 
 
@@ -123,8 +123,8 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
            y = "Proportion of sites",
            x = "Time",
            subtitle = sprintf("Year Round, %s - %s", min(speciesframe$year), max(speciesframe$year))) +
-      geom_vline(xintercept=seq(1,53*nyears,52)) +
-      scale_x_continuous(labels = seq(min(speciesframe$year),max(speciesframe$year),1), breaks = seq(26,52*nyears,52)) +
+      geom_vline(xintercept=seq(1,(nocc+1)*nyears,nocc)) +
+      scale_x_continuous(labels = seq(min(speciesframe$year),max(speciesframe$year),1), breaks = seq(nocc/2,nocc*nyears,nocc)) +
       scale_color_brewer(palette = "Set2",
                          name = "Mgmt Zone",
                          labels = unique(speciesframe$zone)) +
