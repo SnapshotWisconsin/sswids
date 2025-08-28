@@ -18,6 +18,7 @@ list_spatial_layers <- function() {
     'wolf_zones', 'wolf hunting management zones', 'shapefile',
     'ruffed_grouse_priority_areas', 'ruffed grouse priority areas', 'shapefile',
     'bear_zones', 'bear hunting management zones', 'shapefile',
+    'pheasant_regions', 'core pheasant range', 'shapefile',
     'major_roads', 'major roads', 'shapefile',
     'county_local_roads', 'county and local roads', 'shapefile',
     'streams', 'streams and rivers', 'shapefile',

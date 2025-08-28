@@ -56,9 +56,9 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <- sswids_spatial_layers$elk_zones
 
-  } else if (layer_name == "Pheasant Regions") {
+  } else if (layer_name == "pheasant_regions") {
 
-    layer <- sswids_spatial_layers$PheasantRegions
+    layer <- sswids_spatial_layers$pheasant_regions
 
   }else if (layer_name == 'major_roads') {
 
