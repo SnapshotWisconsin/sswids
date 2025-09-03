@@ -57,9 +57,9 @@ if(nrow(upmi_loc) > 0){
 } else{print("No UP location in dataset")
 }
 
-if(42282 %in% camlocs$camera_location_seq_no){
+if(44282 %in% camlocs$camera_location_seq_no){
 
-  print("Camera_location_seq_no 42282 was remvoed from dataset. \nCamera location in a lake, 1000 feet from shore, grid =WASB048, volunteer quit in 2023")
+  print("Camera_location_seq_no 44282 was remvoed from dataset. \nCamera location in a lake, 1000 feet from shore, grid =WASB048, volunteer quit in 2023")
   camlocs <- camlocs%>%
     dplyr::filter(camera_location_seq_no != 44282) # Camera location in a lake, 1000 feet from shore, WASB048, volunteer quit in 2023
 
