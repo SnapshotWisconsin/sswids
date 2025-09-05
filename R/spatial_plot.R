@@ -77,8 +77,8 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
     dplyr::left_join(sf::st_drop_geometry(ppn.byyear))
 
   table.spatial.camsites <-
-    ppn.byyear%>%select(county_nam, n.sites)%>%
-    st_drop_geometry()
+    ppn.byyear%>%select(tidyselect::all_of(spatialgroup), n.sites)%>%
+    sf::st_drop_geometry()%>%dplyr::distinct()
 
 
 

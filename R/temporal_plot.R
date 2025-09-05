@@ -22,9 +22,11 @@
 
 temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup){
 
-  if(any(check_season_dates(df%>%group_by(season)%>% #recreate date ranges from data frame
-                        dplyr::summarise(start_date=as.Date(min(start_date)), end_date=as.Date(max(end_date)))%>%
-                        sf::st_drop_geometry())$season_length_days < 365)){
+  daterange <- df%>%group_by(season)%>% #recreate date ranges from data frame
+    dplyr::summarise(start_date=as.Date(min(start_date)), end_date=as.Date(max(end_date)))%>%
+    sf::st_drop_geometry()
+
+  if(any(check_season_dates(daterange)$season_length_days < 365)){
     stop("Year round data is needed for temporal plots")
   }
 
@@ -77,7 +79,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
   df.byocc.long$binomresponse <- with(df.byocc.long, cbind(value, num.sites - value))
 
   #table for number of sites, should I include this? also need to think about this for plot_spatial
-  table.temporal.camsites.byocc <-df.byocc.long%>%select(year,occ,tidyselect::all_of(spatialgroup), num.sites)%>%sf::st_drop_geometry()
+  table.temporal.camsites.byocc <-df.byocc.long%>%select(year,occ,tidyselect::all_of(spatialgroup), num.sites)%>%sf::st_drop_geometry()%>%dplyr::distinct()
 
   species <- stringr::str_extract(colnames(df), pattern =  ".*_AMT")
   specieslist <- species[species != "" & !is.na(species)]
