@@ -76,7 +76,9 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
     sf::st_transform(., crs = 3071) %>%
     dplyr::left_join(sf::st_drop_geometry(ppn.byyear))
 
-
+  table.spatial.camsites <-
+    ppn.byyear%>%select(county_nam, n.sites)%>%
+    st_drop_geometry()
 
 
 
@@ -96,5 +98,6 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
 
 
   names(plotlist) <- specieslist
+  plotlist <- append(plotlist, list(table.spatial.camsites))
   return(plotlist)
 }

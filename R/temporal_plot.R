@@ -59,10 +59,12 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
     mutate(across(matches("[A-Z]*_occ", ignore.case = FALSE), ~./num.sites,.names = "{sub('_occ', '_propocc',col)}"),
            across(matches("[A-Z]*_sum", ignore.case = FALSE), ~./num.days,
                   .names = "{sub('_sum','_trigsperday',col)}"))%>%
-    mutate(yearocc = paste0(season+201,stringr::str_pad(occ, width=2, side="left", pad="0"))) %>%
+    mutate(yearocc = paste0(lubridate::year(min(daterange$start_date)),stringr::str_pad(occ, width=2, side="left", pad="0"))) %>%
     dplyr::arrange(yearocc) %>%
     group_by(yearocc) %>%
     mutate(time = dplyr::cur_group_id())
+
+
 
   #By zone
   df.byocc.long = df.byocc %>%
@@ -140,5 +142,6 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
   })
 
   names(binomlist) <- specieslist
+  binomlist <- append(binomlist, list(samplesizetable=table.temporal.camsites.byocc))
   return(binomlist)
 }
