@@ -8,8 +8,7 @@ summarize_detections(
   detections,
   locationeffort,
   summary_value = "count triggers",
-  event_threshold = NULL,
-  maxcountevents = NULL
+  event_threshold = NULL
 )
 }
 \arguments{

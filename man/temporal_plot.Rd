@@ -10,7 +10,8 @@ temporal_plot(
   mgmtlayer,
   days_active_threshold,
   ppn_class_threshold,
-  spatialgroup
+  spatialgroup,
+  combine_cols = TRUE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ temporal_plot(
 \item{ppn_class_threshold}{Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a temporal plot.}
 
 \item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group}
+
+\item{combine_cols}{logical, should species age/sex columns be summed togethe? Defaults to TRUE}
 }
 \description{
 Use year round data to decompose detections into seasonal and trend components for

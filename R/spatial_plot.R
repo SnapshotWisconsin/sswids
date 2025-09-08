@@ -46,7 +46,16 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
   cat("Making plots for:", specieslist)
 
 
-
+  df %>%
+    dplyr::filter(days_active >= days_active_threshold) %>%
+    dplyr::filter(prop_classified >= ppn_class_threshold) %>%
+    dplyr::group_by(.data[[spatialgroup]],cam_site_id,season) %>%
+    dplyr::summarise(n.occ = dplyr::n(),
+                     dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~ifelse(sum(.)>0,1,0),
+                                   .names = "{sub('_AMT','_det',col)}")) %>%
+    dplyr::filter(n.occ >= n_occasions_annual) %>%
+    dplyr::group_by(.data[[spatialgroup]],season) %>%
+    dplyr::summarise(n.sites = dplyr::n())
 
 
   ppn.byyear = df %>%

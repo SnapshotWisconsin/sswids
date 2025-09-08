@@ -7,11 +7,12 @@
 spatial_plot(
   conn,
   df,
-  mgmtlayer = get_spatial_data("counties"),
+  mgmtlayer = "counties",
   days_active_threshold,
   ppn_class_threshold,
   n_occasions_annual,
-  spatialgroup = "COUNTY_NAM"
+  spatialgroup = "COUNTY_NAM",
+  combine_cols = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ spatial_plot(
 \item{n_occasions_annual}{Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.}
 
 \item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.}
+
+\item{combine_cols}{logical, should species age/sex columns be summed togethe? Defaults to TRUE}
 }
 \value{
 a named list of ggplot objects

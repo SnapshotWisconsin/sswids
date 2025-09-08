@@ -13,6 +13,7 @@
 #' @param days_active_threshold Numeric, scalar. Minimum number of days a camera needs to have been functioning within an occasion for a cam site id x year x occasion to be included in temporal plot.
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a temporal plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group
+#' @param combine_cols logical, should species age/sex columns be summed togethe? Defaults to TRUE
 #'
 #' @return
 #' @export
@@ -20,7 +21,7 @@
 #' @examples
 
 
-temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup){
+temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup, combine_cols=TRUE){
 
   daterange <- df%>%group_by(season)%>% #recreate date ranges from data frame
     dplyr::summarise(start_date=as.Date(min(start_date)), end_date=as.Date(max(end_date)))%>%
@@ -34,7 +35,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
     warning("Are you sure you want to plot temporal trends by county? Thats 72 lines in 1 plot, and probably won't work for most species")
   }
 
-  if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1){
+  if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1 & combine_cols == TRUE){
   df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
   }
 
