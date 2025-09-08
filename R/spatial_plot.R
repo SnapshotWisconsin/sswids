@@ -11,6 +11,7 @@
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a spatial plot.
 #' @param n_occasions_annual Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.
+#' @param combine_cols logical, should species age/sex columns be summed togethe? Defaults to TRUE
 #'
 #' @return a named list of ggplot objects
 #'
@@ -18,13 +19,13 @@
 #' @export
 #'
 #' @examples
-spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM"){
+spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM", combine_cols=TRUE){
 
 
 
 
 
-  if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1){
+  if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1 & combine_cols ==TRUE){
     df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
   }
 
@@ -46,16 +47,6 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
   cat("Making plots for:", specieslist)
 
 
-  df %>%
-    dplyr::filter(days_active >= days_active_threshold) %>%
-    dplyr::filter(prop_classified >= ppn_class_threshold) %>%
-    dplyr::group_by(.data[[spatialgroup]],cam_site_id,season) %>%
-    dplyr::summarise(n.occ = dplyr::n(),
-                     dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~ifelse(sum(.)>0,1,0),
-                                   .names = "{sub('_AMT','_det',col)}")) %>%
-    dplyr::filter(n.occ >= n_occasions_annual) %>%
-    dplyr::group_by(.data[[spatialgroup]],season) %>%
-    dplyr::summarise(n.sites = dplyr::n())
 
 
   ppn.byyear = df %>%
