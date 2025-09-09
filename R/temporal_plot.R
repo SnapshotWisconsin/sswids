@@ -93,7 +93,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
 
   #set up to loop through species dataframes
   binomlist <- lapply(seq(1:nspecies), function(i){
-    speciesframe <- filter(df.byocc.long, grepl(Spp, pattern = unique(df.byocc.long$Spp)[1]))
+    speciesframe <- filter(df.byocc.long, grepl(Spp, pattern = unique(df.byocc.long$Spp)[i]))
     colnames(speciesframe)[which(colnames(speciesframe) == spatialgroup)] <- "zone" #can't handle multiple spatial groups
 
     nocc <- length(unique(speciesframe$occ))
@@ -128,7 +128,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
       geom_line(data=occtrendm2y, aes(x = time, y = .fitted, color=zone), lwd=0.5) +
       geom_line(data=yrtrendm2y, aes(x = time, y = .fitted, color=zone), lwd=2) +
       geom_pointrange(data=yrtrendm2y, aes(x= time, y= .fitted,ymin = .lower_ci, ymax = .upper_ci, color=zone), size=1, lwd=1) +
-      labs(title=stringr::str_wrap(sprintf("Weekly Proportion of Snapshot Camera Sites with %s detections", titles[1]),75),
+      labs(title=stringr::str_wrap(sprintf("Weekly Proportion of Snapshot Camera Sites with %s detections", titles[i]),75),
            y = "Proportion of sites",
            x = "Time",
            subtitle = sprintf("Year Round, %s - %s", min(speciesframe$year), max(speciesframe$year))) +
