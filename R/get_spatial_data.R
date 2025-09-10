@@ -60,6 +60,10 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <- sswids_spatial_layers$pheasant_regions
 
+  } else if (layer_name == "beaver_zones") {
+
+    layer <- sswids_spatial_layers$beaver_zones
+
   } else if (layer_name == 'major_roads') {
 
     layer <- sf::st_read('C:/sswids_gis/shapefiles/major_roads.shp')
