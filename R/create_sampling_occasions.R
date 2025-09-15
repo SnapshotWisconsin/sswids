@@ -81,12 +81,13 @@ create_sampling_occasions <- function(daterange=NULL, locationeffort, num_occasi
       dplyr::across(dplyr::ends_with("count"), ~sum(.x, na.rm=TRUE)),
       #add occasions with multiple camera_location_seq_no to same column
       camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
+      camera_version=paste(unique(camera_version),collapse =","),
       days_active=unique(days_active)) %>%
       dplyr::mutate(dplyr::across(dplyr::starts_with("class"), ~.x/motion_trigger_count, .names = "prop_classified"))%>%
     dplyr::ungroup()%>% dplyr::arrange(cam_site_id, season, occ)
 
   #rearrange columns
-  effort_by_day <- effort_by_day[,c(1:10,13,12,11)]
+  effort_by_day <- effort_by_day[,c(1:10,14,13,11,12)]
 
   #filter by prop_classified which is at occasion level
   effort_by_day2 <- effort_by_day%>%

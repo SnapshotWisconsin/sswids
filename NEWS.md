@@ -1,5 +1,12 @@
 # sswids (development version)
 
+# sswids v0.0.0.9005
+9/15/2025
+
+*added camera_version column to workflow to account for different detectability between V3 and V4 cameras
+*fixed bug where camera-occasions with 0 out of 0 photos classified previously did not count as effort because
+prop_classified was NaN
+
 # sswids v0.0.0.9004
 7/17/2025
 
