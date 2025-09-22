@@ -104,17 +104,19 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
   #eliminate cam_site_id x seasons with overlapping effort of more than 1 day when camera was switched over, leaving in overlapped day
   #to be removed in later function calculating effort per occ
   #nest dataframe by cam_site_id now, camera_location_seq_no now in nested effort column
-  Q4 <- tidyr::unnest(effort_df_camsiteid, cols = c(effort))%>%tidyr::nest(.by = c(cam_site_id, season), .key = "effort")%>%dplyr::arrange(cam_site_id)#must sort with code CAN"T SORT MANUALLY or you'll get mismatched effort data to cam_site_id
+  Q4 <- tidyr::unnest(effort_df_camsiteid, cols = c(effort))%>%tidyr::nest(.by = cam_site_id, .key = "effort")%>%dplyr::arrange(cam_site_id)#must sort with code CAN"T SORT MANUALLY or you'll get mismatched effort data to cam_site_id
   #find duplicated dates of effort in each nested effort dataframe for each row of cam_site_id x season
   Q5 <- Q4%>%purrr::map(.x = .$effort, .f = ~.x[duplicated(.x$final_date) | duplicated(.x$final_date, fromLast=TRUE),])
-  names(Q5) <- paste(Q4$cam_site_id, Q4$season)
+  names(Q5) <- Q4$cam_site_id
   #pull out cam_site_id x seasons with overlapping effort data
   overlap <- Q5[lapply(Q5, function (x) nrow(x) > 2)==TRUE] # 2 because pulled out both duplicated rows in line 100
+  badseasons <- lapply(overlap, function (x) unique(x$season))
   #filter rows with overlapping effort more than one day
-  Q6 <- Q4%>%filter(!cam_site_id %in% substr(names(overlap), 1, 8) | !season %in% substr(names(overlap), 10, 10))
-
-  printoverlap <- tibble::tibble("cam_site_id"=substring(names(overlap), 0,8), "season"=substring(names(overlap),10),
-                             "camera_location_seq_no"=unlist(lapply(overlap, function(x) paste0(unique(x$camera_location_seq_no), collapse = ",")), use.names = FALSE))
+  Q6 <- tidyr::unnest(Q4, cols = c(effort))%>%filter(!cam_site_id %in% unique(substr(names(overlap), 1, 8)) | !season %in% unique(unlist(badseasons)))%>%
+    tidyr::nest(.by = cam_site_id, .key = "effort")
+  printoverlap <- tibble::tibble("cam_site_id"=substring(names(overlap), 0,8),
+                                 "season"=unlist(lapply(overlap, function(x) paste0(unique(x$season), collapse = ",")), use.names = FALSE),
+                                 "camera_location_seq_no"=unlist(lapply(overlap, function(x) paste0(unique(x$camera_location_seq_no), collapse = ",")), use.names = FALSE))
   cat("\ncam sites x seasons removed due to overlapping effort of more than 1 day...\n")
   print(printoverlap, n=nrow(printoverlap))
 
@@ -122,8 +124,9 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
   Q7 <- Q6%>%dplyr::mutate("lat"= purrr::map_dbl(.x=.$effort, .f=~mean(as.numeric(.x$latitude))), "lon"= purrr::map_dbl(.x=.$effort, .f=~mean(as.numeric(.x$longitude))))
   #remove columns in list column dataframe of indivual cam _loc_seq_no coordinates, grid type and grid id
   Q8 <- Q7%>%dplyr::mutate("effort"= purrr::map(.x= .$effort, .f= ~select(.x, -c(latitude, longitude, grid_type_code, dnr_grid_id))))
+  Q9 <- tidyr::unnest(Q8, cols = c(effort))%>%tidyr::nest(.by = c(cam_site_id, season, lat, lon), .key = "effort")
 
-  return(Q8)
+  return(Q9)
 
 
 
