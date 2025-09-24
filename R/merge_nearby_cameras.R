@@ -30,7 +30,9 @@
 #'                     this represents the distance between 2 camera locations. This number is divided in half
 #'                     within the function to create a buffer around each camera (e.g. for cam_distance=100
 #'                     makes 50m buffer around each camera, those buffers that intersect are dissolved into 1).
-#'                     Default is 100m.
+#'                     Default is 100m.If cam_distance=0 cam_site_ids will be assigned by lat/lon coordinates,
+#'                     in other words camera location sequence numbers having the lat/lon wil be grouped into
+#'                     the same cam_site_id.
 #'
 #' @return nested data frame of locations and effort with new cam_site_id
 #' @export
@@ -43,6 +45,13 @@
 
 merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
 
+  if(cam_distance == 0){
+    effort_df_camsiteid <- locationeffort%>%dplyr::group_by(longitude, latitude)%>%
+    dplyr::mutate(buffer_id = dplyr::cur_group_id(), cam_site_id = stringr::str_c('cam_', sprintf("%04d", buffer_id)))%>%
+    dplyr::select(-buffer_id) %>%
+    dplyr::arrange(cam_site_id, season)%>%dplyr::ungroup()
+
+  } else{
   colidx <- which(colnames(locationeffort) %in% c("camera_location_seq_no", "longitude", "latitude"))
   camlocs <- locationeffort%>%dplyr::select(all_of(colidx))%>%dplyr::distinct()
 
@@ -94,7 +103,7 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
     dplyr::select(-buffer_id) %>%
     dplyr::arrange(cam_site_id, season)
 
-
+  }
   multiplecamlocseqno <- effort_df_camsiteid%>%dplyr::group_by(cam_site_id, season)%>%filter(dplyr::n()>1) %>% dplyr::summarize(n=dplyr::n())
   cat("cam_site_ids with multiple cam_loc_seq_no...\n")
   print(multiplecamlocseqno, n=nrow(multiplecamlocseqno))

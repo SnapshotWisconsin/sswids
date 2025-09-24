@@ -13,7 +13,9 @@ merge_nearby_cameras(locationeffort, cam_distance = 100)
 this represents the distance between 2 camera locations. This number is divided in half
 within the function to create a buffer around each camera (e.g. for cam_distance=100
 makes 50m buffer around each camera, those buffers that intersect are dissolved into 1).
-Default is 100m.}
+Default is 100m.If cam_distance=0 cam_site_ids will be assigned by lat/lon coordinates,
+in other words camera location sequence numbers having the lat/lon wil be grouped into
+the same cam_site_id.}
 }
 \value{
 nested data frame of locations and effort with new cam_site_id
