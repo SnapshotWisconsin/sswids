@@ -34,13 +34,17 @@
 
 create_season_dates <- function(min_date, max_date, years, discontinuous=FALSE) {
 
-if (discontinuous ==FALSE){
+if (discontinuous == FALSE){
+  if(length(years) == 2){
   if(years[1] <= years[2]){
   years <- seq(years[1], years[2], 1)
-  }
+    }
 
   if(years[2] < years[1]){
     years <- seq(years[2], years[1], 1)
+    }
+  }else{
+    years <- as.numeric(years)
   }
 }else{
   years <- as.numeric(years)
