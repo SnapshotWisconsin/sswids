@@ -29,6 +29,7 @@
 #' @param remove0Timelapse Logical, should rows with 0 timelapse photos be removed
 #'                         from the table. These rows indicate camera site/days
 #'                         where no timelapse photo was taken despite programming.
+#' @param county character vector describing the counties by which to filter data
 #'
 #' @return a nested data frame with daily camera effort information as well as
 #' location and grid information.See details for more info.
@@ -51,7 +52,7 @@
 #' }
 #' @seealso `create_season_dates()` `nest()`
 
-query_effort <- function(conn, prec, grid, daterange=NULL, remove0Timelapse=TRUE){
+query_effort <- function(conn, prec, grid, daterange=NULL, remove0Timelapse=TRUE, county=NULL){
 
 
 if(prec == 0.95){
@@ -71,33 +72,8 @@ if(!inherits(daterange, "data.frame")){
   daterange <- data.frame("start_date"=as.Date(min(daterange)), "end_date"=as.Date(max(daterange)))
 }
 
-# query <- daterange%>%
-#   purrr::map2_chr(
-#     .x = .$start_date,
-#     .y = .$end_date,
-#     .f = ~ trimws(sprintf("SELECT G83100.DS_LOCATION_EFFORT.CAMERA_LOCATION_SEQ_NO,
-#                             G83100.DS_LOCATION_EFFORT.FINAL_DATE,
-#                             G83100.DS_LOCATION_EFFORT.MOTION_TRIGGER_COUNT,
-#                             G83100.DS_LOCATION_EFFORT.TIME_LAPSE_TRIGGER_COUNT,
-#                             %s,
-#                             G83100.SSWI_CAMERA_LOCATION.ORIG_HRZ_X_COORD_AMT,
-#                             G83100.SSWI_CAMERA_LOCATION.ORIG_HRZ_Y_COORD_AMT,
-#                             G83100.SSWI_GRID_REF.DNR_GRID_ID,
-#                             G83100.SSWI_GRID_REF.GRID_TYPE_CODE
-#                           FROM G83100.DS_LOCATION_EFFORT
-#                           INNER JOIN G83100.SSWI_CAMERA_LOCATION
-#                           ON G83100.SSWI_CAMERA_LOCATION.CAMERA_LOCATION_SEQ_NO = G83100.DS_LOCATION_EFFORT.CAMERA_LOCATION_SEQ_NO
-#                           INNER JOIN G83100.SSWI_GRID_REF
-#                           ON G83100.SSWI_GRID_REF.GRID_SEQ_NO       = G83100.SSWI_CAMERA_LOCATION.GRID_SEQ_NO
-#                           WHERE G83100.SSWI_GRID_REF.GRID_TYPE_CODE IN ('%s')
-#                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE >= TO_DATE('%s', 'YYYY-MM-DD')
-#                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE <= TO_DATE('%s', 'YYYY-MM-DD');",
-#                         effortcolumn,
-#                         paste0(grid, collapse = "', '"),
-#                         format(.x, '%Y-%m-%d'),
-#                         format(.y, '%Y-%m-%d'))))
 
-
+if (is.null(county)){
 query <- daterange%>%
   purrr::map2_chr(
     .x = .$start_date,
@@ -126,6 +102,40 @@ effortcolumn,
 paste0(grid, collapse = "', '"),
 format(.x, '%Y-%m-%d'),
 format(.y, '%Y-%m-%d'))))
+} else{
+    query <- daterange%>%
+      purrr::map2_chr(
+        .x = .$start_date,
+        .y = .$end_date,
+        .f = ~ trimws(sprintf("SELECT
+g83100.ds_location_effort.camera_location_seq_no,
+g83100.ds_location_effort.final_date,
+g83100.ds_location_effort.motion_trigger_count,
+g83100.ds_location_effort.time_lapse_trigger_count,
+%s,
+g83100.sswi_camera_location.orig_hrz_x_coord_amt,
+g83100.sswi_camera_location.orig_hrz_y_coord_amt,
+g83100.sswi_grid_ref.grid_type_code,
+g83100.sswi_grid_ref.dnr_grid_id,
+g83100.sswi_camera.camera_seq_no,
+g83100.sswi_camera.camera_type_code,
+g83100.sswi_county.county_name
+FROM
+g83100.ds_location_effort
+INNER JOIN g83100.sswi_camera_location ON g83100.ds_location_effort.camera_location_seq_no = g83100.sswi_camera_location.camera_location_seq_no
+INNER JOIN g83100.sswi_grid_ref ON g83100.sswi_camera_location.grid_seq_no = g83100.sswi_grid_ref.grid_seq_no
+INNER JOIN g83100.sswi_camera ON g83100.sswi_camera.camera_seq_no = g83100.sswi_camera_location.camera_seq_no
+INNER JOIN g83100.sswi_county ON g83100.sswi_grid_ref.county_code = g83100.sswi_county.county_code
+WHERE G83100.SSWI_GRID_REF.GRID_TYPE_CODE IN ('%s')
+                          AND G83100.DS_LOCATION_EFFORT.FINAL_DATE >= TO_DATE('%s', 'YYYY-MM-DD')
+                          AND G83100.DS_LOCATION_EFFORT.FINAL_DATE <= TO_DATE('%s', 'YYYY-MM-DD')
+                          AND G83100.SSWI_COUNTY.COUNTY_NAME IN ('%s');",
+                              effortcolumn,
+                              paste0(grid, collapse = "', '"),
+                              format(.x, '%Y-%m-%d'),
+                              format(.y, '%Y-%m-%d'),
+                              paste0(county, collapse = "', '"))))
+  }
 
 
 
@@ -141,7 +151,8 @@ df <-
 if (remove0Timelapse==TRUE){
 df <- df[df$TIME_LAPSE_TRIGGER_COUNT > 0,]
 }
-colnames(df)[7:8] <- c("Longitude", "Latitude")
+coordcols <- which(colnames(df) %in% c("ORIG_HRZ_X_COORD_AMT", "ORIG_HRZ_Y_COORD_AMT"))
+colnames(df)[coordcols] <- c("Longitude", "Latitude")
 df <- df%>%mutate(CameraVersion=dplyr::case_when(CAMERA_TYPE_CODE == "BUSHNELL119949WI" ~ "V4",
                                                              CAMERA_TYPE_CODE == "BUSHNELL119837WI" ~ "V3",
                                                              CAMERA_TYPE_CODE == "BUSHNELL119836WI" ~ "V2",
@@ -149,10 +160,12 @@ df <- df%>%mutate(CameraVersion=dplyr::case_when(CAMERA_TYPE_CODE == "BUSHNELL11
 
 class_col <- grep(pattern="CLASS_.*_TRIGGER_COUNT",x=colnames(df), value=TRUE)
 df$prop_classified <- df[,class_col]/df$MOTION_TRIGGER_COUNT
-df <- df[,c(2:6,13,7:8,1,9:10,14)]
-# clean up names (snakecase), convert to tibble
+# clean up names (snakecase)
 names(df) <- janitor::make_clean_names(names(df))
-effortvars <- c("final_date", "motion_trigger_count", "time_lapse_trigger_count", "class_final_trigger_count", "class_effort_trigger_count", "prop_classified")
+effortvars <- c("final_date", "motion_trigger_count", "time_lapse_trigger_count", tolower(class_col), "prop_classified")
+
+df <- df[, c("season", "camera_location_seq_no", "longitude", "latitude", "camera_version", effortvars)]
+
 
 df <- df%>%dplyr::arrange(camera_location_seq_no, final_date)%>%tidyr::nest(effort=any_of(effortvars))
 

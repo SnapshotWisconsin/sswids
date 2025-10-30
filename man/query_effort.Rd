@@ -4,7 +4,14 @@
 \alias{query_effort}
 \title{Pulls in effort data from database}
 \usage{
-query_effort(conn, prec, grid, daterange = NULL, remove0Timelapse = TRUE)
+query_effort(
+  conn,
+  prec,
+  grid,
+  daterange = NULL,
+  remove0Timelapse = TRUE,
+  county = NULL
+)
 }
 \arguments{
 \item{conn}{connection to database returned by \code{sswids::connect_to_sswidb()}}
@@ -27,6 +34,8 @@ to December 31st of the previous year.}
 \item{remove0Timelapse}{Logical, should rows with 0 timelapse photos be removed
 from the table. These rows indicate camera site/days
 where no timelapse photo was taken despite programming.}
+
+\item{county}{character vector describing the counties by which to filter data}
 }
 \value{
 a nested data frame with daily camera effort information as well as

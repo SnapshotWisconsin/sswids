@@ -1,4 +1,4 @@
-#' Pull in detection from Snapshot database
+#' Pull in detection from Snapshot database. A wrapper around `sswidb::sswidb_detections()`.
 #'
 #' @param conn a connection to the sswi database
 #' @param species character vector of species of interest.See `sswidb::sswidb_species`
@@ -12,6 +12,7 @@
 #'             indicates final data and returns FINAL data while 0 indicates data
 #'             that is classified but includes classifications that don't meet
 #'             accuracy standards.
+#' @param county a county name filter, uses all counties when NULL, passed on to `sswidb::sswidb_detections()`
 #'
 #' @return
 #' @export
@@ -20,7 +21,7 @@
 
 
 
-query_detections <- function(conn, species, grid, daterange=NULL, prec) {
+query_detections <- function(conn, species, grid, daterange=NULL, prec, county=NULL) {
 
   if(is.null(daterange)){
     previousyear <- lubridate::year(Sys.Date()-365)
@@ -51,7 +52,8 @@ detections_df <-
       grid = grid,
       # set precision level
       prec = prec,
-      conn = conn
+      conn = conn,
+      county = county
     )
   ) %>% purrr::list_rbind(names_to="season") %>%
   # clean up names (snakecase), convert to tibble

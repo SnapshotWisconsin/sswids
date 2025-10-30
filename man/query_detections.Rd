@@ -2,9 +2,9 @@
 % Please edit documentation in R/query_detections.R
 \name{query_detections}
 \alias{query_detections}
-\title{Pull in detection from Snapshot database}
+\title{Pull in detection from Snapshot database. A wrapper around \code{sswidb::sswidb_detections()}.}
 \usage{
-query_detections(conn, species, grid, daterange = NULL, prec)
+query_detections(conn, species, grid, daterange = NULL, prec, county = NULL)
 }
 \arguments{
 \item{conn}{a connection to the sswi database}
@@ -23,7 +23,9 @@ provided defaults to 2019-01-01 to  the current date - 1 year.}
 indicates final data and returns FINAL data while 0 indicates data
 that is classified but includes classifications that don't meet
 accuracy standards.}
+
+\item{county}{a county name filter, uses all counties when NULL, passed on to \code{sswidb::sswidb_detections()}}
 }
 \description{
-Pull in detection from Snapshot database
+Pull in detection from Snapshot database. A wrapper around \code{sswidb::sswidb_detections()}.
 }
