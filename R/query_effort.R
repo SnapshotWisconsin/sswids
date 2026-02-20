@@ -89,15 +89,20 @@ g83100.sswi_camera_location.orig_hrz_y_coord_amt,
 g83100.sswi_grid_ref.grid_type_code,
 g83100.sswi_grid_ref.dnr_grid_id,
 g83100.sswi_camera.camera_seq_no,
-g83100.sswi_camera.camera_type_code
+g83100.sswi_camera.camera_type_code,
+g83100.sswi_metadata.metadata_text,
+g83100.sswi_metadata.metadata_group_code,
+g83100.sswi_metadata.metadata_name
 FROM
 g83100.ds_location_effort
 INNER JOIN g83100.sswi_camera_location ON g83100.ds_location_effort.camera_location_seq_no = g83100.sswi_camera_location.camera_location_seq_no
 INNER JOIN g83100.sswi_grid_ref ON g83100.sswi_camera_location.grid_seq_no = g83100.sswi_grid_ref.grid_seq_no
 INNER JOIN g83100.sswi_camera ON g83100.sswi_camera.camera_seq_no = g83100.sswi_camera_location.camera_seq_no
+INNER JOIN g83100.sswi_metadata ON g83100.sswi_metadata.event_seq_no = g83100.sswi_camera_location.event_seq_no
 WHERE G83100.SSWI_GRID_REF.GRID_TYPE_CODE IN ('%s')
                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE >= TO_DATE('%s', 'YYYY-MM-DD')
-                          AND G83100.DS_LOCATION_EFFORT.FINAL_DATE <= TO_DATE('%s', 'YYYY-MM-DD');",
+                          AND G83100.DS_LOCATION_EFFORT.FINAL_DATE <= TO_DATE('%s', 'YYYY-MM-DD')
+                          AND g83100.sswi_metadata.metadata_name = 'TRAVEL_CORRIDOR_TYPE_CODE';",
 effortcolumn,
 paste0(grid, collapse = "', '"),
 format(.x, '%Y-%m-%d'),
@@ -119,17 +124,22 @@ g83100.sswi_grid_ref.grid_type_code,
 g83100.sswi_grid_ref.dnr_grid_id,
 g83100.sswi_camera.camera_seq_no,
 g83100.sswi_camera.camera_type_code,
-g83100.sswi_county.county_name
+g83100.sswi_county.county_name,
+g83100.sswi_metadata.metadata_text,
+g83100.sswi_metadata.metadata_group_code,
+g83100.sswi_metadata.metadata_name
 FROM
 g83100.ds_location_effort
 INNER JOIN g83100.sswi_camera_location ON g83100.ds_location_effort.camera_location_seq_no = g83100.sswi_camera_location.camera_location_seq_no
 INNER JOIN g83100.sswi_grid_ref ON g83100.sswi_camera_location.grid_seq_no = g83100.sswi_grid_ref.grid_seq_no
 INNER JOIN g83100.sswi_camera ON g83100.sswi_camera.camera_seq_no = g83100.sswi_camera_location.camera_seq_no
 INNER JOIN g83100.sswi_county ON g83100.sswi_grid_ref.county_code = g83100.sswi_county.county_code
+INNER JOIN g83100.sswi_metadata ON g83100.sswi_metadata.event_seq_no = g83100.sswi_camera_location.event_seq_no
 WHERE G83100.SSWI_GRID_REF.GRID_TYPE_CODE IN ('%s')
                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE >= TO_DATE('%s', 'YYYY-MM-DD')
                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE <= TO_DATE('%s', 'YYYY-MM-DD')
-                          AND G83100.SSWI_COUNTY.COUNTY_NAME IN ('%s');",
+                          AND G83100.SSWI_COUNTY.COUNTY_NAME IN ('%s')
+                          AND g83100.sswi_metadata.metadata_name = 'TRAVEL_CORRIDOR_TYPE_CODE;",
                               effortcolumn,
                               paste0(grid, collapse = "', '"),
                               format(.x, '%Y-%m-%d'),
@@ -156,7 +166,9 @@ colnames(df)[coordcols] <- c("Longitude", "Latitude")
 df <- df%>%mutate(CameraVersion=dplyr::case_when(CAMERA_TYPE_CODE == "BUSHNELL119949WI" ~ "V4",
                                                              CAMERA_TYPE_CODE == "BUSHNELL119837WI" ~ "V3",
                                                              CAMERA_TYPE_CODE == "BUSHNELL119836WI" ~ "V2",
-                                                             CAMERA_TYPE_CODE == "BUSHNELL119636WI" ~ "V1"))
+                                                             CAMERA_TYPE_CODE == "BUSHNELL119636WI" ~ "V1"))%>%
+      dplyr::rename(trailtype=METADATA_TEXT)%>%tidyr::replace_na(list(trailtype = "none"))
+
 
 class_col <- grep(pattern="CLASS_.*_TRIGGER_COUNT",x=colnames(df), value=TRUE)
 df$prop_classified <- df[,class_col]/df$MOTION_TRIGGER_COUNT
@@ -164,7 +176,7 @@ df$prop_classified <- df[,class_col]/df$MOTION_TRIGGER_COUNT
 names(df) <- janitor::make_clean_names(names(df))
 effortvars <- c("final_date", "motion_trigger_count", "time_lapse_trigger_count", tolower(class_col), "prop_classified")
 
-df <- df[, c("season", "camera_location_seq_no", "longitude", "latitude", "camera_version", effortvars)]
+df <- df[, c("season", "camera_location_seq_no", "longitude", "latitude", "camera_version", "trailtype", effortvars)]
 
 
 df <- df%>%dplyr::arrange(camera_location_seq_no, final_date)%>%tidyr::nest(effort=any_of(effortvars))

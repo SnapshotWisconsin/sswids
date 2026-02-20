@@ -10,7 +10,7 @@ spatial_plot(
   mgmtlayer = "counties",
   days_active_threshold,
   ppn_class_threshold,
-  n_occasions_annual,
+  n_occasions_annual_threshold,
   spatialgroup = "COUNTY_NAM",
   combine_cols = TRUE
 )
@@ -26,11 +26,11 @@ spatial_plot(
 
 \item{ppn_class_threshold}{Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a spatial plot.}
 
-\item{n_occasions_annual}{Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.}
+\item{n_occasions_annual_threshold}{Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.}
 
 \item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.}
 
-\item{combine_cols}{logical, should species age/sex columns be summed togethe? Defaults to TRUE}
+\item{combine_cols}{logical, should species age/sex columns be summed together? Defaults to TRUE}
 }
 \value{
 a named list of ggplot objects

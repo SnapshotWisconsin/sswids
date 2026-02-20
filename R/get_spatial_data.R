@@ -20,7 +20,15 @@
 
 get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
-  if (layer_name == 'counties') {
+  if (layer_name == 'bear_zones') {
+
+    layer <- sswids_spatial_layers$bear_zones
+
+  } else if (layer_name == "beaver_zones") {
+
+    layer <- sswids_spatial_layers$beaver_zones
+
+  } else if (layer_name == 'counties') {
 
     layer <- sswids_spatial_layers$counties
 
@@ -32,9 +40,21 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <- sswids_spatial_layers$ecological_landscapes
 
+  } else if (layer_name == "elk_zones") {
+
+    layer <- sswids_spatial_layers$elk_zones
+
   } else if (layer_name == 'furbearer_zones') {
 
     layer <- sswids_spatial_layers$furbearer_zones
+
+  } else if (layer_name == "pheasant_regions") {
+
+    layer <- sswids_spatial_layers$pheasant_regions
+
+  } else if (layer_name == 'ruffed_grouse_priority_areas') {
+
+    layer <- sswids_spatial_layers$ruffed_grouse_priority_areas
 
   } else if (layer_name == 'turkey_mgt_zones') {
 
@@ -44,43 +64,27 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <- sswids_spatial_layers$wolf_zones
 
-  } else if (layer_name == 'ruffed_grouse_priority_areas') {
-
-    layer <- sswids_spatial_layers$ruffed_grouse_priority_areas
-
-  } else if (layer_name == 'bear_zones') {
-
-    layer <- sswids_spatial_layers$bear_zones
-
-  } else if (layer_name == "elk_zones") {
-
-    layer <- sswids_spatial_layers$elk_zones
-
-  } else if (layer_name == "pheasant_regions") {
-
-    layer <- sswids_spatial_layers$pheasant_regions
-
-  } else if (layer_name == "beaver_zones") {
-
-    layer <- sswids_spatial_layers$beaver_zones
-
-  } else if (layer_name == 'major_roads') {
-
-    layer <- sf::st_read('C:/sswids_gis/shapefiles/major_roads.shp')
-
-  } else if (layer_name == 'county_local_roads') {
+  }  else if (layer_name == 'county_local_roads') {
 
     layer <- sf::st_read('C:/sswids_gis/shapefiles/county_local_roads.shp')
 
-  } else if (layer_name == 'streams') {
+  }  else if (layer_name == 'major_roads') {
 
-    layer <- sf::st_read('C:/sswids_gis/shapefiles/24k_Hydro_Flowlines_(Rivers_Streams).shp')
+    layer <- sf::st_read('C:/sswids_gis/shapefiles/major_roads.shp')
 
-  } else if (layer_name == 'open_water') {
+  }  else if (layer_name == 'open_water') {
 
     layer <- sf::st_read('C:/sswids_gis/shapefiles/24k_Hydro_Waterbodies_(Open_Water).shp')
 
-  } else if (layer_name == 'wiscland2') {
+  }  else if (layer_name == 'PLSS_QuarterSections') {
+
+    layer <- sf::st_read('C:/sswids_gis/shapefiles/PLSS_Sections.shp')
+
+  }  else if (layer_name == 'streams') {
+
+    layer <- sf::st_read('C:/sswids_gis/shapefiles/24k_Hydro_Flowlines_(Rivers_Streams).shp')
+
+  }  else if (layer_name == 'wiscland2') {
 
     if(is.null(level)){print("Please specify what level of Wiscland you would like")} else{
     layer <-

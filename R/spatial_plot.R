@@ -9,9 +9,9 @@
 #' @param mgmtlayer spatial layer from `list_spatial_layers()`, defaults to counties
 #' @param days_active_threshold Numeric, scalar. Minimum number of days a camera needs to have been functioning within an occasion for a cam site id x year x occasion to be included in spatial plot.
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a spatial plot.
-#' @param n_occasions_annual Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.
+#' @param n_occasions_annual_threshold Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.
-#' @param combine_cols logical, should species age/sex columns be summed togethe? Defaults to TRUE
+#' @param combine_cols logical, should species age/sex columns be summed together? Defaults to TRUE
 #'
 #' @return a named list of ggplot objects
 #'
@@ -19,7 +19,7 @@
 #' @export
 #'
 #' @examples
-spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold, n_occasions_annual, spatialgroup="COUNTY_NAM", combine_cols=TRUE){
+spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold, n_occasions_annual_threshold, spatialgroup="COUNTY_NAM", combine_cols=TRUE){
 
 
 
@@ -28,6 +28,8 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
   if(length(grep(pattern = "[A-Z]*_AMT", x = colnames(df), value = TRUE)) > 1 & combine_cols ==TRUE){
     df <- combine_species_cols(conn = conn, df=df) # helper function can be found in utils.R
   }
+
+
 
 
   if(!(spatialgroup %in% colnames(df))){
@@ -56,7 +58,7 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
     dplyr::summarise(n.occ = dplyr::n(),
                      dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~ifelse(sum(.)>0,1,0),
                      .names = "{sub('_AMT','_det',col)}")) %>%
-    dplyr::filter(n.occ >= n_occasions_annual) %>%
+    dplyr::filter(n.occ >= n_occasions_annual_threshold) %>%
     dplyr::group_by(.data[[spatialgroup]],season) %>%
     dplyr::summarise(n.sites = dplyr::n(),
                      dplyr::across(tidyselect::matches("[A-Z]*_det", ignore.case = FALSE), ~sum(.)/n.sites,
@@ -76,6 +78,10 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
     sf::st_transform(., crs = 3071) %>%
     dplyr::left_join(sf::st_drop_geometry(ppn.byyear))
 
+  if(mgmtlayer == "counties"){
+    ppn.byyear <- ppn.byyear%>%mutate(mean=replace(mean, COUNTY_NAM =="Menominee", NA)) # not enough data in Menominee County
+  }
+
   table.spatial.camsites <-
     ppn.byyear%>%select(tidyselect::all_of(spatialgroup), n.sites)%>%
     sf::st_drop_geometry()%>%dplyr::distinct()
@@ -92,9 +98,13 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
       geom_sf(color="white", mapping=aes(fill=mean)) +
       #geom_sf(data=mgmtlayer, color="white", lwd=1,fill=NA) +
       labs(title=stringr::str_wrap(sprintf("%s -- Proportion of Snapshot Cameras with Detection", titles[j]),80)) +
-      scale_fill_continuous() +
+      scale_fill_distiller(name = "Blues", direction = 1, na.value = "grey50") +
+      theme_minimal() +
     theme(legend.title = element_blank(),
+          legend.text = element_text(size=12),
+          axis.text = element_text(size=12),
           plot.title = element_text(hjust = 0.5)))
+
 
 
   names(plotlist) <- specieslist

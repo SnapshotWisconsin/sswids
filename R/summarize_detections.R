@@ -59,7 +59,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     if(summary_value == "max count"){
       stop("event_threshold argument is meant to be used with count triggers or max events only")
     }
-    colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "camera_version", "start_date", "end_date", "detection_datetime", "species",
+    colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "camera_version", "trail_type", "start_date", "end_date", "detection_datetime", "species",
                   sort(grep(pattern = "[A-Z]*_AMT", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
                   "time_lapse_trigger_count", grep(pattern = "class_.*_trigger_count", x = colnames(joined1), value = TRUE), "prop_classified", "days_active")
     joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
@@ -77,7 +77,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
         stop("max events argument is meant to be used with an event_threshold, \n if event_threshold = NULL the function would return the sum of counts of all detections within an occasion")
       }
   #reordering columns, getting rid of unnecessary columns
-  colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "camera_version", "start_date", "end_date",
+  colskeep <- c("cam_site_id", "season", "occ", "camera_location_seq_no", "camera_version", "trail_type", "start_date", "end_date",
                 sort(grep(pattern = "[A-Z]*_AMT", x = colnames(joined1), value = TRUE)), "lat", "lon", "motion_trigger_count",
                 "time_lapse_trigger_count", grep(pattern = "class_.*_trigger_count", x = colnames(joined1), value = TRUE), "prop_classified", "days_active")
   joined2 <- joined1[,colskeep]%>%dplyr::arrange(cam_site_id, season, occ)
@@ -111,6 +111,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
     # this works as key column headings are capitalized
     dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                      camera_version=paste(unique(camera_version),collapse =","),
+                     trail_type=paste(unique(trail_type),collapse =","),
                      across(start_date:end_date, .fns = ~unique(.x)),
                      dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~max(. , na.rm = TRUE)),
                      across(lat:days_active, .fns = ~unique(.x))) %>%
@@ -123,6 +124,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       # COUNT instead of MAX
       dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                        camera_version=paste(unique(camera_version),collapse =","),
+                       trail_type=paste(unique(trail_type),collapse =","),
                        across(start_date:end_date, .fns = ~unique(.x)),
                        dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~sum(. > 0, na.rm=TRUE)),
                        across(lat:days_active, .fns = ~unique(.x))) %>%
@@ -134,6 +136,7 @@ summarize_detections <- function(detections, locationeffort, summary_value = "co
       dplyr::group_by(cam_site_id, season, occ) %>%
       dplyr::summarise(camera_location_seq_no=paste(unique(camera_location_seq_no),collapse =","),
                        camera_version=paste(unique(camera_version),collapse =","),
+                       trail_type=paste(unique(trail_type),collapse =","),
                        across(start_date:end_date, .fns = ~unique(.x)),
                        dplyr::across(tidyselect::matches("[A-Z]*_AMT", ignore.case = FALSE), ~sum( ., na.rm=TRUE)),
                        across(lat:days_active, .fns = ~unique(.x))) %>%

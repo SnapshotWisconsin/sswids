@@ -1,7 +1,7 @@
 #' Pull in detection from Snapshot database. A wrapper around `sswidb::sswidb_detections()`.
 #'
 #' @param conn a connection to the sswi database
-#' @param species character vector of species of interest.See `sswidb::sswidb_species`
+#' @param species character vector of species of interest.See `sswidb::sswidb_species`, species=NULL returns all species
 #' @param grid specified as character vector. What camera grids to pull effort
 #'             info for (e.g. "SSWI").
 #' @param daterange preferably a data frame of start and end dates, with columns
@@ -33,6 +33,8 @@ query_detections <- function(conn, species, grid, daterange=NULL, prec, county=N
   if(!inherits(daterange, "data.frame")){
     daterange <- data.frame("start_date"=as.Date(min(daterange)), "end_date"=as.Date(max(daterange)))
   }
+
+
 
 # detections
 detections_df <-

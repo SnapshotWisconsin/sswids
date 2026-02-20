@@ -9,7 +9,7 @@ query_detections(conn, species, grid, daterange = NULL, prec, county = NULL)
 \arguments{
 \item{conn}{a connection to the sswi database}
 
-\item{species}{character vector of species of interest.See \code{sswidb::sswidb_species}}
+\item{species}{character vector of species of interest.See \code{sswidb::sswidb_species}, species=NULL returns all species}
 
 \item{grid}{specified as character vector. What camera grids to pull effort
 info for (e.g. "SSWI").}

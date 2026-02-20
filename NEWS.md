@@ -1,5 +1,18 @@
 # sswids (development version)
 
+# sswids v0.0.0.9006
+2/20/2026
+
+*add PLSS sections as spatial layer
+*add all species option to query_detections function
+*remove menominee county from spatial_plot
+*change to color blind friendly palettes for temp_plot
+*remove restrictions on running temporal_plot for less than full year data
+*reverse color scale on spatial plots
+*add trail type to location effort data pull
+*query_detections and query_effort can handle county specification 
+*query_detections can handle all species data pull
+
 # sswids v0.0.0.9005
 9/15/2025
 

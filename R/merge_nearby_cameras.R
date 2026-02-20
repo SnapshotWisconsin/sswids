@@ -132,7 +132,7 @@ merge_nearby_cameras <- function(locationeffort, cam_distance=100) {
   #average camera coordinates
   Q7 <- Q6%>%dplyr::mutate("lat"= purrr::map_dbl(.x=.$effort, .f=~mean(as.numeric(.x$latitude))), "lon"= purrr::map_dbl(.x=.$effort, .f=~mean(as.numeric(.x$longitude))))
   #remove columns in list column dataframe of indivual cam _loc_seq_no coordinates, grid type and grid id
-  Q8 <- Q7%>%dplyr::mutate("effort"= purrr::map(.x= .$effort, .f= ~select(.x, -c(latitude, longitude)))) #, grid_type_code, dnr_grid_id
+  Q8 <- Q7%>%dplyr::mutate("effort"= purrr::map(.x= .$effort, .f= ~select(.x, -tidyr::any_of(c("latitude", "longitude", "grid_type_code", "dnr_grid_id")))))
   Q9 <- tidyr::unnest(Q8, cols = c(effort))%>%tidyr::nest(.by = c(cam_site_id, season, lat, lon), .key = "effort")
 
   return(Q9)

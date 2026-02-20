@@ -27,7 +27,7 @@ temporal_plot(
 
 \item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group}
 
-\item{combine_cols}{logical, should species age/sex columns be summed togethe? Defaults to TRUE}
+\item{combine_cols}{logical, should species age/sex columns be summed together? Defaults to TRUE}
 }
 \description{
 Use year round data to decompose detections into seasonal and trend components for

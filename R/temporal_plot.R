@@ -13,7 +13,7 @@
 #' @param days_active_threshold Numeric, scalar. Minimum number of days a camera needs to have been functioning within an occasion for a cam site id x year x occasion to be included in temporal plot.
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a temporal plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group
-#' @param combine_cols logical, should species age/sex columns be summed togethe? Defaults to TRUE
+#' @param combine_cols logical, should species age/sex columns be summed together? Defaults to TRUE
 #'
 #' @return
 #' @export
@@ -27,9 +27,9 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
     dplyr::summarise(start_date=as.Date(min(start_date)), end_date=as.Date(max(end_date)))%>%
     sf::st_drop_geometry()
 
-  if(any(check_season_dates(daterange)$season_length_days < 365)){
-    stop("Year round data is needed for temporal plots")
-  }
+  # if(any(check_season_dates(daterange)$season_length_days < 365)){
+  #   stop("Year round data is needed for temporal plots")
+  # }
 
   if(mgmtlayer == "counties"){
     warning("Are you sure you want to plot temporal trends by county? Thats 72 lines in 1 plot, and probably won't work for most species")
@@ -134,12 +134,14 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
            subtitle = sprintf("Year Round, %s - %s", min(speciesframe$year), max(speciesframe$year))) +
       geom_vline(xintercept=seq(1,(nocc+1)*nyears,nocc)) +
       scale_x_continuous(labels = seq(min(speciesframe$year),max(speciesframe$year),1), breaks = seq(nocc/2,nocc*nyears,nocc)) +
-      scale_color_brewer(palette = "Set2",
-                         name = "Mgmt Zone",
-                         labels = unique(speciesframe$zone)) +
-      scale_fill_brewer(palette = "Set2",
-                        name = "Mgmt Zone",
-                        labels = unique(speciesframe$zone))
+             scale_color_brewer(pallete= "Set2",
+                                name = "Mgmt Zone",
+                                labels = unique(speciesframe$zone)) +
+      theme_minimal() +
+      theme(legend.text = element_text(size=12),
+            legend.title = element_text(size=14),
+            axis.text = element_text(size=12),
+            axis.title = element_text(size=14))
 
     return(plottemp)
   })
