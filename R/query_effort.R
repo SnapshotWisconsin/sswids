@@ -139,7 +139,7 @@ WHERE G83100.SSWI_GRID_REF.GRID_TYPE_CODE IN ('%s')
                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE >= TO_DATE('%s', 'YYYY-MM-DD')
                           AND G83100.DS_LOCATION_EFFORT.FINAL_DATE <= TO_DATE('%s', 'YYYY-MM-DD')
                           AND G83100.SSWI_COUNTY.COUNTY_NAME IN ('%s')
-                          AND g83100.sswi_metadata.metadata_name = 'TRAVEL_CORRIDOR_TYPE_CODE;",
+                          AND g83100.sswi_metadata.metadata_name = 'TRAVEL_CORRIDOR_TYPE_CODE';",
                               effortcolumn,
                               paste0(grid, collapse = "', '"),
                               format(.x, '%Y-%m-%d'),
