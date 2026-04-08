@@ -82,4 +82,12 @@ detections_df <-
       TRUE ~ count
     )
   )
+
+ badclass <- detections_df%>%
+   group_by(across(-c(count)))%>%dplyr::count()%>%dplyr::filter( n > 1)
+
+if(nrow(badclass)>0){warning(paste("Duplicate classifications for triggers...", paste0(badclass$trigger_id, collapse=",")))}
+
+return(detections_df)
+
 }

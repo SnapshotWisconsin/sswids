@@ -134,7 +134,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
            subtitle = sprintf("Year Round, %s - %s", min(speciesframe$year), max(speciesframe$year))) +
       geom_vline(xintercept=seq(1,(nocc+1)*nyears,nocc)) +
       scale_x_continuous(labels = seq(min(speciesframe$year),max(speciesframe$year),1), breaks = seq(nocc/2,nocc*nyears,nocc)) +
-             scale_color_brewer(pallete= "Set2",
+             scale_color_brewer(palette= "Set2",
                                 name = "Mgmt Zone",
                                 labels = unique(speciesframe$zone)) +
       theme_minimal() +
