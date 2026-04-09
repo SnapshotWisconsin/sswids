@@ -14,6 +14,7 @@
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a temporal plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group
 #' @param combine_cols logical, should species age/sex columns be summed together? Defaults to TRUE
+#' @param linear logical, should interannual trend be modeled as linear or non-linear trend? Defaults to TRUE
 #'
 #' @return
 #' @export
@@ -21,7 +22,7 @@
 #' @examples
 
 
-temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup, combine_cols=TRUE){
+temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup, combine_cols=TRUE, linear=TRUE){
 
   daterange <- df%>%group_by(season)%>% #recreate date ranges from data frame
     dplyr::summarise(start_date=as.Date(min(start_date)), end_date=as.Date(max(end_date)))%>%
@@ -102,13 +103,19 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
 
 
     #model with year x occ interaction as well as occ x zone interaction
+    if(linear == TRUE){
+      m2y <- mgcv::gam(binomresponse ~ zone * season + s(occ, bs = "cc", k=nocc, by=zone) +
+                         ti(season, occ, bs = c("tp", "cc")),
+                       data = speciesframe,
+                       family = binomial,
+                       knots = knots)
+    } else {
     m2y <- mgcv::gam(binomresponse ~ zone + s(season, k=nyears, by=zone) + s(occ, bs = "cc", k=nocc, by=zone) +
                        ti(season, occ, bs = c("tp", "cc")),
                data = speciesframe,
                family = binomial,
                knots = knots)
-
-
+    }
 
 
     newdatay <- expand.grid(season=unique(speciesframe$season), zone=unique(speciesframe$zone), occ=nocc/2)
