@@ -12,6 +12,7 @@
 #' @param n_occasions_annual_threshold Numeric, scalar. Minimum number of occasions required for a cam site x year to be included in a spatial plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.
 #' @param combine_cols logical, should species age/sex columns be summed together? Defaults to TRUE
+#' @param layer2 character, specifying a 2nd spatial layer from `list_spatial_layers()` to add to plot if mgmtlayer == counties
 #'
 #' @return a named list of ggplot objects
 #'
@@ -19,7 +20,9 @@
 #' @export
 #'
 #' @examples
-spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold, n_occasions_annual_threshold, spatialgroup="COUNTY_NAM", combine_cols=TRUE){
+spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold, ppn_class_threshold,
+                          n_occasions_annual_threshold, spatialgroup="COUNTY_NAM", combine_cols=TRUE,
+                          layer2=NULL){
 
 
 
@@ -88,7 +91,7 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
 
 
 
-  titles <- janitor::make_clean_names(sub("(FOX|SKUNK|PIG|CRANE|CAT|DOG|GROUSE)(.*)", "\\2 \\1",
+  titles <- janitor::make_clean_names(sub("(FOX|SKUNK|PIG|CRANE|DOG|GROUSE)(.*)", "\\2 \\1",
                                  x = unique(ppn.byyear$Spp)), case = "title")
   nspecies <- length(specieslist)
 
@@ -104,6 +107,24 @@ spatial_plot <- function (conn, df, mgmtlayer="counties", days_active_threshold,
           legend.text = element_text(size=12),
           axis.text = element_text(size=12),
           plot.title = element_text(hjust = 0.5)))
+
+  if(mgmtlayer=="counties"){
+    message("Do you want to overlay a management zone layer as well? Use layer2")
+    if(!is.null(layer2)){
+    layer2 <- get_spatial_data(layer2)
+    }
+    plotlist <- lapply(seq(1:nspecies), function(j)
+      ggplot(filter(ppn.byyear, grepl(Spp, pattern = unique(ppn.byyear$Spp)[j]))) +
+        geom_sf(color="white", mapping=aes(fill=mean)) +
+        {if (!is.null(layer2)) geom_sf(data=layer2, color="white", lwd=1,fill=NA)} +
+        labs(title=stringr::str_wrap(sprintf("%s -- Proportion of Snapshot Cameras with Detection", titles[j]),80)) +
+        scale_fill_distiller(name = "Blues", direction = 1, na.value = "grey50") +
+        theme_minimal() +
+        theme(legend.title = element_blank(),
+              legend.text = element_text(size=12),
+              axis.text = element_text(size=12),
+              plot.title = element_text(hjust = 0.5)))
+  }
 
 
 

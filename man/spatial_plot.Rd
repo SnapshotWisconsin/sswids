@@ -12,7 +12,8 @@ spatial_plot(
   ppn_class_threshold,
   n_occasions_annual_threshold,
   spatialgroup = "COUNTY_NAM",
-  combine_cols = TRUE
+  combine_cols = TRUE,
+  layer2 = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ spatial_plot(
 \item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Defaults to COUNTY_NAM.}
 
 \item{combine_cols}{logical, should species age/sex columns be summed together? Defaults to TRUE}
+
+\item{layer2}{character, specifying a 2nd spatial layer from \code{list_spatial_layers()} to add to plot if mgmtlayer == counties}
 }
 \value{
 a named list of ggplot objects

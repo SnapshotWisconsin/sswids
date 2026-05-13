@@ -11,8 +11,7 @@ temporal_plot(
   days_active_threshold,
   ppn_class_threshold,
   spatialgroup,
-  combine_cols = TRUE,
-  linear = TRUE
+  combine_cols = TRUE
 )
 }
 \arguments{
@@ -20,7 +19,7 @@ temporal_plot(
 
 \item{df}{a sf data frame output by the data pull workflow}
 
-\item{mgmtlayer}{spatial layer from \code{list_spatial_layers()}}
+\item{mgmtlayer}{character, spatial layer from \code{list_spatial_layers()}}
 
 \item{days_active_threshold}{Numeric, scalar. Minimum number of days a camera needs to have been functioning within an occasion for a cam site id x year x occasion to be included in temporal plot.}
 
@@ -29,8 +28,6 @@ temporal_plot(
 \item{spatialgroup}{character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group}
 
 \item{combine_cols}{logical, should species age/sex columns be summed together? Defaults to TRUE}
-
-\item{linear}{logical, should interannual trend be modeled as linear or non-linear trend? Defaults to TRUE}
 }
 \description{
 Use year round data to decompose detections into seasonal and trend components for
