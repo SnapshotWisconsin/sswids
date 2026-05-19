@@ -11,8 +11,8 @@ R package for the [Snapshot Wisconsin](https://dnr.wisconsin.gov/topic/research/
 You can install the development version of sswids from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("SnapshotWisconsin/sswids", build_vignettes = TRUE)
+# install.packages("remotes")
+remotes::install_github("SnapshotWisconsin/sswids", build_vignettes = TRUE)
 ```
 Including `build_vignettes = TRUE` is the only way the vignette is included and accessible via the `utils::browseVignettes()` or `vignettes()` functions.To render vignette use 1 of the 2 functions below. 
 My suggestion would be `browsevignettes("sswids")` as it renders it in internet window instead of within
