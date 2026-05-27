@@ -14,6 +14,7 @@
 #' @param ppn_class_threshold Numeric, scalar. Proportion of photos classified within an occasion required for a cam site id x year x occasion to be included in a temporal plot.
 #' @param spatialgroup character, column name in mgmtlayer that denotes either the zone names or county names to summarize camera data by. Not built to handle more than one spatial group
 #' @param combine_cols logical, should species age/sex columns be summed together? Defaults to TRUE
+#' @param linear logical, should inter-annual trends be modeled linearly or non-linearly, defaults to TRUE meaning linear modeling
 #'
 #' @return
 #' @export
@@ -21,7 +22,7 @@
 #' @examples
 
 
-temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup, combine_cols=TRUE){
+temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class_threshold, spatialgroup, combine_cols=TRUE, linear=TRUE){
 
   daterange <- df%>%group_by(season)%>% #recreate date ranges from data frame
     dplyr::summarise(start_date=as.Date(min(start_date)), end_date=as.Date(max(end_date)))%>%
@@ -149,7 +150,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
         Beaver.newdata <- expand.grid(zone=unique(BeaverDF$zone), season=unique(BeaverDF$season),
                                       camera_version2=unique(BeaverDF$camera_version2),
                                       occ=seq(1,52, by=1))%>%dplyr::arrange(season, zone, occ)
-
+        if(linear==TRUE){
         BamPre <- mgcv::bam(Spp_binary ~ zone * season + camera_version2 +
                                  s(occ, bs = "cc", k=nocc, by=zone),
                                data = BeaverDF,
@@ -157,6 +158,15 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
                                knots = knots,
                                discrete=TRUE,
                                nthreads=2)
+        }else{
+          BamPre <- mgcv::bam(Spp_binary ~ zone + s(season, k=nyears, by=zone) + camera_version2 +
+                                s(occ, bs = "cc", k=nocc, by=zone),
+                              data = BeaverDF,
+                              family = binomial,
+                              knots = knots,
+                              discrete=TRUE,
+                              nthreads=2)
+        }
 
         meansBAMPre <- modelbased::estimate_means(BamPre, by = c("zone", "season"), newdata=Beaver.newdata)%>%
           mutate(time=(nocc/2)+nocc*(season-1))#takes a while
@@ -165,7 +175,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
 
       }else{
 
-
+        if(linear==TRUE){
         BamPre <- mgcv::bam(Spp_binary ~ zone * season + camera_version2 + s(lat, lon, k=60) +
                                  s(occ, bs = "cc", k=nocc, by=zone),
                                data = speciesframe,
@@ -173,6 +183,15 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
                                knots = knots,
                                discrete=TRUE,
                                nthreads=2)
+        }else{
+          BamPre <- mgcv::bam(Spp_binary ~  zone + s(season, k=nyears, by=zone) + camera_version2 + s(lat, lon, k=60) +
+                                s(occ, bs = "cc", k=nocc, by=zone),
+                              data = speciesframe,
+                              family = binomial,
+                              knots = knots,
+                              discrete=TRUE,
+                              nthreads=2)
+        }
 
 
         meansBAMPre <- modelbased::estimate_means(BamPre, by = c("zone", "season"), newdata=newdata)%>%mutate(time=(nocc/2)+nocc*(season-1))#takes a while
