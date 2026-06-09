@@ -115,7 +115,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
 
   Covs <- expand.grid(season=unique(df2$season),
                       camera_version2=levels(df2$camera_version2),
-                      occ=seq(1,52, by=1))%>%dplyr::arrange(season, occ)
+                      occ=seq(1,nocc, by=1))%>%dplyr::arrange(season, occ)
   newdata <- dplyr::cross_join(knots2, Covs)
   newdata$zone <- as.factor(newdata$zone)
 
