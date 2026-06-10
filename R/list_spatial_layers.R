@@ -23,6 +23,7 @@ list_spatial_layers <- function() {
     'open_water', 'open water bodies', 'shapefile',
     'pheasant_regions', 'core pheasant range', 'shapefile',
     'PLSS_QuarterSections', 'Section township info', 'shapefile',
+    'rugged_grouse_hunting_zones', 'ruffed grouse hunting zones', 'shapefile',
     'ruffed_grouse_priority_areas', 'ruffed grouse priority areas', 'shapefile',
     'streams', 'streams and rivers', 'shapefile',
     'turkey_mgt_zones', 'turkey hunting management zones', 'shapefile',

@@ -52,7 +52,11 @@ get_spatial_data <- function(layer_name = NULL, level = NULL, year = NULL) {
 
     layer <- sswids_spatial_layers$pheasant_regions
 
-  } else if (layer_name == 'ruffed_grouse_priority_areas') {
+  } else if (layer_name == 'ruffed_grouse_hunting_zones') {
+
+    layer <- sswids_spatial_layers$ruffed_grouse_hunting_zones
+
+  }else if (layer_name == 'ruffed_grouse_priority_areas') {
 
     layer <- sswids_spatial_layers$ruffed_grouse_priority_areas
 
