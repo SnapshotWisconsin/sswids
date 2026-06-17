@@ -149,7 +149,7 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
 
         Beaver.newdata <- expand.grid(zone=unique(BeaverDF$zone), season=unique(BeaverDF$season),
                                       camera_version2=unique(BeaverDF$camera_version2),
-                                      occ=seq(1,52, by=1))%>%dplyr::arrange(season, zone, occ)
+                                      occ=seq(1,nocc, by=1))%>%dplyr::arrange(season, zone, occ)
         if(linear==TRUE){
         BamPre <- mgcv::bam(Spp_binary ~ zone * season + camera_version2 +
                                  s(occ, bs = "cc", k=nocc, by=zone),
@@ -173,7 +173,36 @@ temporal_plot <- function (conn, df, mgmtlayer, days_active_threshold, ppn_class
         occBAMPre <- modelbased::estimate_means(BamPre, by = c("zone", "season", "occ"), newdata=Beaver.newdata)%>%mutate(time=occ+nocc*(season-1))
 
 
-      }else{
+      }else if(spp == "ELK"){
+
+        speciesframe <- speciesframe%>%filter(!is.na(zone))
+        newdata <- expand.grid(zone=unique(speciesframe$zone), season=unique(speciesframe$season),
+                                      camera_version2=unique(speciesframe$camera_version2),
+                                      occ=seq(1,nocc, by=1))%>%dplyr::arrange(season, zone, occ)
+        if(linear==TRUE){
+          BamPre <- mgcv::bam(Spp_binary ~ zone * season + camera_version2 +
+                                s(occ, bs = "cc", k=nocc, by=zone),
+                              data = speciesframe,
+                              family = binomial,
+                              knots = knots,
+                              discrete=TRUE,
+                              nthreads=2)
+        }else{
+          BamPre <- mgcv::bam(Spp_binary ~ zone + s(season, k=nyears, by=zone) + camera_version2 +
+                                s(occ, bs = "cc", k=nocc, by=zone),
+                              data = speciesframe,
+                              family = binomial,
+                              knots = knots,
+                              discrete=TRUE,
+                              nthreads=2)
+        }
+
+        meansBAMPre <- modelbased::estimate_means(BamPre, by = c("zone", "season"), newdata=newdata)%>%
+          mutate(time=(nocc/2)+nocc*(season-1))#takes a while
+        occBAMPre <- modelbased::estimate_means(BamPre, by = c("zone", "season", "occ"), newdata=newdata)%>%mutate(time=occ+nocc*(season-1))
+
+        }else{
+
 
         if(linear==TRUE){
         BamPre <- mgcv::bam(Spp_binary ~ zone * season + camera_version2 + s(lat, lon, k=60) +
